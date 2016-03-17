@@ -165,7 +165,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				// Get first album ID
 				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 LIMIT 1");
 				// Reload page
-				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через 5 сек...","http://bkvk.local/sync.php?do=photo&album=".$row['id']."&offset=0",5000);
+				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через 5 сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0",5000);
 
 			} // if album is not found
 
@@ -231,6 +231,11 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 				array_unshift($log,'<tr><td>Получаем фото <b> '.$ot.' - '.$to.' / '.$photos_vk_total.'</b> из ВК.</td></tr>');
 				print $log[0];
+			
+				// No photos in list? Probably a bad response. Refresh...
+				if(sizeof($photos_vk_list) < 1){
+					print $skin->reload('warning',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,3000);
+				}
 			
 				$photos_list = array();
 				// get local IDs
@@ -316,7 +321,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					if(!empty($row['id']) && $row['id'] > $album_id){
 						$album_next = $row['id'];
 						// Got next album, let's reload page
-						print $skin->reload('info',"Страница будет обновлена через 3 сек.","http://bkvk.local/sync.php?do=photo&album=".$album_next."&offset=0",3000);
+						print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0",3000);
 
 					} else {
 						// No unsynced photos left and all abums was synced too. This is the end...
@@ -348,7 +353,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 					// Calculate offset and reload page
 					$offset_new = $offset+$count;
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.","http://bkvk.local/sync.php?do=photo&album=".$album_id."&offset=".$offset_new."",10000);
+					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."",10000);
 
 				}
 			
@@ -389,7 +394,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_music'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через 5 сек...","http://bkvk.local/sync.php?do=music&part=1",5000);
+				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через 5 сек...",$cfg['vkbk_url']."sync.php?do=music&part=1",5000);
 				
 			} // if music part is not found
 			
@@ -535,7 +540,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					// Calculate offset and reload page
 					$part_new = $part+1;
 					//print_r($part_new);
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.","http://bkvk.local/sync.php?do=music&part=".$part_new."",10000);
+					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=music&part=".$part_new."",10000);
 				}
 			
 				// Get log if any process rinning
@@ -575,7 +580,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_video'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через 5 сек...","http://bkvk.local/sync.php?do=video&part=1",5000);
+				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через 5 сек...",$cfg['vkbk_url']."sync.php?do=video&part=1",5000);
 				
 			} // if video part is not found
 			
@@ -726,7 +731,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 					// Calculate offset and reload page
 					$part_new = $part+1;
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.","http://bkvk.local/sync.php?do=video&part=".$part_new."",10000);
+					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=video&part=".$part_new."",10000);
 				}
 			
 				// Get log if any process rinning
