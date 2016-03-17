@@ -136,7 +136,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_photos WHERE album_id > -9000 AND `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.","http://bkvk.local/queue.php?t=p&id=".$nrow['id']."&auto=1",2000);
+							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=p&id=".$nrow['id']."&auto=1",2000);
 						}
 					}
 					
@@ -202,7 +202,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_music WHERE `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.","http://bkvk.local/queue.php?t=m&id=".$nrow['id']."&auto=1",2000);
+							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=m&id=".$nrow['id']."&auto=1",2000);
 						}
 					}
 					
@@ -253,7 +253,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.","http://bkvk.local/queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),2000);
+							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),2000);
 						}
 					}
 					
@@ -272,7 +272,7 @@ E;
 						$skip_row = ($_GET['skip'] != '') ? $_GET['skip'].','.$queue_id : $queue_id;
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 && `id` < {$queue_id} ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через 3 сек.","http://bkvk.local/queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",2000);
+							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",2000);
 						}
 				}
 			}
@@ -313,14 +313,14 @@ if($bar_queue['p'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['p'] == true){
 			$first['p'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-success\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"><b class=\"fa fa-repeat\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-success\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" onClick="jQuery('#{$row['id']}').hide();return true;"><b class="fa fa-arrow-circle-up"></b></a></td>
+  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a></td>
 </tr>
 E;
 	}
@@ -341,14 +341,14 @@ if($bar_queue['m'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['m'] == true){
 			$first['m'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-warning\"><b class=\"fa fa-repeat\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-warning\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">[{$duration}] {$row['artist']} - {$row['title']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=m&id={$row['id']}" style="font-size:130%;" class="label label-warning" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=m&id={$row['id']}" style="font-size:130%;" class="label label-warning" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -362,14 +362,14 @@ if($bar_queue['v'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['v'] == true){
 			$first['v'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"><b class=\"fa fa-repeat\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=v&id={$row['id']}" style="font-size:130%;" class="label label-info" onClick="jQuery('#{$row['id']}').hide();return true;"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=v&id={$row['id']}" style="font-size:130%;" class="label label-info" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
 </tr>
 E;
 	}
