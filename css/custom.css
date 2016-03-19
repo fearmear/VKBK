@@ -222,17 +222,20 @@ body {
     margin-bottom: 1em;
 }
 #video-list .panel-heading {
-    height: 55px;
+    height: 42px;
     overflow: hidden;
 }
-#video-list .label {
+#video-list .panel-title {
     font-size: 100%;
+}
+#video-list .label {
+    font-size: 85%;
     position: absolute;
-    right: 6%;
-    bottom: 8%;
+    right: 20px;
+    bottom: 25px;
 }
 #video-list img {
-    max-width: 320px;
+    max-width: 130px;
     margin: 0 auto;
 }
 .fancybox-title-inside-wrap {

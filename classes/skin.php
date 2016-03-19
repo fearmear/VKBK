@@ -73,6 +73,7 @@ E;
 	}
 	
 	function reload($class,$msg,$uri,$timeout){
+	    if($timeout <= 0){ $timeout = 10000; } else { $timeout = $timeout * 1000; }
 	    if($class=='info'){ $c = 'class="alert alert-info" role="alert"'; }
 	    if($class=='warning'){ $c = 'class="alert alert-warning" role="alert"'; }
 return <<<E

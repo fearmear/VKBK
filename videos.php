@@ -58,7 +58,7 @@ while($row = $db->return_row($r)){
 	if($row['desc'] != ''){ $row['desc'] = nl2br($row['desc']); }
 	$row['duration'] = $skin->seconds2human($row['duration']);
 print <<<E
-<div class="col-sm-4">
+<div class="col-sm-2">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title"><i class="fa fa-film"></i> {$row['title']}</h3>

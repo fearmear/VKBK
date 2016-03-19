@@ -165,8 +165,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				// Get first album ID
 				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 LIMIT 1");
 				// Reload page
-				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через 5 сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0",5000);
-
+				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через ".$cfg['sync_photo_start_cd']." сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0",$cfg['sync_photo_start_cd']);
 			} // if album is not found
 
 			// Album ID found
@@ -234,7 +233,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			
 				// No photos in list? Probably a bad response. Refresh...
 				if(sizeof($photos_vk_list) < 1){
-					print $skin->reload('warning',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,3000);
+					print $skin->reload('warning',"Страница будет обновлена через ".$cfg['sync_photo_error_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,$cfg['sync_photo_error_cd']);
 				}
 			
 				$photos_list = array();
@@ -321,8 +320,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					if(!empty($row['id']) && $row['id'] > $album_id){
 						$album_next = $row['id'];
 						// Got next album, let's reload page
-						print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0",3000);
-
+						print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0",$cfg['sync_photo_next_cd']);
 					} else {
 						// No unsynced photos left and all abums was synced too. This is the end...
 						// Let's make recount photos
@@ -332,7 +330,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							$total['albums']++;
 							$q2 = $db->query_row("SELECT COUNT(id) as photos FROM vk_photos WHERE `album_id` = ".$row['id']."");
 							$total['photos'] += $q2['photos'];
-							$q3 = $db->query("UPDATE vk_albums SET `img_done` = ".$q2['photos']." WHERE `id` = ".$row['id']."");
+							$q3 = $db->query("UPDATE vk_albums SET `img_total` = ".$q2['photos'].", `img_done` = ".$q2['photos']." WHERE `id` = ".$row['id']."");
 							unset($q2);
 						}
 						
@@ -353,9 +351,9 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 					// Calculate offset and reload page
 					$offset_new = $offset+$count;
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."",10000);
-
+					print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."",$cfg['sync_photo_next_cd']);
 				}
+			
 			
 				// Get log if any process rinning
 				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_photo'");
@@ -394,7 +392,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_music'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через 5 сек...",$cfg['vkbk_url']."sync.php?do=music&part=1",5000);
+				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через ".$cfg['sync_music_start_cd']." сек...",$cfg['vkbk_url']."sync.php?do=music&part=1",$cfg['sync_music_start_cd']);
 				
 			} // if music part is not found
 			
@@ -540,7 +538,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					// Calculate offset and reload page
 					$part_new = $part+1;
 					//print_r($part_new);
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=music&part=".$part_new."",10000);
+					print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_music_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=music&part=".$part_new."",$cfg['sync_music_next_cd']);
 				}
 			
 				// Get log if any process rinning
@@ -580,7 +578,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_video'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через 5 сек...",$cfg['vkbk_url']."sync.php?do=video&part=1",5000);
+				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через ".$cfg['sync_video_start_cd']." сек...",$cfg['vkbk_url']."sync.php?do=video&part=1",$cfg['sync_video_start_cd']);
 				
 			} // if video part is not found
 			
@@ -731,7 +729,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 					// Calculate offset and reload page
 					$part_new = $part+1;
-					print $skin->reload('info',"Страница будет обновлена через 10 сек.",$cfg['vkbk_url']."sync.php?do=video&part=".$part_new."",10000);
+					print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_video_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=video&part=".$part_new."",$cfg['sync_video_next_cd']);
 				}
 			
 				// Get log if any process rinning

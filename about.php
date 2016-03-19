@@ -55,6 +55,11 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена</li>
 </ul>
 <h4>версия 0.3</h4>
+<ul class="list-group list-unstyled"><div>2016-03-19</div>
+<li><label><span class="label label-warning">обновлено</span></label> Настройки таймаутов перенесены в конфиг.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Обновление количества фото в альбомах при синхронизации.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Не отображалась кнопка автоматического скачивания.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-03-15</div>
 <li><label><span class="label label-primary">новое</span></label> Просмотр видеозаписей</li>
 <li><label><span class="label label-warning">обновлено</span></label> При ошибке синхронизации в автоматическом режиме и html ответе сервера (прим. ошибка Bad Gateway) добавлен пропуск данных ID.</li>

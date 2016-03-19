@@ -136,7 +136,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_photos WHERE album_id > -9000 AND `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=p&id=".$nrow['id']."&auto=1",2000);
+							print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."queue.php?t=p&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
 						}
 					}
 					
@@ -202,7 +202,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_music WHERE `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=m&id=".$nrow['id']."&auto=1",2000);
+							print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_music_next_cd']." сек.",$cfg['vkbk_url']."queue.php?t=m&id=".$nrow['id']."&auto=1",$cfg['sync_music_next_cd']);
 						}
 					}
 					
@@ -253,7 +253,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),2000);
+							print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_video_next_cd']." сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),$cfg['sync_video_next_cd']);
 						}
 					}
 					
@@ -272,7 +272,7 @@ E;
 						$skip_row = ($_GET['skip'] != '') ? $_GET['skip'].','.$queue_id : $queue_id;
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 && `id` < {$queue_id} ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через 3 сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",2000);
+							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через ".$cfg['sync_music_error_cd']." сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",$cfg['sync_music_error_cd']);
 						}
 				}
 			}
@@ -320,7 +320,7 @@ print <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a></td>
+  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
 </tr>
 E;
 	}

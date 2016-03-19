@@ -49,5 +49,16 @@ $cfg['perpage_photo'] = 24;
 // Videos
 $cfg['perpage_video'] = 24;
 
+// Sync
+$cfg['sync_photo_start_cd'] = 5;
+$cfg['sync_photo_error_cd'] = 5;
+$cfg['sync_photo_next_cd'] = 3;
+
+$cfg['sync_music_start_cd'] = 5;
+$cfg['sync_music_error_cd'] = 5;
+$cfg['sync_music_next_cd'] = 3;
+
+$cfg['sync_video_start_cd'] = 5;
+$cfg['sync_video_next_cd'] = 3;
 
 ?>
