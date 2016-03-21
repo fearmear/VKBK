@@ -95,7 +95,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						unset($album_list['ids'][$key]);
 						$to_delete = true;
 					} else {
-						// Если альбом не найден локально, добавляем его в список мипорта
+						// Если альбом не найден локально, добавляем его в список импорта
 						$album_create[] = $v;
 					}
 				}
@@ -458,7 +458,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			
 				if(sizeof($music_list) > 0){
 					// Update status for local IDs which was found
-					$q = $db->query("UPDATE vk_music SET `saved` = 1 WHERE `id` IN(".implode(',',$music_list).") AND `in_queue` = 0");
+					$q = $db->query("UPDATE vk_music SET `saved` = 1, `deleted` = 0 WHERE `id` IN(".implode(',',$music_list).") AND `in_queue` = 0");
 					$moved = $db->affected_rows();
 					array_unshift($log,'<tr><td>Пропускаем найденные локально аудиозаписи. Всего - <b>'.$moved.'</b></td></tr>');
 					print $log[0];
