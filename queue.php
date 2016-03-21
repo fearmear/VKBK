@@ -22,7 +22,7 @@ $version = $row['version'];
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array());
+print $skin->header(array('extend'=>''));
 print $skin->navigation($lc);
 
 $bar_total = $db->query_row("SELECT COUNT(*) as p FROM vk_photos WHERE album_id > -9000");
@@ -122,6 +122,7 @@ if(isset($_GET['id']) && isset($_GET['t'])){
 			
 			$out = $c->curl_req(array(
 					'uri' => $q['uri'],
+					'method'=>'',
 					'return'=>1
 			));
 			
@@ -187,6 +188,7 @@ E;
 			
 			$out = $c->curl_req(array(
 					'uri' => $q['uri'],
+					'method'=>'',
 					'return'=>1
 			));
 
@@ -239,6 +241,7 @@ E;
 			preg_match("/[^\/]+$/",$q['preview_uri'],$n);
 			$out = $c->curl_req(array(
 					'uri' => $q['preview_uri'],
+					'method'=>'',
 					'return'=>1
 			));
 			
@@ -407,7 +410,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version));
+print $skin->footer(array('v'=>$version,'extend'=>''));
 
 $db->close($res);
 

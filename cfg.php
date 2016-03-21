@@ -1,9 +1,10 @@
 <?php
 
 // Defines
-define(ROOT,dirname(__FILE__).'/');
+define('ROOT',dirname(__FILE__).'/');
 
 // Configuration
+date_default_timezone_set("Europe/Minsk");
 $cfg = array();
 
 // VKBK

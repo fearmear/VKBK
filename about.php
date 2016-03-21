@@ -22,7 +22,7 @@ $version = $row['version'];
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array());
+print $skin->header(array('extend'=>''));
 print $skin->navigation($lc);
 
 print <<<E
@@ -56,6 +56,7 @@ print <<<E
 </ul>
 <h4>версия 0.3</h4>
 <ul class="list-group list-unstyled"><div>2016-03-21</div>
+<li><label><span class="label label-warning">обновлено</span></label> Код немного приведен в порядок для работы на PHP 5.3.x.</li>
 <li><label><span class="label label-danger">багфикс</span></label> Неправильные флаги при повторной синхронизации музыки.</li>
 </ul>
 <ul class="list-group list-unstyled"><div>2016-03-19</div>
@@ -115,7 +116,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version));
+print $skin->footer(array('v'=>$version,'extend'=>''));
 
 $db->close($res);
 

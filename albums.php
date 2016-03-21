@@ -54,6 +54,8 @@ print <<<E
         </div>
 E;
 
+$photos = '';
+
 if($album_id){
 	$album = $db->query_row("SELECT * FROM vk_albums WHERE `id` = {$album_id}");
 	$header = '<i class="fa fa-folder-open-o"></i> '.$album['name'].($album['img_total'] > $album['img_done'] ? ' <a href="sync.php?do=album&id='.$album_id.'" class="btn btn-primary btn-lg" role="button">Синхр.</a>' : '');
@@ -86,13 +88,13 @@ $photos .= <<<E
     <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
 	}
+	$npage = 1;
 
 }
 
 print <<<E
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">{$header}</h1>
-		  <p>{$desc}</p>
           <div class="free-wall" id="freewall">
 			{$photos}
 			<div class="paginator-next" style="display:none;"><a href="ajax/albums-paginator.php?id={$album_id}&page={$npage}">следующая страница</a></div>

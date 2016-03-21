@@ -22,7 +22,7 @@ $version = $row['version'];
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array());
+print $skin->header(array('extend'=>''));
 print $skin->navigation($lc);
 
 print <<<E

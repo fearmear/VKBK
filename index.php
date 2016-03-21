@@ -22,7 +22,7 @@ $version = $row['version'];
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array());
+print $skin->header(array('extend'=>''));
 print $skin->navigation($lc);
 
 print <<<E
@@ -70,7 +70,7 @@ print <<<E
 E;
 			}
 print <<<E
-<h4><a href="https://vk.com/id{$u['uid']}" target="_blank">{$u['nickname']}</a></h4>
+<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a></h4>
 {$u['first_name']} {$u['last_name']}
 E;
 print '</center><ul class="nav nav-pills">';
@@ -321,7 +321,7 @@ print <<<E
 
 E;
 
-print $skin->footer(array('v'=>$version));
+print $skin->footer(array('v'=>$version,'extend'=>''));
 
 $db->close($res);
 
