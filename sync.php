@@ -131,7 +131,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			// Fouth - update albums count
 			$q = $db->query("UPDATE vk_counters SET `album` = (SELECT COUNT(*) FROM vk_albums WHERE id > -9000)");
 		
-			print '<tr><td>Синхронизация завершена. Перейти в <a href="albums.php">альбомы</a>?</td></tr>';
+			print '<tr><td><div class="alert alert-success" role="alert"><strong>УРА!</strong> Синхронизация завершена. Перейти в <a href="albums.php">альбомы</a> или <a href="sync.php?do=photo">синхронизировать</a> фотографии</div></td></tr>';
 
 		} // DO Albums end
 	
@@ -205,7 +205,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 				$photos_vk = $api['response']['items'];
 				$photos_vk_total = $api['response']['count'];
-				
+			
 				$photos_vk_list = array();
 				// Get VK IDs
 				foreach($photos_vk as $k => $v){
@@ -232,16 +232,19 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				print $log[0];
 			
 				// No photos in list? Probably a bad response. Refresh...
-				if(sizeof($photos_vk_list) < 1){
-					print $skin->reload('warning',"Страница будет обновлена через ".$cfg['sync_photo_error_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,$cfg['sync_photo_error_cd']);
-				}
+				//if(sizeof($photos_vk_list) < 1){
+					//print $skin->reload('warning',"Страница будет обновлена через ".$cfg['sync_photo_error_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,$cfg['sync_photo_error_cd']);
+				//}
 			
 				$photos_list = array();
-				// get local IDs
-				$q = $db->query("SELECT id FROM vk_photos WHERE `id` IN(".implode(',',$photos_vk_list).")");
-				while($row = $db->return_row($q)){
-					$photos_list[] = $row['id'];
-					//print_r($row);
+				// No photos in list? Probably album is empty.
+				if(sizeof($photos_vk_list) > 0){
+					// get local IDs
+					$q = $db->query("SELECT id FROM vk_photos WHERE `id` IN(".implode(',',$photos_vk_list).")");
+					while($row = $db->return_row($q)){
+						$photos_list[] = $row['id'];
+						//print_r($row);
+					}
 				}
 			
 				// Get list of IDs which is NOT in local DB. so they are NEW
@@ -282,7 +285,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				} // foreach end
 				
 				if(!empty($photos_data) && (sizeof($photos_create) == sizeof($photos_data))){
-					$data_sql = array();
+					$data_sql = array(0=>'');
 					$data_limit = 250;
 					$data_i = 1;
 					$data_k = 0;

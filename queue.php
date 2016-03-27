@@ -100,6 +100,7 @@ E;
 unset($done);
 
 $skip_list = isset($_GET['skip']) ? preg_replace("/[^0-9\,]/","",$_GET['skip']) : '';
+if(!isset($_GET['auto'])){ $_GET['auto'] = false; } 
 
 if(isset($_GET['id']) && isset($_GET['t'])){
 	$queue_id = is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
