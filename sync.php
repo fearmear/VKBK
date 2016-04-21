@@ -66,11 +66,13 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			$album_vk = array();
 			$album_delete = '';
 			$album_create = array();
+			$album_renamed = array('count'=>0,'list'=>'');
 		
 			// Get local albums
-			$r = $db->query("SELECT id FROM vk_albums WHERE id > -9000");
+			$r = $db->query("SELECT id, name FROM vk_albums WHERE id > -9000");
 			while($row = $db->return_row($r)){
 				$album_list['ids'][] = $row['id'];
+				$album_list['names'][$row['id']] = $row['name'];
 			}
 			
 			$local_albums = sizeof($album_list['ids']);
@@ -94,6 +96,14 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						$key = array_search($v['id'], $album_list['ids']);
 						unset($album_list['ids'][$key]);
 						$to_delete = true;
+						
+						// Проверяем изменилось ли название альбома
+						if($v['title'] != $album_list['names'][$v['id']]){
+							$q = $db->query("UPDATE vk_albums SET name = '".$v['title']."' WHERE id = ".$v['id']);
+							$album_renamed['count']++;
+							$album_renamed['list'] .= '&laquo;'.$album_list['names'][$v['id']].'&raquo; > &laquo;'.$v['title'].'&raquo;<br/>';
+						}
+						
 					} else {
 						// Если альбом не найден локально, добавляем его в список импорта
 						$album_create[] = $v;
@@ -105,7 +115,11 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				}
 			}
 
-			// First - clean unused albums
+			if($album_renamed['count'] > 0){
+				print '<tr><td>Альбомов переименовано: <b>'.$album_renamed['count'].'</b><br/>'.$album_renamed['list'].'</td></tr>';
+			}
+
+			// Clean unused\deleted albums
 			print '<tr><td>Альбомов на удаление: <b>'.sizeof($album_list['ids']).'</b></td></tr>';
 			if(!empty($album_list['ids']) && $to_delete == true){
 				$album_delete = implode(',',$album_list['ids']);
@@ -114,10 +128,10 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				}
 			}
 		
-			// Second - update untouched albums
-			$q = $db->query("UPDATE vk_albums SET updated = ".time()." WHERE id > 0");
+			// Update untouched albums
+			$q = $db->query("UPDATE vk_albums SET updated = ".time()." WHERE id > -9000");
 		
-			// Thrid - import new albums
+			// Import new albums
 			print '<tr><td>Альбомов на создание: <b>'.sizeof($album_create).'</b></td></tr>';
 			if(!empty($album_create)){
 				$album_new = '';
@@ -485,7 +499,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				} // foreach end
 				
 				if(!empty($music_data) && (sizeof($music_create) == sizeof($music_data))){
-					$data_sql = array();
+					$data_sql = array(0=>'');
 					$data_limit = 250;
 					$data_i = 1;
 					$data_k = 0;
@@ -677,7 +691,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				} // foreach end
 				
 				if(!empty($video_data) && (sizeof($video_create) == sizeof($video_data))){
-					$data_sql = array();
+					$data_sql = array(0=>'');
 					$data_limit = 250;
 					$data_i = 1;
 					$data_k = 0;

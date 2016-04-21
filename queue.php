@@ -150,7 +150,7 @@ E;
 			} else {
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста для {$nam}</div>
+<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.</div>
 E;
 			}
 			
@@ -193,7 +193,7 @@ E;
 					'return'=>1
 			));
 
-			if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html'){
+			if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && strstr($out['content'],'<html') == false && strstr($out['content'],'<!DOCTYPE') == false){
 				$saved = $c->file_save(array('path'=>$cfg['music_path'],'name'=>$fnam),$out['content']);
 				if($saved){
 print <<<E

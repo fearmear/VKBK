@@ -102,8 +102,10 @@ print '</center><ul class="nav nav-pills">';
 				'offset' => 0,
 				'extended' => 0
 			));
-			if($video['response']['count']){
+			if(isset($video['response']) && $video['response']['count']){
 				$counters_show['videos'] = $video['response']['count'];
+			} else {
+				$counters_show['videos'] = 'n/a';
 			}
 
 			foreach($counters_show as $k => $v){

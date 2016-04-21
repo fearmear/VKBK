@@ -55,6 +55,9 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена</li>
 </ul>
 <h4>версия 0.3</h4>
+<ul class="list-group list-unstyled"><div>2016-04-21</div>
+<li><label><span class="label label-warning">обновлено</span></label> Обновление названий альбомов при синхронизации.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-03-27</div>
 <li><label><span class="label label-danger">багфикс</span></label> Исправлен баг при синхронизации если альбом пустой.</li>
 </ul>
