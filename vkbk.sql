@@ -33,7 +33,10 @@ CREATE TABLE IF NOT EXISTS `vk_albums` (
   `updated` int(10) unsigned NOT NULL,
   `img_total` int(10) unsigned NOT NULL,
   `img_done` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `created` (`created`),
+  KEY `updated` (`updated`),
+  KEY `images` (`img_total`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -53,7 +56,8 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
   `album` mediumint(8) unsigned NOT NULL,
   `photo` mediumint(8) unsigned NOT NULL,
   `music` mediumint(8) unsigned NOT NULL,
-  `video` mediumint(8) unsigned NOT NULL
+  `video` mediumint(8) unsigned NOT NULL,
+  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -113,7 +117,9 @@ CREATE TABLE IF NOT EXISTS `vk_photos` (
   KEY `queue` (`in_queue`),
   KEY `album` (`album_id`),
   KEY `width` (`width`),
-  KEY `height` (`height`)
+  KEY `height` (`height`),
+  KEY `dsaved` (`date_done`),
+  KEY `saved` (`saved`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -157,7 +163,9 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '0.3 beta');
+('version', '0.4 beta'),
+('auto-queue-audio', '0'),
+('auto-queue-photo', '0');
 
 -- --------------------------------------------------------
 
@@ -178,7 +186,12 @@ CREATE TABLE IF NOT EXISTS `vk_videos` (
   `date_done` int(10) unsigned NOT NULL,
   `deleted` tinyint(1) NOT NULL,
   `in_queue` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `dur` (`duration`),
+  KEY `dadded` (`date_added`),
+  KEY `dsaved` (`date_done`),
+  KEY `deleted` (`deleted`),
+  KEY `queue` (`in_queue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
