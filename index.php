@@ -58,7 +58,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			// We logged in, get personal info
 			$user = $vk->api('users.get', array(
 				'user_id' => $vk_session['vk_user'],
-				'fields' => 'first_name,last_name,has_photo,photo_100,counters,nickname'
+				'fields' => 'first_name,last_name,has_photo,photo_200_orig,counters,nickname'
 			));
 			
 			$u = $user['response'][0];
@@ -66,14 +66,14 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 print '<center>';
 			if($u['has_photo']){
 print <<<E
-<img data-src="holder.js/100x100" class="img-thumbnail" alt="100x100" style="width: 100px; height: 100px;" src="{$u['photo_100']}" data-holder-rendered="true">
+<img data-src="holder.js/100x100" class="img-thumbnail" alt="200x200" style="width: 200px; height: 200px;" src="{$u['photo_200_orig']}" data-holder-rendered="true">
 E;
 			}
 print <<<E
 <h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a></h4>
 {$u['first_name']} {$u['last_name']}
 E;
-print '</center><ul class="nav nav-pills">';
+print '</center><br/><ul class="nav nav-pills">';
 			
 			// GET REAL ALBUMS
 			$albums = $vk->api('photos.getAlbums', array(

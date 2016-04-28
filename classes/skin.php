@@ -61,7 +61,12 @@ E;
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index.php"><i class="fa fa-cogs"></i>Панель управления</a></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
+                <ul class="dropdown-menu">
+		  <li><a href="index.php">Главная страница</a></li>
+                  <li><a href="settings.php">Настройки</a></li>
+                </ul>
+	    </li>
             <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>
             <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
             <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>

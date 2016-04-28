@@ -251,4 +251,8 @@ body {
     bottom: 0;
     text-align: center;
     padding: 5px 0;
+}.toggle-group label, .toggle-group, .toggle {
+    box-sizing: initial;
+    -webkit-box-sizing: initial;
+    -moz-box-sizing: initial;
 }

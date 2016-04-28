@@ -45,6 +45,8 @@ print <<<E
 				<span class="label label-default">4.5.0</span>
 			<a href="https://github.com/kolber/audiojs">audio.js</a>
 				<span class="label label-default">14 Mar 2016</span>
+			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
+				<span class="label label-default">2.2.2</span>
 			</p>
 		  </div>
           <div class="container">
@@ -54,7 +56,15 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена</li>
 </ul>
+<h4>версия 0.4</h4>
+<ul class="list-group list-unstyled"><div>2016-04-28</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлены настройки (Авто-редиректы)</li>
+<li><label><span class="label label-primary">новое</span></label> Красивые чекбоксы (Bootstrap Toggle)</li>
+</ul>
 <h4>версия 0.3</h4>
+<ul class="list-group list-unstyled"><div>2016-04-24</div>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлена полоса прогресса при синхронизации фотографий.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-04-21</div>
 <li><label><span class="label label-warning">обновлено</span></label> Обновление названий альбомов при синхронизации.</li>
 </ul>

@@ -149,8 +149,8 @@ $('#video-list').jscroll({
 		}
 	}
 </script>
-
 E;
+
 print $skin->footer(array(
 	'v'=>$version,
 	'extend'=> $ex_bot,

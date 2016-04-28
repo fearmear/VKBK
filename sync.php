@@ -35,7 +35,7 @@ print <<<E
 E;
 
 if($do != ''){
-	
+
 $don = false;
 
 // Include VK.API
@@ -156,6 +156,23 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	
 			// Check do we have album ID in GET
 			$album_id = (isset($_GET['album'])) ? intval($_GET['album']) : '';
+			$album_total = (isset($_GET['at'])) ? intval($_GET['at']) : 0;
+			$album_process = (isset($_GET['ap'])) ? intval($_GET['ap']) : 0;
+			
+			if($album_total > 0 && $album_process <= $album_total){
+				$per = $album_total/100;
+				$done['al'] = ceil($album_process / $per);
+				// Make a progress bar
+print <<<E
+<div class="row" style="margin:0;">
+<div class="col-sm-12">
+<div class="progress">
+	<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{$done['al']}" aria-valuemin="0" aria-valuemax="100" style="width: {$done['al']}%"><span class="sr-only">{$done['al']}% Complete</span></div>
+</div>
+</div>
+</div>
+E;
+			}
 
 			// No album? Let's start from the beginning
 			if($album_id == ''){
@@ -178,8 +195,11 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_photo'");
 				// Get first album ID
 				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 LIMIT 1");
+				// Get albums count
+				$alb_c = $db->query_row("SELECT COUNT(*) as count FROM vk_albums WHERE id > -9000");
+				$album_total = $alb_c['count'];
 				// Reload page
-				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через ".$cfg['sync_photo_start_cd']." сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0",$cfg['sync_photo_start_cd']);
+				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через ".$cfg['sync_photo_start_cd']." сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0&at=".$album_total."&ap=1",$cfg['sync_photo_start_cd']);
 			} // if album is not found
 
 			// Album ID found
@@ -337,7 +357,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					if(!empty($row['id']) && $row['id'] > $album_id){
 						$album_next = $row['id'];
 						// Got next album, let's reload page
-						print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0",$cfg['sync_photo_next_cd']);
+						print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
 					} else {
 						// No unsynced photos left and all abums was synced too. This is the end...
 						// Let's make recount photos
@@ -356,6 +376,13 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					
 						array_unshift($log,'<tr><td><div class="alert alert-success" role="alert"><strong>УРА!</strong> Синхронизация всех фотографий завершена.<br/>Альбомов - <b>'.$total['albums'].'</b>, фотографий - <b>'.$total['photos'].'</b></div></td></tr>');
 						print $log[0];
+						
+						// Get Settings (Auto-Queue)
+						$aq = $db->query_row("SELECT val as auto FROM vk_status WHERE `key` = 'auto-queue-photo'");
+						if($aq['auto'] == 1){
+							print $skin->reload('info',"Переходим к очереди закачки через ".$cfg['sync_photo_auto_cd']." сек.",$cfg['vkbk_url']."queue.php",$cfg['sync_photo_auto_cd']);
+						}
+						
 					}
 
 				} else {
@@ -368,7 +395,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				
 					// Calculate offset and reload page
 					$offset_new = $offset+$count;
-					print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."",$cfg['sync_photo_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через ".$cfg['sync_photo_next_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
 				}
 			
 			
@@ -543,6 +570,12 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					
 						array_unshift($log,'<tr><td><div class="alert alert-success" role="alert"><strong>УРА!</strong> Синхронизация всех аудиозаписей завершена.<br/>Треков - <b>'.$total['music'].'</b>, на удаление - <b>'.$total['deleted'].'</b></div></td></tr>');
 						print $log[0];
+						
+						// Get Settings (Auto-Queue)
+						$aq = $db->query_row("SELECT val as auto FROM vk_status WHERE `key` = 'auto-queue-audio'");
+						if($aq['auto'] == 1){
+							print $skin->reload('info',"Переходим к очереди закачки через ".$cfg['sync_music_auto_cd']." сек.",$cfg['vkbk_url']."queue.php",$cfg['sync_music_auto_cd']);
+						}
 
 				} else {
 					// Some photos in this album is not synced yed
