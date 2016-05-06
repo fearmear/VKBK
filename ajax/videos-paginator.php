@@ -23,6 +23,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 $offset_page = ($page > 0) ? $cfg['perpage_video']*$page : 0;
 // Get 1 more video to see do we have something on the next page
 $perpage = $cfg['perpage_video']+1;
@@ -31,9 +35,9 @@ $q = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' ORDER BY `date
 while($row = $db->return_row($q)){
 	if($next < $cfg['perpage_video']){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
-	//if(substr($row['preview_path'],0,4) != 'http'){
-		//$row['preview_path'] = preg_replace("/^\/VKBK\/video\//","/vkbk-video/",$row['preview_path']);
-	//}
+	if($cfg['vhost_alias'] == true && substr($row['preview_path'],0,4) != 'http'){
+		$row['preview_path'] = $f->windows_path_alias($row['preview_path'],'video');
+	}
 	$row['player_uri'] = preg_replace("/\?__ref\=vk\.api/","",$row['player_uri']);
 	// Youtube disable fkn Anontation Z
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){

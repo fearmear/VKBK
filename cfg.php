@@ -28,8 +28,8 @@ $cfg['vk_uri'] = '';
 // Path for download
 /*
 For windows users if you want to store files on different drives
-you should add an Alias for your Vhost configuration and uncomment
-some lines in: queue.php, ajax/*-paginator.php, albums.php, videos.php
+you should add an Alias for your Vhost configuration, enable option
+`vhost_alias` and edit function `windows_path_alias` in classes/func.php
 
 Vhost alias example:
 Alias "/vkbk-photo" "C:/VKBK/photo"
@@ -42,6 +42,8 @@ $cfg['photo_path'] = '';
 $cfg['music_path'] = '';
 // Example: /VKBK/video/
 $cfg['video_path'] = '';
+// Enable this if you use Alias for windows
+$cfg['vhost_alias'] = true;
 
 // Albums
 $cfg['photo_layout_width'] = 300;
@@ -49,6 +51,10 @@ $cfg['perpage_photo'] = 24;
 
 // Videos
 $cfg['perpage_video'] = 24;
+
+// Wall
+$cfg['wall_layout_width'] = 200;
+$cfg['perpage_wall'] = 20;
 
 // Sync
 $cfg['sync_photo_start_cd'] = 5;
@@ -63,5 +69,7 @@ $cfg['sync_music_auto_cd'] = 10;
 
 $cfg['sync_video_start_cd'] = 5;
 $cfg['sync_video_next_cd'] = 3;
+
+$cfg['sync_wall_next_cd'] = 10;
 
 ?>

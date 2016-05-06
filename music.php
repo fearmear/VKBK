@@ -16,6 +16,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
 $version = $row['version'];
 
@@ -56,9 +60,9 @@ E;
 $r = $db->query("SELECT * FROM vk_music ORDER BY date_added DESC");
 while($list = $db->return_row($r)){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
-	//if(substr($list['path'],0,4) != 'http'){
-		//$list['path'] = preg_replace("/^\/VKBK\/music\//","/vkbk-music/",$list['path']);
-	//}
+	if($cfg['vhost_alias'] == true && substr($list['path'],0,4) != 'http'){
+		$list['path'] = $f->windows_path_alias($list['path'],'audio');
+	}
 	$sort['artist'] = preg_replace("/[\"\&]/","",$list['artist']);
 	$sort['time'] = preg_replace("/[\"\&]/","",$list['duration']);
 	$list['duration'] = $skin->seconds2human($list['duration']);

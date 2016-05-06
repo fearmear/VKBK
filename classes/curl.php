@@ -58,7 +58,9 @@ class cu{
 		$out['header'] = curl_getinfo($this->ch);
 		$out['err'] = curl_errno($this->ch);
 		$out['errmsg'] = curl_error($this->ch);
-		$out['content'] = curl_exec($this->ch);
+		if($data['return'] == 1){
+			$out['content'] = curl_exec($this->ch);
+		}
 
 		return $out;
 	}

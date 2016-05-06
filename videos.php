@@ -16,6 +16,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
 $version = $row['version'];
 
@@ -23,8 +27,8 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -44,10 +48,11 @@ E;
 $r = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' ORDER BY date_added DESC LIMIT {$offset_page},{$cfg['perpage_video']}");
 while($row = $db->return_row($r)){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
-	//if(substr($row['preview_path'],0,4) != 'http'){
-		//$row['preview_path'] = preg_replace("/^\/VKBK\/video\//","/vkbk-video/",$row['preview_path']);
-	//}
+	if($cfg['vhost_alias'] == true && substr($row['preview_path'],0,4) != 'http'){
+		$row['preview_path'] = $f->windows_path_alias($row['preview_path'],'video');
+	}
 	
+	// Clean ref
 	$row['player_uri'] = preg_replace("/\?__ref\=vk\.api/","",$row['player_uri']);
 	
 	// Youtube disable fkn Anontation Z
@@ -83,9 +88,9 @@ print <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="js/jquery.jscroll.min.js"></script>
-<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {

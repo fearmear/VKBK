@@ -49,6 +49,38 @@ INSERT INTO `vk_albums` (`id`, `name`, `created`, `updated`, `img_total`, `img_d
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `vk_attach`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_attach` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `wall_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `is_local` tinyint(1) NOT NULL,
+  `attach_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `uri` text NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `width` smallint(5) unsigned NOT NULL,
+  `height` smallint(5) unsigned NOT NULL,
+  `text` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `access_key` varchar(255) NOT NULL,
+  `title` text NOT NULL,
+  `duration` smallint(6) NOT NULL,
+  `player` text NOT NULL,
+  `link_url` text NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `uniqid` (`wall_id`,`attach_id`),
+  KEY `local` (`is_local`),
+  KEY `width` (`width`),
+  KEY `height` (`height`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `vk_counters`
 --
 
@@ -57,7 +89,8 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
   `photo` mediumint(8) unsigned NOT NULL,
   `music` mediumint(8) unsigned NOT NULL,
   `video` mediumint(8) unsigned NOT NULL,
-  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`)
+  `wall` mediumint(8) unsigned NOT NULL,
+  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -65,7 +98,23 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
 --
 
 INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`) VALUES
-(0, 0, 0, 0);
+(0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_groups` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `nick` varchar(255) NOT NULL,
+  `photo_uri` text NOT NULL,
+  `photo_path` varchar(255) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -120,6 +169,23 @@ CREATE TABLE IF NOT EXISTS `vk_photos` (
   KEY `height` (`height`),
   KEY `dsaved` (`date_done`),
   KEY `saved` (`saved`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_profiles`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_profiles` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `sex` tinyint(1) NOT NULL DEFAULT '0',
+  `nick` varchar(255) NOT NULL,
+  `photo_uri` text NOT NULL,
+  `photo_path` varchar(255) NOT NULL,
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -194,6 +260,29 @@ CREATE TABLE IF NOT EXISTS `vk_videos` (
   KEY `queue` (`in_queue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_wall`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_wall` (
+  `id` int(11) NOT NULL,
+  `from_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `post_type` varchar(255) NOT NULL,
+  `text` text NOT NULL,
+  `attach` tinyint(1) NOT NULL,
+  `repost` int(11) NOT NULL,
+  `is_repost` tinyint(1) NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `from` (`from_id`),
+  KEY `owner` (`owner_id`),
+  KEY `type` (`post_type`),
+  KEY `attach` (`attach`),
+  KEY `repost` (`is_repost`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

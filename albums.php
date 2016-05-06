@@ -16,6 +16,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
 $version = $row['version'];
 
@@ -23,8 +27,8 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -36,7 +40,7 @@ $header = '';
 print <<<E
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-2 sidebar" style="overflow-y:auto;">
           <ul class="nav nav-sidebar">
 E;
 
@@ -66,9 +70,9 @@ if($album_id){
 	$q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 AND `album_id` = {$album_id} ORDER BY `date_added` DESC LIMIT {$offset_page},{$cfg['perpage_photo']}");
 	while($row = $db->return_row($q)){
 		// Rewrite if you plan to store content outside of web directory and will call it by Alias
-		//if(substr($row['path'],0,4) != 'http'){
-			//$row['path'] = preg_replace("/^\/VKBK\/photo\//","/vkbk-photo/",$row['path']);
-		//}
+		if($cfg['vhost_alias'] == true && substr($row['path'],0,4) != 'http'){
+			$row['path'] = $f->windows_path_alias($row['path'],'photo');
+		}
 $photos .= <<<E
     <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
@@ -81,9 +85,9 @@ E;
 	$q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 ORDER BY `date_done` DESC LIMIT 0,25");
 	while($row = $db->return_row($q)){
 		// Rewrite if you plan to store content outside of web directory and will call it by Alias
-		//if(substr($row['path'],0,4) != 'http'){
-			//$row['path'] = preg_replace("/^\/VKBK\/photo\//","/vkbk-photo/",$row['path']);
-		//}
+		if($cfg['vhost_alias'] == true && substr($row['path'],0,4) != 'http'){
+			$row['path'] = $f->windows_path_alias($row['path'],'photo');
+		}
 $photos .= <<<E
     <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
@@ -104,10 +108,10 @@ print <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="js/freewall.js"></script>
-<script type="text/javascript" src="js/jquery.jscroll.min.js"></script>
-<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/js/freewall.js"></script>
+<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -122,10 +126,10 @@ $(document).ready(function() {
 		}
 	});
 	
-	var images = wall.container.find('.brick');
-	images.find('img').load(function() {
+	//var images = wall.container.find('.brick');
+	//images.find('img').load(function() {
 	wall.fitWidth();
-	});
+	//});
 	
 $('.free-wall').jscroll({
 	debug:false,

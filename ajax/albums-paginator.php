@@ -22,6 +22,10 @@ if($album_id == false){
 
 require_once('../cfg.php');
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 // Get DB
 require_once(ROOT.'classes/db.php');
 $db = new db();
@@ -35,9 +39,9 @@ $q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 AND `album_id` = {$al
 while($row = $db->return_row($q)){
 	if($next < $cfg['perpage_photo']){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
-	//if(substr($row['path'],0,4) != 'http'){
-		//$row['path'] = preg_replace("/^\/VKBK\/photo\//","/vkbk-photo/",$row['path']);
-	//}
+	if($cfg['vhost_alias'] == true && substr($row['path'],0,4) != 'http'){
+		$row['path'] = $f->windows_path_alias($row['path'],'photo');
+	}
 print <<<E
     <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
 E;

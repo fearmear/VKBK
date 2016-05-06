@@ -47,21 +47,55 @@ print <<<E
 				<span class="label label-default">14 Mar 2016</span>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
 				<span class="label label-default">2.2.2</span>
+			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
+				<span class="label label-default">6 May 2016</span>
 			</p>
 		  </div>
-          <div class="container">
+          <div class="col-sm-12">
 
 <h4>ToDo</h4>
+<div class="wall-box">
 <ul class="list-group list-unstyled">
 <li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена</li>
 </ul>
+</div>
 <h4>версия 0.4</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-06</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлена возможность смотреть отдельные посты со стены в лайтбоксе.</li>
+<li><label><span class="label label-primary">новое</span></label> Хэш навигация (hashnav.js).</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Исправлен баг с зависанием загрузки стены в хроме.</li>
+</ul>
+<ul class="list-group list-unstyled"><div>2016-05-05</div>
+<li><label><span class="label label-danger">багфикс</span></span></label> Добавлена дополнительная проверка на контент для закачек.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлен код ошибки если закачка не удалась.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлен интерактивный отсчет для таймеров.</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено отображение чекбокса в настройках для IE 11.</li>
+<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): аудиозаписи.</li>
+<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): репосты (в том числе вложенные).</li>
+<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): ссылки.</li>
+</ul>
+<ul class="list-group list-unstyled"><div>2016-05-04</div>
+<li><label><span class="label label-warning">обновлено</span></label> Множественные изменения в коде.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Опция для виртуальных хостов вынесена отдельно. Теперь для её включения необходимо отредактировать конфиг и одну функцию вместо множества файлов.</li>
+<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): добавлен парсинг видео аттачей, а так же обработка репостов (фото, видео).</li>
+</ul>
+<ul class="list-group list-unstyled"><div>2016-04-30</div>
+<li><label><span class="label label-warning">обновлено</span></label> Общий стиль изменен под новый дизайн ВК.</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Не работал оптимизатор изображений в альбомах на FireFox.</li>
+</ul>
+<ul class="list-group list-unstyled"><div>2016-04-29</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлен раздел &laquo;Сообщения&raquo;.</li>
+<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена). Альфа-версия.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-04-28</div>
 <li><label><span class="label label-primary">новое</span></label> Добавлены настройки (Авто-редиректы)</li>
 <li><label><span class="label label-primary">новое</span></label> Красивые чекбоксы (Bootstrap Toggle)</li>
 </ul>
+</div>
 <h4>версия 0.3</h4>
+<div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-04-24</div>
 <li><label><span class="label label-warning">обновлено</span></label> Добавлена полоса прогресса при синхронизации фотографий.</li>
 </ul>
@@ -86,7 +120,9 @@ print <<<E
 <li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация видеозаписей</li>
 <li><label><span class="label label-danger">багфикс</span></label> Исправлено отображение смешенного контента в очереди закачек.</li>
 </ul>
+</div>
 <h4>версия 0.2</h4>
+<div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-03-14</div>
 <li><label><span class="label label-primary">новое</span></label> Добавлен плеер в раздел музыки (audio.js)</li>
 <li><label><span class="label label-danger">багфикс</span></label> Добавлена проверка на содержимое ответа сервера.</li>
@@ -103,7 +139,9 @@ print <<<E
 <li><label><span class="label label-warning">обновлено</span></label> Раздел Альбомы по-умолчанию отображают 25 последних добавленных фотографий</li>
 <li><label><span class="label label-danger">багфикс</span></label> Добавлена проверка на размер файла при сохранении</li>
 </ul>
+</div>
 <h4>версия 0.1</h4>
+<div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-03-09</div>
 <li><label><span class="label label-primary">новое</span></label> Просмотр фотографий (Fancyfox)</li>
 <li><label><span class="label label-danger">баг</span></label> Необходима проверка на размер файла при закачке</li>
@@ -127,6 +165,7 @@ print <<<E
 <li><label><span class="label label-primary">новое</span></label> Интерфейс, структура</li>
 <li><label><span class="label label-info">инфо</span></label> Начало разработки</li>
 </ul>
+</div>
 
           </div>
 </div>

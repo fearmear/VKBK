@@ -27,7 +27,7 @@ class db {
 	function query($query){
 		$responce = mysql_query($query);
 		if(!$responce){
-			die("Плохой запрос: {$query}\r\n".mysql_error()."\r\n");
+			die("<font style=\"color:red;font-weight:bold;\">Плохой запрос: {$query}\r\n".mysql_error()."</font>\r\n");
 		} else {
 			return $responce;
 		}

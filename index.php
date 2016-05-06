@@ -30,7 +30,6 @@ print <<<E
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Обзор <span class="sr-only">(current)</span></a></li>
 E;
 
 print '<li style="padding:10px 20px;">';
@@ -73,7 +72,7 @@ print <<<E
 <h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a></h4>
 {$u['first_name']} {$u['last_name']}
 E;
-print '</center><br/><ul class="nav nav-pills">';
+print '</center></li><li><ul class="nav nav-pills">';
 			
 			// GET REAL ALBUMS
 			$albums = $vk->api('photos.getAlbums', array(
@@ -153,10 +152,11 @@ print '</li>';
 
 if($vk_session['vk_token'] != '' && $token_valid == true){
 print <<<E
-			<li><a href="sync.php?do=albums">Синхр. альбомы</a></li>
-            <li><a href="sync.php?do=photo">Синхр. фото</a></li>
-            <li><a href="sync.php?do=music">Синхр. музыку</a></li>
-            <li><a href="sync.php?do=video">Синхр. видео</a></li>
+			<li><a href="sync.php?do=albums">Синхр. альбомы</a>
+            <a href="sync.php?do=photo">Синхр. фото</a>
+            <a href="sync.php?do=music">Синхр. музыку</a>
+            <a href="sync.php?do=video">Синхр. видео</a>
+			<a href="sync-wall.php?offset=0">Синхр. стену</a></li>
 E;
 }
 print <<<E
@@ -190,12 +190,8 @@ print <<<E
           </div>
           <!--<h2 class="sub-header">Section title</h2>-->
           <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th><i class="fa fa-info-circle"></i> Уведомления</th>
-                </tr>
-              </thead>
+		  <h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
+            <table class="table table-striped white-box">
               <tbody>
 E;
 
@@ -244,8 +240,8 @@ $queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v'];
 
 print <<<E
           <div class="table-responsive">
-		  <h5><i class="fa fa-cloud-download"></i> Очередь закачки - <b>{$queue_total}</b></h5>
-            <table class="table table-striped">
+		  <h4 class="vkhead"><i class="fa fa-cloud-download"></i> Очередь закачки - <b>{$queue_total}</b></h4>
+            <table class="table table-striped white-box">
               <thead>
                 <tr>
                   <th>#</th>

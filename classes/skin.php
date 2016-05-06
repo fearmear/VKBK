@@ -7,6 +7,7 @@ class skin {
 	}
 	
 	function header($s){
+	    global $cfg;
 		return <<<E
 <!DOCTYPE html>
 <html lang="en">
@@ -16,12 +17,13 @@ class skin {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
+    <base href="{$cfg['vkbk_url']}"/>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="css/custom.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
     {$s['extend']}
   </head>
   <body>
@@ -32,14 +34,14 @@ E;
 		return <<<E
     <footer class="footer">
       <div class="container">
-        <p class="text-muted">VKBK {$s['v']} &copy; 2016 Megumin</p>
+        <p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$s['v']} &copy; 2016 Megumin</p>
       </div>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     {$s['extend']}
   </body>
 </html>
@@ -57,23 +59,84 @@ E;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php">VKBK</a>
+          <a class="navbar-brand" href="index.php"><i class="fa fa-vk" style="font-size:22px;"></i>BK</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
                 <ul class="dropdown-menu">
 		  <li><a href="index.php">Главная страница</a></li>
+		  <li><a href="queue.php">Очередь закачки</a></li>
+		  <li role="separator" class="divider"></li>
                   <li><a href="settings.php">Настройки</a></li>
+		  <li role="separator" class="divider"></li>
+		  <li><a href="about.php">История версий</a></li>
                 </ul>
 	    </li>
             <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>
             <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
             <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>
+	    <li><a href="wall.php"><i class="fa fa-comments-o"></i>Сообщения <span class="badge">{$s['wall']}</span></a></li>
           </ul>
         </div>
       </div>
     </nav>
+E;
+	}
+	
+	function queue_progress_bar($bar){
+return <<<E
+<div class="row">
+<div class="col-sm-2"><i class="fa fa-{$bar['fa']}"></i> {$bar['name']} <span class="label label-default">{$bar['perx']}%</span></div>
+<div class="col-sm-10">
+<div class="progress">
+	<div class="progress-bar progress-bar-{$bar['bar']}" role="progressbar" aria-valuenow="{$bar['per']}" aria-valuemin="0" aria-valuemax="100" style="width:{$bar['per']}%"><span class="sr-only">{$bar['per']}% Complete</span></div>
+</div>
+</div>
+</div>
+E;
+	}
+	
+	/*
+	    Function: queue_list_attach
+	    Returns a list of attach items to download list
+	    In:
+	    row - data
+	    fiirst - aqto button switch (bool)
+	*/
+	function queue_list_attach($row,$first){
+	    global $skin;
+	    
+	    if(isset($row['date'])){ $row['date'] = date("Y-m-d H:i:s",$row['date']); } else { $row['date'] = ' -//- '; }
+	    $uri_name = $row['uri'];
+	    
+	    $t = '';
+	    if($row['type'] == 'photo'){    $t = 'atph';$row['id'] = $row['attach_id']; }
+	    if($row['type'] == 'video'){    $t = 'atvi';$row['id'] = $row['attach_id']; }
+	    if($row['type'] == 'link'){     $t = 'atli';$row['id'] = $row['attach_id']; }
+	    if($row['type'] == 'audio'){
+		$t = 'atau';$row['id'] = $row['attach_id'];
+		mb_internal_encoding("UTF-8");
+		if(mb_strlen($row['title'])   > 50){ $row['title']   = mb_substr($row['title'],0,50).'...'; }
+		if(mb_strlen($row['caption']) > 50){ $row['caption'] = mb_substr($row['caption'],0,50).'...'; }
+		$duration = $skin->seconds2human($row['duration']);
+		$uri_name = "[{$duration}] {$row['caption']} - {$row['title']}";
+	    }
+	    if($row['type'] == 'groups'){   $t = 'gr'; $row['uri']  = $row['photo_uri']; }
+	    if($row['type'] == 'profiles'){ $t = 'pr'; $row['uri']  = $row['photo_uri']; }
+	    
+	    
+	    // Add a autodownload for the first element in list
+	    if($first == true){
+		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+	    } else { $auto = ''; }
+return <<<E
+<tr>
+  <td>{$row['id']}</td>
+  <td><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
+  <td>{$row['date']}</td>
+  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+</tr>
 E;
 	}
 	
@@ -86,7 +149,17 @@ return <<<E
   <td>
     <div {$c}><i class="fa fa-refresh fa-spin"></i> {$msg}</div>
 	<script type="text/javascript">
-	window.setTimeout(function(){ window.location = "{$uri}"; },{$timeout});
+	var count = {$timeout}/1000;
+	var counter = setInterval(timer, 1000);
+	function timer() {
+	    count=count-1;
+	    if(count <= 0) {
+		clearInterval(counter);
+		//return;
+		window.location = "{$uri}";
+	    }
+	    document.getElementById("gcd").innerHTML = count;
+	}
 	</script>
   </td>
 </tr>
