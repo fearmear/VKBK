@@ -43,7 +43,7 @@ $cfg['music_path'] = '';
 // Example: /VKBK/video/
 $cfg['video_path'] = '';
 // Enable this if you use Alias for windows
-$cfg['vhost_alias'] = true;
+$cfg['vhost_alias'] = false;
 
 // Albums
 $cfg['photo_layout_width'] = 300;
