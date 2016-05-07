@@ -229,7 +229,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '0.4 beta'),
+('version', '0.4.5 beta'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0');
 
