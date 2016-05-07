@@ -85,6 +85,8 @@ E;
 	}
 	
 	function queue_progress_bar($bar){
+	    if(isset($bar['per'])  && $bar['per']  < 0){ $bar['per']  = 0; }
+	    if(isset($bar['perx']) && $bar['perx'] < 0){ $bar['perx'] = 0; }
 return <<<E
 <div class="row">
 <div class="col-sm-2"><i class="fa fa-{$bar['fa']}"></i> {$bar['name']} <span class="label label-default">{$bar['perx']}%</span></div>

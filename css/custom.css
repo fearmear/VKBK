@@ -325,7 +325,8 @@ body {
     box-sizing: content-box; /* IE 11 */
     -webkit-box-sizing: initial;
     -moz-box-sizing: initial;
-}.white-box {
+}
+.white-box {
     background: #fff;
     border: solid 1px #e6e7eb;
 }

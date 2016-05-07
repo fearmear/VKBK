@@ -188,7 +188,7 @@ class func {
 
 	    $full_date = date("d M Y H:i",$row['date']);
 	    $row['date'] = $this->wall_date_format($row['date']);
-	    if($row['text'] != ''){ $row['text'] = '<div style="margin-bottom:10px;">'.nl2br($row['text']).'</div>'; }
+	    if($row['text'] != ''){ $row['text'] = '<div style="margin-bottom:10px;">'.nl2br($this->wall_post_parse($row['text'])).'</div>'; }
 	    $tmp_box = '';
 	    $tmp_class = 'col-sm-6 col-sm-offset-3 wall-box';
 $tmp_postid = <<<E
@@ -354,6 +354,24 @@ $output .= <<<E
 E;
 	    return $output;
 	} // Wall Show Post end
+	
+	function wall_post_parse($text){
+	    if($text != ''){
+		$fnd = array(
+		    '/\#([^\s\#]+)/',
+		    '/\[([^\s\|]+)\|([^\]]+)\]/'
+		);
+		$rpl = array(
+		    '<a href="https://new.vk.com/feed?section=search&q=%23\1" rel="norefferer" target="_blank"><i class="fa fa-tag"></i> \1</a>',
+		    '<a href="https://new.vk.com/\1" rel="norefferer" target="_blank"><i class="fa fa-chain"></i> \2</a>'
+		);
+		$text = preg_replace($fnd,$rpl,$text);
+		
+		return $text;
+	    } else {
+		return false;
+	    }
+	}
 
 } // end of class
 

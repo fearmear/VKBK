@@ -257,10 +257,10 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						$atk['link']['access_key'] = '';
 						// Check do we have this attach already?
 						$at = $db->query_row("SELECT attach_id FROM vk_attach WHERE attach_id = ".$atk['link']['id']);
-						// Attach found, make a link
+						// Attach found, just skip it ><
 						if(!empty($at['attach_id'])){
 							// Insert OR update
-							$f->wall_attach_update($v['id'],$atk);
+							//$f->wall_attach_update($v['id'],$atk);
 						} else {
 							if(isset($atk['link']['photo'])){
 								$photo_uri = $f->get_largest_photo($atk['link']['photo']);
@@ -357,27 +357,27 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							// Attach - Link
 							if($rpatk['type'] == 'link'){
 								// For links we use a date as id because link type does not have a id
-								$rpatk['link']['id'] = $v['date'];
-								$rpatk['link']['owner_id'] = $v['owner_id'];
-								$rpatk['link']['date'] = $v['date'];
+								$rpatk['link']['id']       = $rp['date'];
+								$rpatk['link']['owner_id'] = $rp['owner_id'];
+								$rpatk['link']['date']     = $rp['date'];
 								$rpatk['link']['access_key'] = '';
 								// Check do we have this attach already?
 								$at = $db->query_row("SELECT attach_id FROM vk_attach WHERE attach_id = ".$rpatk['link']['id']);
-								// Attach found, make a link
+								// Attach found, just skip it ><
 								if(!empty($at['attach_id'])){
 									// Insert OR update
-									$f->wall_attach_update($v['id'],$rpatk);
+									//$f->wall_attach_update($rp['id'],$rpatk);
 								} else {
-									if(isset($atk['link']['photo'])){
+									if(isset($rpatk['link']['photo'])){
 										$photo_uri = $f->get_largest_photo($rpatk['link']['photo']);
-										$rpatk['link']['width']  = $rpatk['link']['photo']['width'];
-										$rpatk['link']['height'] = $rpatk['link']['photo']['height'];
+										$rpatk['link']['width']  = (isset($rpatk['link']['photo']['width'])) ? $rpatk['link']['photo']['width'] : 0;
+										$rpatk['link']['height'] = (isset($rpatk['link']['photo']['height'])) ? $rpatk['link']['photo']['height'] : 0;
 									} else {
 										$photo_uri = '';
 									}
 									
 									// Save information about attach
-									$f->wall_attach_insert($v['id'],$rpatk,$photo_uri);
+									$f->wall_attach_insert($rp['id'],$rpatk,$photo_uri);
 								}
 							}
 							
@@ -388,13 +388,13 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 								// Attach found, make a link
 								if(!empty($at['id'])){
 									// Insert OR update
-									$f->wall_attach_update($v['id'],$rpatk);
+									$f->wall_attach_update($rp['id'],$rpatk);
 								} else {
 									$photo_uri                    = $rpatk['audio']['url'];
 									$rpatk['audio']['caption']    = $rpatk['audio']['artist'];
 									$rpatk['audio']['access_key'] = '';
 									// Save information about attach
-									$f->wall_attach_insert($v['id'],$rpatk,$photo_uri);
+									$f->wall_attach_insert($rp['id'],$rpatk,$photo_uri);
 								}
 							}
 						}

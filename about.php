@@ -57,7 +57,15 @@ print <<<E
 <div class="wall-box">
 <ul class="list-group list-unstyled">
 <li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
-<li><label><span class="label label-default">сделать</span></label> синхронизация > стена</li>
+<li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
+</ul>
+</div>
+<h4>версия 0.4.5</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-07</div>
+<li><label><span class="label label-warning">обновлено</span></label> Для синхронизации аттачей добавлена проверка на наличие файла локально.</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение ссылки для репоста.</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение аудиозаписи для репоста.</li>
 </ul>
 </div>
 <h4>версия 0.4</h4>

@@ -72,4 +72,5 @@ $cfg['sync_video_next_cd'] = 3;
 
 $cfg['sync_wall_next_cd'] = 10;
 
+$cfg['sync_found_local'] = 1;
 ?>
