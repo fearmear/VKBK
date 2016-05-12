@@ -30,26 +30,38 @@ print <<<E
           <h2 class="sub-header">VKBK история версий</h2>
 		  <div class="well">
 			<p>VKBK - это инструмент для создания и синхронизации локального бэкапа вашего лампового профиля ВК.</p>
-			<p>Сторонние библиотеки:<br/>
+			<p>Сторонние библиотеки:</p>
+			<div class="row">
+			<div class="col-sm-3 libs-row">
 			<a href="http://getbootstrap.com/">Bootstrap</a>
-				<span class="label label-default">3.3.6</span>
+				<span class="label label-default">3.3.6</span><br/>
 			<a href="https://github.com/vladkens/VK">PHP класс для VK.API</a>
-				<span class="label label-default">0.1.7</span>
+				<span class="label label-default">0.1.7</span><br/>
 			<a href="https://github.com/kombai/freewall">Freewall.js</a>
-				<span class="label label-default">1.05</span>
+				<span class="label label-default">1.05</span><br/>
 			<a href="https://github.com/pklauzinski/jscroll">jScroll.js</a>
 				<span class="label label-default">2.3.4</span>
+			</div>
+			<div class="col-sm-3 libs-row">
 			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
-				<span class="label label-default">2.1.5</span>
+				<span class="label label-default">2.1.5</span><br/>
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
-				<span class="label label-default">4.5.0</span>
+				<span class="label label-default">4.5.0</span><br/>
 			<a href="https://github.com/kolber/audiojs">audio.js</a>
-				<span class="label label-default">14 Mar 2016</span>
+				<span class="label label-default">14 Mar 2016</span><br/>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
 				<span class="label label-default">2.2.2</span>
+			</div>
+			<div class="col-sm-3 libs-row">
 			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
-				<span class="label label-default">6 May 2016</span>
-			</p>
+				<span class="label label-default">6 May 2016</span><br/>
+			<a href="https://github.com/noraesae/perfect-scrollbar">perfect-scrollbar.js</a>
+				<span class="label label-default">0.6.11</span>
+			</div>
+			<div class="col-sm-3 libs-row">
+			</div>
+			</div>
+			
 		  </div>
           <div class="col-sm-12">
 
@@ -63,6 +75,7 @@ print <<<E
 <h4>версия 0.4.5</h4>
 <div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-05-12</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлен perfect-scrollbar.js.</li>
 <li><label><span class="label label-primary">новое</span></label> Добавлен вывод альбомов (в которых есть хотя бы одно изображение) с превьюшками.</li>
 <li><label><span class="label label-warning">обновлено</span></label> В альбомах фото выводятся в порядке убывания.</li>
 </ul>

@@ -29,7 +29,7 @@ $do = (isset($_GET['do'])) ? $_GET['do'] : '';
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header">Синхронизация</h2>
+          <h2 class="sub-header"><i class="fa fa-refresh"></i>Синхронизация</h2>
           <div class="table-responsive white-box">
             <table class="table table-striped">
 E;

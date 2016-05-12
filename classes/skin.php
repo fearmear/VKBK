@@ -65,12 +65,12 @@ E;
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
                 <ul class="dropdown-menu">
-		  <li><a href="index.php">Главная страница</a></li>
-		  <li><a href="queue.php">Очередь закачки</a></li>
+		  <li><a href="index.php"><i class="fa fa-home"></i> Главная страница</a></li>
+		  <li><a href="queue.php"><i class="fa fa-cloud-download"></i> Очередь закачки</a></li>
 		  <li role="separator" class="divider"></li>
-                  <li><a href="settings.php">Настройки</a></li>
+                  <li><a href="settings.php"><i class="fa fa-sliders"></i> Настройки</a></li>
 		  <li role="separator" class="divider"></li>
-		  <li><a href="about.php">История версий</a></li>
+		  <li><a href="about.php"><i class="fa fa-code-fork"></i> История версий</a></li>
                 </ul>
 	    </li>
             <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>

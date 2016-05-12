@@ -65,7 +65,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 print '<center>';
 			if($u['has_photo']){
 print <<<E
-<img data-src="holder.js/100x100" class="img-thumbnail" alt="200x200" style="width: 200px; height: 200px;" src="{$u['photo_200_orig']}" data-holder-rendered="true">
+<img class="img-thumbnail" alt="200x200" style="width: 200px;" src="{$u['photo_200_orig']}" data-holder-rendered="true">
 E;
 			}
 print <<<E
