@@ -159,6 +159,14 @@ body {
     margin-bottom: 10px;
 }
 
+.albums-list > a {
+    padding-right: 10px !important;
+}
+.albums-list span {
+    color: #aaa;
+    float: right;
+}
+
 
 /*
  * Main content
@@ -199,7 +207,8 @@ body {
 
 /*****************************************************/
 .table>thead>tr>th, .vkhead {
-    color: #47698f;
+    color: #777;
+    padding: 0 10px;
 }
 .brick img {
     margin: 0;
@@ -248,9 +257,9 @@ body {
 .table>thead>tr>th {
     border-bottom: 1px solid #ddd;
 }
-.table>tbody>tr:first-child>td {
+/*.table>tbody>tr:first-child>td {
     border-top:0;
-}
+}*/
 
 /* AUDIO.js */
 .ajs {
@@ -410,5 +419,36 @@ img.wall-ava {
     top: 10px;
     right: 20px;
     font-size: 10px;
+    color: #aaa;
+}.placeholders {
+    background: #fff;
+    border: 1px solid #e1e2e6;
+}
+.pic-albums {
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 200px;
+    cursor: pointer;
+}
+.pic-albums .col-sm-3 {
+    padding: 0px 5px 10px;
+}
+.pic-albums a,
+.pic-albums a:hover,
+.pic-albums a:active,
+.pic-albums a:visited {
+    display:block;min-height:150px;position:relative;background-size:cover;background-position:50%;color:#fff;
+    border: solid 1px #e6e7eb;
+}
+.pic-albums span {
+    position:absolute;left:0;bottom:0;display:block;background-color:rgba(0,0,0,.6);width:100%;padding:2px 10px;
+}
+.pic-albums-more {
+    background: #fff;
+    clear: both;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border: solid 1px #e6e7eb;
     color: #aaa;
 }

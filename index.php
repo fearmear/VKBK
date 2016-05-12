@@ -189,10 +189,11 @@ print <<<E
             </div>
           </div>
           <!--<h2 class="sub-header">Section title</h2>-->
-          <div class="table-responsive">
-		  <h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
-            <table class="table table-striped white-box">
-              <tbody>
+		  <div class="row white-box">
+			<div class="table-responsive">
+				<h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
+	            <table class="table table-striped">
+		          <tbody>
 E;
 
 if($counters_show['albums'] != 0 && $counters_show['albums'] > $counters['album']){
@@ -223,9 +224,11 @@ E;
 }
 
 print <<<E
-              </tbody>
-            </table>
-          </div>
+			      </tbody>
+		        </table>
+	          </div>
+		  </div><br/>
+		  <div class="row white-box">
 E;
 
 // Get LOCAL queue
@@ -311,7 +314,7 @@ print <<<E
               </tbody>
             </table>
           </div>
-		  
+		  </div>
         </div>
       </div>
 	  

@@ -40,25 +40,32 @@ $header = '';
 print <<<E
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" style="overflow-y:auto;">
+        <div class="col-sm-3 col-md-2 sidebar" style="overflow-y:auto;padding:0 20px 10px 10px;">
           <ul class="nav nav-sidebar">
+		  <li class="albums-list">
 E;
 
 $r = $db->query("SELECT * FROM vk_albums ORDER BY id ASC");
 while($album_list = $db->return_row($r)){
+	$full_name = $album_list['name'];
+	mb_internal_encoding("UTF-8");
+	if(mb_strlen($album_list['name']) > 10){ $album_list['name'] = mb_substr($album_list['name'],0,12).'<small>...</small>'; }
+	
 	if($album_list['id'] == $album_id){
-		print '<li class="active"><a href="albums.php?id='.$album_list['id'].'"><span class="label label-default">'.$album_list['img_done'].'</span> '.$album_list['name'].'<span class="sr-only">(current)</span></a></li>';
+		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'"><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
 	} else {
-		print '<li><a href="albums.php?id='.$album_list['id'].'"><span class="label label-primary">'.$album_list['img_done'].'</span> '.$album_list['name'].'</a></li>';
+		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'"><i class="fa fa-folder" style="color:#777;"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
 	}
 }
 
 print <<<E
+</li>
           </ul>
         </div>
 E;
 
 $photos = '';
+$pic_albums = '';
 
 if($album_id){
 	$album = $db->query_row("SELECT * FROM vk_albums WHERE `id` = {$album_id}");
@@ -80,6 +87,19 @@ E;
 	
 } else { // end if album id
 
+	$q = $db->query("SELECT a.*, p.path FROM vk_albums a LEFT JOIN vk_photos p ON a.id = p.album_id RIGHT JOIN ( SELECT album_id, MAX( date_added ) AS mdate FROM vk_photos GROUP BY album_id ) p2 ON a.id = p2.album_id WHERE p.date_added = mdate GROUP BY a.id");
+	while($arow = $db->return_row($q)){
+		if($cfg['vhost_alias'] == true && substr($arow['path'],0,4) != 'http'){
+			$arow['path'] = $f->windows_path_alias($arow['path'],'photo');
+		}
+		if(mb_strlen($arow['name']) > 10){ $arow['name'] = mb_substr($arow['name'],0,12).'<small>...</small>'; }
+$pic_albums .= <<<E
+<div class="col-sm-3">
+<a href="albums.php?id={$arow['id']}" style="background-image:url('{$arow['path']}');"><span>{$arow['name']}</span></a>
+</div>
+E;
+	}
+
 	// Show latest photos
 	$header = '<i class="fa fa-image"></i> Последние фотографии';
 	$q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 ORDER BY `date_done` DESC LIMIT 0,25");
@@ -98,13 +118,18 @@ E;
 
 print <<<E
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{$header}</h1>
+		  
+E;
+		if(!$album_id){
+			print '<div class="row pic-albums">'.$pic_albums.'</div>';
+		}
+print <<<E
+		  <h1 class="page-header">{$header}</h1>
           <div class="free-wall" id="freewall">
 			{$photos}
 			<div class="paginator-next" style="display:none;"><a href="ajax/albums-paginator.php?id={$album_id}&page={$npage}">следующая страница</a></div>
           </div>
     </div>
-
 E;
 
 $ex_bot = <<<E
@@ -118,9 +143,10 @@ $(document).ready(function() {
 	var wall = new Freewall("#freewall");
 	wall.reset({
 		selector: '.brick',
-		animate: true,
+		animate: false,
 		cellW: {$cfg['photo_layout_width']},
 		cellH: 'auto',
+		keepOrder: true,
 		onResize: function() {
 			wall.fitWidth();
 		}
@@ -136,7 +162,10 @@ $('.free-wall').jscroll({
     nextSelector: 'div.paginator-next > a:last',
 	padding: 200,
 	callback: function(){
-		wall.refresh();
+		$(".jscroll-added:last").each(function(){
+			wall.fitWidth();
+			$(window).trigger("resize");
+		});
 	}
 });
 
@@ -161,7 +190,14 @@ $('.free-wall').jscroll({
 
 	});
 	
+	$(".full-name").tooltip();
+	
+	$(".pic-albums .col-sm-3:nth-child(4)").after("<div class=\"pic-albums-more\" onclick=\"javascript:pic_albs();\">показать все альбомы</div>");
 });
+function pic_albs(){
+	$(".pic-albums").css({"overflow":"visible","height":"auto"});
+	$(".pic-albums-more").hide();
+}
 </script>
 
 E;

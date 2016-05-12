@@ -62,6 +62,10 @@ print <<<E
 </div>
 <h4>версия 0.4.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-12</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлен вывод альбомов (в которых есть хотя бы одно изображение) с превьюшками.</li>
+<li><label><span class="label label-warning">обновлено</span></label> В альбомах фото выводятся в порядке убывания.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-05-07</div>
 <li><label><span class="label label-warning">обновлено</span></label> Для синхронизации аттачей добавлена проверка на наличие файла локально.</li>
 <li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение ссылки для репоста.</li>
