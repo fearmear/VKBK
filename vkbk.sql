@@ -126,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `vk_music` (
   `id` int(10) unsigned NOT NULL,
   `artist` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `album` int(10) unsigned NOT NULL,
   `duration` smallint(5) unsigned NOT NULL,
   `uri` text NOT NULL,
   `date_added` int(10) unsigned NOT NULL,
@@ -142,6 +143,19 @@ CREATE TABLE IF NOT EXISTS `vk_music` (
   KEY `saved` (`saved`),
   KEY `deleted` (`deleted`),
   KEY `track` (`artist`,`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_music_albums`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_music_albums` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -229,7 +243,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '0.4.5 beta'),
+('version', '0.5 beta'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0');
 
