@@ -103,7 +103,7 @@ E;
 
 	// Show latest photos
 	$header = '<i class="fa fa-image"></i> Последние фотографии';
-	$q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 ORDER BY `date_done` DESC LIMIT 0,25");
+	$q = $db->query("SELECT * FROM vk_photos WHERE `saved` = 1 ORDER BY `date_added` DESC LIMIT 0,25");
 	while($row = $db->return_row($q)){
 		// Rewrite if you plan to store content outside of web directory and will call it by Alias
 		if($cfg['vhost_alias'] == true && substr($row['path'],0,4) != 'http'){
