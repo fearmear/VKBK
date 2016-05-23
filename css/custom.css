@@ -261,41 +261,6 @@ body {
     border-top:0;
 }*/
 
-/* AUDIO.js */
-.ajs {
-    margin-bottom: 90px;
-}
-.ajs ol { padding: 0px; margin: 20px auto; list-style: decimal-leading-zero inside; color: #ccc; max-width: 960px; border-top: 1px solid #ccc; font-size: 0.9em; }
-.ajs ol li { position: relative; margin: 0px; padding: 9px 65px 10px 12px; border-bottom: 1px solid #ccc; cursor: pointer; }
-.ajs ol li a { display: block; text-indent: -3.3ex; padding: 0px 0px 0px 20px; }
-.ajs li.playing {
-    color: #fff;
-    background-color: #428bca;
-    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
-}
-.ajs li.playing a {
-    color: #FFF;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
-}
-.ajs li.playing:before { content: ''; width: 14px; height: 14px; padding: 3px; line-height: 14px; margin: 0px; position: absolute; left: -24px; top: 9px; color: #000; font-size: 13px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2); }
-.ajs .badge {
-    position: absolute;
-    right: 5px;
-}
-.ajs .playing .badge{
-    background-color: #428bca;
-}
-.ajs-player {
-    position: fixed;
-    right: 0;
-    bottom: 60px;
-    z-index: 10;
-    background-color: #e8e8e8;
-    width: 100%;
-}
-.audiojs .play-pause {
-    box-sizing: content-box;
-}
 #video-list .col-sm-4 {
     margin-bottom: 1em;
 }
@@ -452,7 +417,8 @@ img.wall-ava {
     line-height: 40px;
     border: solid 1px #e6e7eb;
     color: #aaa;
-}.libs-row { border-left:solid 2px #e0e0e0; }
+}
+.libs-row { border-left:solid 2px #e0e0e0; }
 .libs-row:first-child { border:0; }
 .libs-row span { float: right; }
 @media(max-width: 767px){

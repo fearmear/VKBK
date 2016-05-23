@@ -47,8 +47,8 @@ print <<<E
 				<span class="label label-default">2.1.5</span><br/>
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
 				<span class="label label-default">4.5.0</span><br/>
-			<a href="https://github.com/kolber/audiojs">audio.js</a>
-				<span class="label label-default">14 Mar 2016</span><br/>
+			<s><a href="https://github.com/kolber/audiojs">audio.js</a></s>
+				<span class="label label-danger">Deprecated in 0.5</span><br/>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
 				<span class="label label-default">2.2.2</span>
 			</div>
@@ -56,7 +56,11 @@ print <<<E
 			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
 				<span class="label label-default">6 May 2016</span><br/>
 			<a href="https://github.com/noraesae/perfect-scrollbar">perfect-scrollbar.js</a>
-				<span class="label label-default">0.6.11</span>
+				<span class="label label-default">0.6.11</span><br/>
+			<a href="https://github.com/happyworm/jPlayer">jPlayer.js</a>
+				<span class="label label-default">2.9.2</span><br/>
+			<a href="https://github.com/silviomoreto/bootstrap-select">Bootstrap Select</a>
+				<span class="label label-default">1.10.0</span>
 			</div>
 			<div class="col-sm-3 libs-row">
 			</div>
@@ -70,6 +74,15 @@ print <<<E
 <ul class="list-group list-unstyled">
 <li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
+</ul>
+</div>
+<h4>версия 0.5</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-19</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлены красивые списки (Bootstrap Select)</li>
+<li><label><span class="label label-primary">новое</span></label> Плеер audio.js заменен на более продвинутый jPlayer.js в связи с этим добавились новые опции а так же изменился дизайн</li>
+<li><label><span class="label label-warning">обновлено</span></label> В аудиозаписях добавлено отображение удаленных треков</li>
+<li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация альбомов для аудиозаписей.</li>
 </ul>
 </div>
 <h4>версия 0.4.5</h4>

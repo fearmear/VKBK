@@ -26,35 +26,109 @@ $version = $row['version'];
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array('extend'=>''));
+$ex_top = <<<E
+<link rel="stylesheet" href="/css/bootstrap-select.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+E;
+
+print $skin->header(array('extend'=>$ex_top));
 print $skin->navigation($lc);
 
 print <<<E
 <div class="container">
           <h2 class="sub-header"><i class="fa fa-music"></i> Музыка</h2>
-		  <div class="ajs-player">
-		  <div class="col-sm-6" style="text-align:center;font-size:90%;padding:10px;">
-			<strong>Сортировка:</strong> ВК&nbsp;
-			<a href="#" onClick="sort('date_added','desc'); return false;"><i class="fa fa-arrow-up"></i></a>
-			&nbsp;
-			<a href="#" onClick="sort('date_added','asc'); return false;"><i class="fa fa-arrow-down"></i></a>
-			&nbsp;&nbsp;
-			исполнитель&nbsp;
-			<a href="#" onClick="sort('artist','asc'); return false;"><i class="fa fa-arrow-up"></i></a>
-			&nbsp;
-			<a href="#" onClick="sort('artist','desc'); return false;"><i class="fa fa-arrow-down"></i></a>
-			&nbsp;&nbsp;
-			время&nbsp;
-			<a href="#" onClick="sort('time','asc'); return false;"><i class="fa fa-arrow-up"></i></a>
-			&nbsp;
-			<a href="#" onClick="sort('time','desc'); return false;"><i class="fa fa-arrow-down"></i></a>
-		  </div>
-		  <div class="col-sm-6">
-		  <audio preload></audio>
-		  </div>
-		  </div>
-          <div class="table-responsive ajs">
-            <ol id="music-container">
+
+<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+<div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
+	<div class="jp-type-playlist">
+		<div class="jp-gui jp-interface">
+			<div class="jp-controls">
+				<button class="jp-previous" role="button" tabindex="0">previous</button>
+				<button class="jp-play" role="button" tabindex="0">play</button>
+				<button class="jp-next" role="button" tabindex="0">next</button>
+				<button class="jp-stop" role="button" tabindex="0">stop</button>
+			</div>
+			<div class="jp-progress">
+				<div class="jp-seek-bar">
+					<div class="jp-play-bar"></div>
+				</div>
+			</div>
+			<div class="jp-volume-controls">
+				<button class="jp-mute" role="button" tabindex="0"><i class="fa fa-volume-off"></i></button>
+				<button class="jp-volume-max" role="button" tabindex="0"><i class="fa fa-volume-up"></i></button>
+				<div class="jp-volume-bar">
+					<div class="jp-volume-bar-value"></div>
+				</div>
+			</div>
+			<div class="jp-time-holder">
+				<div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+				<div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+			</div>
+			<div class="jp-toggles">
+				<button class="jp-repeat tip" data-placement="top" data-toggle="tooltip" data-original-title="повторять" role="button" tabindex="0"><i class="fa fa-repeat"></i></button>
+				<button class="jp-shuffle tip" data-placement="top" data-toggle="tooltip" data-original-title="перемешать" role="button" tabindex="0"><i class="fa fa-random"></i></button>
+			</div>
+			<div class="jp-filters">
+				<label for="listsort">Сортировать по: </label>
+				<select class="jp-sorter selectpicker show-tick" name="listsort">
+					<option data-icon="fa-sort-amount-desc" value="deflist"><i class="fa fa-reorder"></i> по умолчанию</option>
+					<option data-icon="fa-sort-amount-asc" value="reverse"><i class="fa fa-retweet"></i> в обратном порядке</option>
+					<optgroup label="Длительность">
+						<option data-icon="fa-sort-numeric-asc" value="durasc"><i class="fa fa-retweet"></i> сначала короткие</option>
+						<option data-icon="fa-sort-numeric-desc" value="durdesc"><i class="fa fa-retweet"></i> сначала длинные</option>
+					</optgroup>
+					<optgroup label="Исполнитель">
+						<option data-icon="fa-sort-alpha-asc" value="arasc"><i class="fa fa-retweet"></i> Исполнитель A-Z</option>
+						<option data-icon="fa-sort-alpha-desc" value="ardesc"><i class="fa fa-retweet"></i> Исполнитель Z-A</option>
+					</optgroup>
+					<optgroup label="Трек">
+						<option data-icon="fa-sort-alpha-asc" value="ttlasc"><i class="fa fa-retweet"></i> Название A-Z</option>
+						<option data-icon="fa-sort-alpha-desc" value="ttldesc"><i class="fa fa-retweet"></i> Название Z-A</option>
+					</optgroup>
+				</select>
+E;
+
+// Show albums if they exist
+$albums = '';
+$r = $db->query("SELECT * FROM vk_music_albums ORDER BY id DESC");
+while($row = $db->return_row($r)){
+	mb_internal_encoding("UTF-8");
+	if(mb_strlen($row['name']) > 25){ $row['name'] = mb_substr($row['name'],0,25).'...'; }
+$albums .= '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+}
+if($albums != ''){
+print <<<E
+<label for="alblist">Альбом: </label>
+<select class="jp-albums selectpicker show-tick" name="alblist">
+<option value="0">Все аудиозаписи</option>
+{$albums}
+</select>
+E;
+}
+
+print <<<E
+			</div>
+		</div>
+		
+		<div class="jp-playlist">
+			<ul>
+				<li>&nbsp;</li>
+			</ul>
+		</div>
+		<div class="jp-no-solution">
+			<span>Update Required</span>
+			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+		</div>
+	</div>
+</div>
+
+E;
+
+$playlist = <<<E
+	new jPlayerPlaylist({
+		jPlayer: "#jquery_jplayer_1",
+		cssSelectorAncestor: "#jp_container_1"
+	}, [
 E;
 
 $r = $db->query("SELECT * FROM vk_music ORDER BY date_added DESC");
@@ -63,92 +137,73 @@ while($list = $db->return_row($r)){
 	if($cfg['vhost_alias'] == true && substr($list['path'],0,4) != 'http'){
 		$list['path'] = $f->windows_path_alias($list['path'],'audio');
 	}
-	$sort['artist'] = preg_replace("/[\"\&]/","",$list['artist']);
-	$sort['time'] = preg_replace("/[\"\&]/","",$list['duration']);
+	$time = $list['duration'];
 	$list['duration'] = $skin->seconds2human($list['duration']);
-print <<<E
-<li data-dadded="{$list['date_added']}" data-dsync="{$list['date_done']}" data-artist="{$sort['artist']}" data-time="{$sort['time']}">
-    <span class="badge">{$list['duration']}</span> <a href="#" data-src="{$list['path']}">{$list['artist']} - {$list['title']}</a>
-</li>
+	$list['artist'] = preg_replace('/\"/','\\"',$list['artist']);
+	$list['title'] = preg_replace('/\"/','\\"',$list['title']);
+	$list['sartist'] = preg_replace('/\s/','',$list['artist']);
+	$list['stitle'] = preg_replace('/\s/','',$list['title']);
+	$playlist .= <<<E
+{
+	title:"{$list['title']}",
+	artist:"{$list['artist']}",
+	stitle:"{$list['stitle']}",
+	sartist:"{$list['sartist']}",
+	free:true,
+	mp3:"{$list['path']}",
+	duration:"{$list['duration']}",
+	data_added:{$list['date_added']},
+	data_dsync:{$list['date_done']},
+	time:{$time},
+	deleted: {$list['deleted']},
+	album:{$list['album']}
+},
+
 E;
 }
 
-print <<<E
-            </ol>
-          </div>
-</div>
-E;
+$playlist .= '],{';
 
 $ex_bot = <<<E
-<script type="text/javascript" src="audiojs/audio.min.js"></script>
+<script type="text/javascript" src="/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="/jplayer/jplayer.playlist.js"></script>
+<script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
 <script type="text/javascript">
-      $(function() { 
-        // Setup the player to autoplay the next track
-        var a = audiojs.createAll({
-          trackEnded: function() {
-            var next = $('ol li.playing').next();
-            if (!next.length) next = $('ol li').first();
-            next.addClass('playing').siblings().removeClass('playing');
-            audio.load($('a', next).attr('data-src'));
-            audio.play();
-          }
-        });
-        
-        // Load in the first track
-        var audio = a[0];
-            first = $('ol a').attr('data-src');
-        $('ol li').first().addClass('playing');
-        audio.load(first);
+//<![CDATA[
+jQuery(document).ready(function(){
 
-        // Load in a track on click
-        $('ol li').click(function(e) {
-          e.preventDefault();
-          $(this).addClass('playing').siblings().removeClass('playing');
-          audio.load($('a', this).attr('data-src'));
-          audio.play();
-        });
-        // Keyboard shortcuts
-        $(document).keydown(function(e) {
-          var unicode = e.charCode ? e.charCode : e.keyCode;
-             // right arrow
-          if (unicode == 39) {
-            var next = $('li.playing').next();
-            if (!next.length) next = $('ol li').first();
-            next.click();
-            // back arrow
-          } else if (unicode == 37) {
-            var prev = $('li.playing').prev();
-            if (!prev.length) prev = $('ol li').last();
-            prev.click();
-            // spacebar
-          } else if (unicode == 32) {
-            audio.playPause();
-          }
-        })
-      });
-	  
-	  // Sorting options
-	  var c = '';
-	  var d = '';
-	  function sort(method,e){
-		if(method == 'date_added'){
-		if(e == 'asc'){ c = e; d = 'dadded'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		if(e == 'desc'){ c = e; d = 'dadded'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		}
-		if(method == 'artist'){
-		if(e == 'asc'){ c = e; d = 'artist'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		if(e == 'desc'){ c = e; d = 'artist'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		}
-		if(method == 'time'){
-		if(e == 'asc'){ c = e; d = 'time'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		if(e == 'desc'){ c = e; d = 'time'; $("#music-container li").sort(sort_li).appendTo('#music-container'); }
-		}
-	  }
-	  // sort function callback
-	  function sort_li(a, b){
-	    if(c == 'asc'){ return ($(b).data(d)) < ($(a).data(d)) ? 1 : -1; }
-		if(c == 'desc'){ return ($(b).data(d)) > ($(a).data(d)) ? 1 : -1; }
-	  }
+	{$playlist}
+		playlistOptions : {
+			addTime : 0,
+			removeTime: 0,
+			displayTime : 0,
+			shuffleTime : 0,
+		},
+		
+        cssSelectorAncestor: "#jp_container_1",
+		backgroundColor: "#e8e8e8",
+		solution: "html",
+        supplied: "mp3",
+		preload: "none", //"metadata",
+		volume: 1,
+		muted: false,
+        useStateClassSkin: true,
+        autoBlur: false,
+        //smoothPlayBar: true,
+        keyEnabled: true,
+        remainingDuration: true,
+        toggleDuration: true
+    });
+	
+	$(".tip").tooltip();
+	
+	// Bootstrip select
+	$('.selectpicker').selectpicker({
+		iconBase: 'fa',
+		tickIcon: 'fa-check'
+	});
+});
+//]]>
 </script>
 
 E;

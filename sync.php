@@ -29,7 +29,7 @@ $do = (isset($_GET['do'])) ? $_GET['do'] : '';
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-refresh"></i>Синхронизация</h2>
+          <h2 class="sub-header"><i class="fa fa-refresh"></i> Синхронизация</h2>
           <div class="table-responsive white-box">
             <table class="table table-striped">
 E;
@@ -148,7 +148,94 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			print '<tr><td><div class="alert alert-success" role="alert"><strong>УРА!</strong> Синхронизация завершена. Перейти в <a href="albums.php">альбомы</a> или <a href="sync.php?do=photo">синхронизировать</a> фотографии</div></td></tr>';
 
 		} // DO Albums end
-	
+
+		// Music Albums sync
+		if($do == 'musicalbums'){
+			$don = true;
+			$to_delete = false;
+			$album_list = array('ids'=>array());
+			$album_vk = array();
+			$album_delete = '';
+			$album_create = array();
+			$album_renamed = array('count'=>0,'list'=>'');
+			
+			$offset = 0;
+		
+			// Get local albums
+			$r = $db->query("SELECT id, name FROM vk_music_albums");
+			while($row = $db->return_row($r)){
+				$album_list['ids'][] = $row['id'];
+				$album_list['names'][$row['id']] = $row['name'];
+			}
+			
+			$local_albums = sizeof($album_list['ids']);
+		
+			// Get VK music albums
+			$api = $vk->api('audio.getAlbums', array(
+				'owner_id' => $vk_session['vk_user'],
+				'count' => 100,
+				'offset' => $offset
+			));
+			
+			$album_vk = $api['response']['items'];
+			
+			// Check local albums for IDs and delete unknown
+			if(!empty($album_vk[0]['id']) && !empty($local_albums)){
+				foreach($album_vk as $k => $v){
+					// Если альбом есть в базе
+					if(in_array($v['id'],$album_list['ids'])){
+						// Если альбом есть локально, то убираем его из локального списка
+						// Оставшиеся альбомы пойдут на удаление
+						$key = array_search($v['id'], $album_list['ids']);
+						unset($album_list['ids'][$key]);
+						$to_delete = true;
+						
+						// Проверяем изменилось ли название альбома
+						if($v['title'] != $album_list['names'][$v['id']]){
+							$q = $db->query("UPDATE vk_music_albums SET name = '".$v['title']."' WHERE id = ".$v['id']);
+							$album_renamed['count']++;
+							$album_renamed['list'] .= '&laquo;'.$album_list['names'][$v['id']].'&raquo; > &laquo;'.$v['title'].'&raquo;<br/>';
+						}
+						
+					} else {
+						// Если альбом не найден локально, добавляем его в список импорта
+						$album_create[] = $v;
+					}
+				}
+			} else if(!empty($album_vk[0]['id']) && empty($local_albums)) {
+				foreach($album_vk as $k => $v){
+					$album_create[] = $v;
+				}
+			}
+			
+			if($album_renamed['count'] > 0){
+				print '<tr><td>Альбомов переименовано: <b>'.$album_renamed['count'].'</b><br/>'.$album_renamed['list'].'</td></tr>';
+			}
+
+			// Clean unused\deleted albums
+			print '<tr><td>Альбомов на удаление: <b>'.sizeof($album_list['ids']).'</b></td></tr>';
+			if(!empty($album_list['ids']) && $to_delete == true){
+				$album_delete = implode(',',$album_list['ids']);
+				
+				if($album_delete != ''){
+					$q = $db->query("UPDATE vk_music_albums SET `deleted` = 1 WHERE `id` IN({$album_delete})");
+				}
+			}
+		
+			// Import new albums
+			print '<tr><td>Альбомов на создание: <b>'.sizeof($album_create).'</b></td></tr>';
+			if(!empty($album_create)){
+				$album_new = '';
+				foreach($album_create as $k => $v){
+					$album_new .= (($album_new!='') ? ',' : '').
+					"({$v['id']},'{$v['title']}',0)";
+				}
+				$q = $db->query("INSERT INTO vk_music_albums (`id`,`name`,`deleted`) VALUES ".$album_new."");
+			}
+		
+			print '<tr><td><div class="alert alert-success" role="alert"><strong>УРА!</strong> Синхронизация завершена. Перейти в <a href="music.php">аудиозаписи</a> или <a href="sync.php?do=music">синхронизировать</a> аудиозаписи</div></td></tr>';
+
+		} // DO Music Albums end
 
 		// Photos sync
 		if($do == 'photo'){
@@ -491,10 +578,12 @@ E;
 				print $log[0];
 				
 				$music_list = array();
+				$album_list = array();
 				// get local IDs
-				$q = $db->query("SELECT id FROM vk_music WHERE `id` IN(".implode(',',$music_vk_list).")");
+				$q = $db->query("SELECT id,album FROM vk_music WHERE `id` IN(".implode(',',$music_vk_list).")");
 				while($row = $db->return_row($q)){
 					$music_list[] = $row['id'];
+					$album_list[$row['id']] = $row['album'];
 				}
 			
 				// Get list of IDs which is NOT in local DB. so they are NEW
@@ -512,17 +601,21 @@ E;
 				
 				// Put new music to queue
 				$music_data = array();
-				
+				$album_data = array();
 				foreach($music_vk as $k => $v){
 					if(in_array($v['id'],$music_create)){
-						
 						$music_data[$v['id']] = array(
 							'artist' => ($v['artist'] == '' ? '- Unknown -' : $v['artist']),
 							'title' => ($v['title'] == '' ? '- Unknown -' : $v['title']),
+							'album_id' => (isset($v['album_id']) ? $v['album_id'] : 0),
 							'duration' => (!is_numeric($v['duration']) ? 0 : $v['duration']),
 							'date' => $v['date'],
 							'uri' => $v['url']
 						);
+					}
+					// Check for changes of album_id
+					if(in_array($v['id'],$music_list) && isset($v['album_id']) && $album_list[$v['id']] != $v['album_id']){
+						$album_data[$v['id']] = $v['album_id'];
 					}
 				} // foreach end
 				
@@ -532,7 +625,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($music_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['artist'])."','".mysql_real_escape_string($v['title'])."',{$v['duration']},'{$v['uri']}',{$v['date']},0,0,0,'','',true)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['artist'])."','".mysql_real_escape_string($v['title'])."',{$v['album_id']},{$v['duration']},'{$v['uri']}',{$v['date']},0,0,0,'','',true)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;
@@ -541,10 +634,19 @@ E;
 					}
 					//print_r($data_sql);
 					foreach($data_sql as $k => $v){
-						$q = $db->query("INSERT INTO vk_music (`id`,`artist`,`title`,`duration`,`uri`,`date_added`,`date_done`,`saved`,`deleted`,`path`,`hash`,`in_queue`) VALUES {$v}");
+						$q = $db->query("INSERT INTO vk_music (`id`,`artist`,`title`,`album`,`duration`,`uri`,`date_added`,`date_done`,`saved`,`deleted`,`path`,`hash`,`in_queue`) VALUES {$v}");
 					}
 
 					array_unshift($log,'<tr><td>Новые аудиозаписи добавлены в очередь. Всего - <b>'.sizeof($music_create).'</b></td></tr>');
+					print $log[0];
+				}
+				
+				if(!empty($album_data)){
+					foreach($album_data as $k => $v){
+						$q = $db->query("UPDATE vk_music SET `album` = {$v} WHERE `id`= {$k}");
+					}
+
+					array_unshift($log,'<tr><td>Обновлены альбомы для аудиозаписей. Всего - <b>'.sizeof($album_data).'</b></td></tr>');
 					print $log[0];
 				}
 
