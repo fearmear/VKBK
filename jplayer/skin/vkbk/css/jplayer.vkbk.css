@@ -143,7 +143,6 @@
   display: block;
   float: left;
   overflow: hidden;
-  text-indent: -9999px;
   border: none;
   cursor: pointer; }
 
@@ -151,41 +150,48 @@
   width: 40px;
   height: 40px; }
 
+.jp-stop, .jp-previous, .jp-next, .jp-play {
+  color: #fff;
+}
+
+.jp-stop, .jp-previous, .jp-next {
+    background-color: #47698f;
+}
+
 .jp-play {
-  background: url("../image/jplayer.vkbk.jpg") 0 0 no-repeat; }
+  background-color: #577CA1;
+  font-size: 20px;
+  padding-bottom: 4px;
+}
 
-.jp-play:focus {
-  background: url("../image/jplayer.vkbk.jpg") -41px 0 no-repeat; }
-
-.jp-state-playing .jp-play {
-  background: url("../image/jplayer.vkbk.jpg") 0 -42px no-repeat; }
-
-.jp-state-playing .jp-play:focus {
-  background: url("../image/jplayer.vkbk.jpg") -41px -42px no-repeat; }
+.jp-stop, .jp-play {
+  border-radius: 6px;
+}
 
 .jp-stop, .jp-previous, .jp-next {
   width: 28px;
   height: 28px;
-  margin-top: 6px; }
+  margin-top: 6px;
+}
 
 .jp-stop {
-  background: url("../image/jplayer.vkbk.jpg") 0 -83px no-repeat;
-  margin-left: 10px; }
-
-.jp-stop:focus {
-  background: url("../image/jplayer.vkbk.jpg") -29px -83px no-repeat; }
+  margin-left: 10px;
+  padding: 0 0px 1px 0;
+  font-size: 12px;
+}
 
 .jp-previous {
-  background: url("../image/jplayer.vkbk.jpg") 0 -112px no-repeat; }
-
-.jp-previous:focus {
-  background: url("../image/jplayer.vkbk.jpg") -29px -112px no-repeat; }
+  font-size: 14px;
+  padding-left: 2px;
+  border-radius: 6px 0 0 6px;
+}
 
 .jp-next {
-  background: url("../image/jplayer.vkbk.jpg") 0 -141px no-repeat; }
+  font-size: 14px;
+  padding-right: 2px;
+  border-radius: 0 6px 6px 0;
+}
 
-.jp-next:focus {
-  background: url("../image/jplayer.vkbk.jpg") -29px -141px no-repeat; }
 
 /* @end */
 /* @group progress bar */
@@ -361,15 +367,21 @@
 .jp-playlist ul {
   list-style-type: none;
   margin: 0;
-  padding: 0 20px;
+  padding: 20px;
   font-size: .72em; }
 
 .jp-playlist li {
-  padding: 7px 0 6px 20px;
+  padding: 0 0 0 20px;
+  color: #939699;
   border-bottom: 1px solid #e1e2e6; }
 
 .jp-playlist li div {
   display: inline; }
+
+a.jp-playlist-item {
+    display: block;
+    padding: 7px 0 6px 0;
+}
 
 /* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
 div.jp-type-playlist div.jp-playlist li:last-child {
@@ -377,19 +389,20 @@ div.jp-type-playlist div.jp-playlist li:last-child {
   border-bottom: none; }
 
 div.jp-type-playlist div.jp-playlist li.jp-playlist-current {
+    background-color: #e8edf4;
   list-style-type: square;
   list-style-position: inside;
   padding-left: 7px; }
 
 div.jp-type-playlist div.jp-playlist a {
-  color: #333;
+  color: #33567f;
   text-decoration: none; }
 
 div.jp-type-playlist div.jp-playlist a:hover {
-  color: #0d88c1; }
+  text-decoration: underline; }
 
 div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
-  color: #0d88c1; }
+  color: #33567f; }
 
 div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
   float: right;
@@ -406,7 +419,8 @@ div.jp-type-playlist div.jp-playlist span.jp-free-media {
   float: right;
   display: inline;
   text-align: right;
-  margin-right: 10px; }
+  margin-right: 10px;
+  margin-top: 6px; }
 
 div.jp-type-playlist div.jp-playlist span.jp-free-media a {
   color: #666; }
@@ -414,8 +428,8 @@ div.jp-type-playlist div.jp-playlist span.jp-free-media a {
 div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover {
   color: #0d88c1; }
 
-.music-deleted {
-    background-color: #f2dede;
+.music-deleted a.jp-playlist-item {
+    color: #a94442 !important;
 }
 
 span.jp-artist {
@@ -566,6 +580,45 @@ span.jp-artist {
     top: 25px;
     font-size: 12px;
 }
+
+@media(max-width: 640px){
+    .jp-filters {
+	top: -110px;
+	left: 0;
+	padding: 15px 20px 0;
+	background-color: #efefef;
+	border-top: 1px solid #e8e8e8;
+    }
+    .jp-filters label {
+	margin-bottom: 20px;
+    }
+}
+@media(min-width: 485px) and (max-width: 640px){
+    .jp-filters .bootstrap-select {
+	margin-right: 200px;
+    }
+}
+@media(min-width: 645px) and (max-width: 768px){
+    .jp-filters {
+	top: 5px;
+    }
+    .jp-filters label {
+	margin-left: 0px !important;
+	margin-bottom: 10px;
+    }
+    .jp-filters .bootstrap-select:first-of-type {
+	max-width: 165px !important;
+    }
+}
+@media(min-width: 770px) and (max-width: 1024px){
+    .jp-filters {
+	top: 5px;
+    }
+    .jp-filters .bootstrap-select {
+	margin-right: 150px;
+    }
+}
+
 .jp-filters .btn-default:hover,
 .jp-filters .btn-default:focus {
     background-color: #fff;

@@ -68,6 +68,8 @@
 		this.cssSelector.shuffleOff = this.cssSelector.cssSelectorAncestor + " .jp-shuffle-off";
 		this.cssSelector.sorter = this.cssSelector.cssSelectorAncestor + " .jp-sorter";
 		this.cssSelector.albums = this.cssSelector.cssSelectorAncestor + " .jp-albums";
+		this.cssSelector.playpauA = this.cssSelector.cssSelectorAncestor + " .fa-play";
+		this.cssSelector.playpauB = this.cssSelector.cssSelectorAncestor + " .fa-pause";
 
 		// Override the cssSelectorAncestor given in options
 		this.options.cssSelectorAncestor = this.cssSelector.cssSelectorAncestor;
@@ -90,6 +92,8 @@
 		// Create a play event handler to pause other instances
 		$(this.cssSelector.jPlayer).bind($.jPlayer.event.play, function() {
 			$(this).jPlayer("pauseOthers");
+			$(self.cssSelector.playpauA).hide();
+			$(self.cssSelector.playpauB).show();
 		});
 
 		// Create a resize event handler to show the title in full screen mode.
@@ -299,7 +303,7 @@
 
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
 			//listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
-			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + (media.artist ? media.artist+" &mdash; " : "") + media.title + "</a>";
+			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + (media.artist ? "<b>"+media.artist+"</b> &mdash; " : "") + media.title + "</a>";
 			listItem += "</div></li>";
 
 			return listItem;

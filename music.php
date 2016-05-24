@@ -43,10 +43,10 @@ print <<<E
 	<div class="jp-type-playlist">
 		<div class="jp-gui jp-interface">
 			<div class="jp-controls">
-				<button class="jp-previous" role="button" tabindex="0">previous</button>
-				<button class="jp-play" role="button" tabindex="0">play</button>
-				<button class="jp-next" role="button" tabindex="0">next</button>
-				<button class="jp-stop" role="button" tabindex="0">stop</button>
+				<button class="jp-previous" role="button" tabindex="0"><i class="fa fa-backward"></i></button>
+				<button class="jp-play" role="button" tabindex="0"><i class="fa fa-play"></i><i class="fa fa-pause" style="display:none;"></i></button>
+				<button class="jp-next" role="button" tabindex="0"><i class="fa fa-forward"></i></button>
+				<button class="jp-stop" role="button" tabindex="0"><i class="fa fa-stop"></i></button>
 			</div>
 			<div class="jp-progress">
 				<div class="jp-seek-bar">
@@ -94,8 +94,9 @@ $r = $db->query("SELECT * FROM vk_music_albums ORDER BY id DESC");
 while($row = $db->return_row($r)){
 	mb_internal_encoding("UTF-8");
 	if(mb_strlen($row['name']) > 25){ $row['name'] = mb_substr($row['name'],0,25).'...'; }
-$albums .= '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+	$albums .= '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 }
+
 if($albums != ''){
 print <<<E
 <label for="alblist">Альбом: </label>
@@ -139,10 +140,11 @@ while($list = $db->return_row($r)){
 	}
 	$time = $list['duration'];
 	$list['duration'] = $skin->seconds2human($list['duration']);
-	$list['artist'] = preg_replace('/\"/','\\"',$list['artist']);
-	$list['title'] = preg_replace('/\"/','\\"',$list['title']);
-	$list['sartist'] = preg_replace('/\s/','',$list['artist']);
-	$list['stitle'] = preg_replace('/\s/','',$list['title']);
+	$list['artist'] = trim(preg_replace('/\"/','\\"',$list['artist']));
+	$list['title'] = trim(preg_replace('/\"/','\\"',$list['title']));
+	mb_internal_encoding("UTF-8");
+	$list['sartist'] = mb_substr(preg_replace('/\s[\\"]/','',$list['artist']),0,10);
+	$list['stitle'] = mb_substr(preg_replace('/\s[\\"]/','',$list['title']),0,10);
 	$playlist .= <<<E
 {
 	title:"{$list['title']}",
@@ -194,6 +196,11 @@ jQuery(document).ready(function(){
         remainingDuration: true,
         toggleDuration: true
     });
+	
+	$(".jp-play").click(function(){
+		if($.jPlayer.event.play){ $(".jp-play .fa-play").hide();$(".jp-play .fa-pause").show(); }
+		if($.jPlayer.event.pause){ $(".jp-play .fa-play").show();$(".jp-play .fa-pause").hide(); }
+	});
 	
 	$(".tip").tooltip();
 	

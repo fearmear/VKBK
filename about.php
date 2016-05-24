@@ -78,6 +78,9 @@ print <<<E
 </div>
 <h4>версия 0.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-24</div>
+<li><label><span class="label label-warning">обновлено</span></label> Улучшена сортировка плейлиста по исполнителю и названию трека.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-05-19</div>
 <li><label><span class="label label-primary">новое</span></label> Добавлены красивые списки (Bootstrap Select)</li>
 <li><label><span class="label label-primary">новое</span></label> Плеер audio.js заменен на более продвинутый jPlayer.js в связи с этим добавились новые опции а так же изменился дизайн</li>
