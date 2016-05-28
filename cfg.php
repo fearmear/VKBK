@@ -3,60 +3,98 @@
 // Defines
 define('ROOT',dirname(__FILE__).'/');
 
-// Configuration
+// Time Configuration
 date_default_timezone_set("Europe/Minsk");
+
+// VKBK Configuration
 $cfg = array();
 
-// VKBK
-// Example: http://your.host/
+/* Script URL
+  Example: http://your.host/
+*/
 $cfg['vkbk_url'] = '';
 
-// MySQL Database
+/* MySQL Connection
+  Import vkbk.sql in created DB
+*/
 $cfg['host'] = 'localhost';
 $cfg['user'] = '';
 $cfg['pass'] = '';
 $cfg['base'] = '';
 
-// VK.API Information
-// App ID (ID приложения)
+/* VK.API
+  Script settings
+*/
+/* App ID
+  ID приложения
+*/
 $cfg['vk_id'] = ;
-// Protected key (Защищенный ключ)
+/* Protected key
+  Защищенный ключ
+*/
 $cfg['vk_secret'] = '';
-// Example: http://your.host/
+/* Open API URL
+  Example: http://your.host/
+*/
 $cfg['vk_uri'] = '';
 
-// Path for download
-/*
-For windows users if you want to store files on different drives
-you should add an Alias for your Vhost configuration, enable option
-`vhost_alias` and edit function `windows_path_alias` in classes/func.php
+/* Path for download
 
-Vhost alias example:
-Alias "/vkbk-photo" "C:/VKBK/photo"
-Alias "/vkbk-music" "D:/VKBK/music"
-Alias "/vkbk-video" "E:/VKBK/video"
+  For windows users: if you want to store files on different drives
+  you should add an Alias for your Vhost configuration, enable option
+  `vhost_alias` and edit function `windows_path_alias` in classes/func.php
+
+  Vhost alias example:
+  Alias "/vkbk-photo" "C:/VKBK/photo"
+  Alias "/vkbk-music" "D:/VKBK/music"
+  Alias "/vkbk-video" "E:/VKBK/video"
 */
-// Example: /VKBK/photo/
-$cfg['photo_path'] = '';
-// Example: /VKBK/music/
-$cfg['music_path'] = '';
-// Example: /VKBK/video/
-$cfg['video_path'] = '';
 // Enable this if you use Alias for windows
 $cfg['vhost_alias'] = false;
+/* Photos dir
+  Example: C:/VKBK/photo/
+*/
+$cfg['photo_path'] = '';
+/* Music dir
+  Example: D:/VKBK/music/
+*/
+$cfg['music_path'] = '';
+/* Videos dir
+  Example: E:/VKBK/video/
+*/
+$cfg['video_path'] = '';
 
-// Albums
+
+/* Albums
+  Settings
+  photo_layout_width - max width for photos in preview
+  perpage_photo - how much photos load per page
+*/
 $cfg['photo_layout_width'] = 300;
 $cfg['perpage_photo'] = 24;
 
-// Videos
+/* Videos
+  Settings
+  perpage_video - how much videos load per page
+*/
 $cfg['perpage_video'] = 24;
 
-// Wall
+/* Wall
+  Settings
+  wall_layout_width - max width for photos in preview
+  perpage_wall - how much posts load per page
+*/
 $cfg['wall_layout_width'] = 200;
 $cfg['perpage_wall'] = 20;
 
-// Sync
+/* Sync
+  Settings
+  sync_*_start_cd - sec. before start sync
+  sync_*_error_cd - sec. if error occurred before reload page
+  sync_*_next_cd - sec. before next item would load
+  sync_*_auto_cd - sec. before load queue after sync
+  sync_found_local - sec. before load next item if current already exists
+*/
 $cfg['sync_photo_start_cd'] = 5;
 $cfg['sync_photo_error_cd'] = 5;
 $cfg['sync_photo_next_cd'] = 3;
@@ -73,4 +111,11 @@ $cfg['sync_video_next_cd'] = 3;
 $cfg['sync_wall_next_cd'] = 10;
 
 $cfg['sync_found_local'] = 1;
+
+/* Addon: youtube-dl
+  This path you should edit if you have a youtube-dl
+  installed and you want use it for making local video backup
+  Example: C:\Users\%USER%\AppData\Local\Programs\Python\Python35\
+*/
+$cfg['yt_dl_path'] = "";
 ?>

@@ -832,7 +832,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($video_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['title'])."','".mysql_real_escape_string($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['title'])."','".mysql_real_escape_string($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true,'',0,'',0,0)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;
@@ -841,7 +841,7 @@ E;
 					}
 					
 					foreach($data_sql as $k => $v){
-						$q = $db->query("INSERT INTO vk_videos (`id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`) VALUES {$v}");
+						$q = $db->query("INSERT INTO vk_videos (`id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`,`local_path`,`local_size`,local_format`,`local_w`,`local_h`) VALUES {$v}");
 					}
 
 					array_unshift($log,'<tr><td>Новые видеозаписи добавлены в очередь. Всего - <b>'.sizeof($video_create).'</b></td></tr>');

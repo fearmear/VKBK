@@ -78,6 +78,10 @@ print <<<E
 </div>
 <h4>версия 0.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-28</div>
+<li><label><span class="label label-warning">обновлено</span></label> Раздел видео обновлен.</li>
+<li><label><span class="label label-primary">новое</span></label> Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-chain"></i> youtube-dl</a> (необходимо установить отдально!)</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-05-24</div>
 <li><label><span class="label label-warning">обновлено</span></label> Улучшена сортировка плейлиста по исполнителю и названию трека.</li>
 </ul>

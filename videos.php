@@ -45,6 +45,7 @@ E;
 	$npage = $page+1;
 	$offset_page = ($page > 0) ? $cfg['perpage_video']*$page : 0;
 
+	mb_internal_encoding("UTF-8");
 $r = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' ORDER BY date_added DESC LIMIT {$offset_page},{$cfg['perpage_video']}");
 while($row = $db->return_row($r)){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
@@ -60,24 +61,63 @@ while($row = $db->return_row($r)){
 		$row['player_uri'] = $row['player_uri'].'?iv_load_policy=3';
 	}
 	
+	$row['stitle'] = $row['title'];
+	if(mb_strlen($row['title']) > 40){ $row['stitle'] = mb_substr($row['title'],0,40).'...'; }
 	if($row['desc'] != ''){ $row['desc'] = nl2br($row['desc']); }
 	$row['duration'] = $skin->seconds2human($row['duration']);
 print <<<E
-<div class="col-sm-2">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa fa-film"></i> {$row['title']}</h3>
-            </div>
-            <div class="panel-body">
-			  <span class="label label-primary">{$row['duration']}</span>
-              <a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><img src="{$row['preview_path']}" /></a>
-			  <div id="title-{$row['id']}" style="display:none;">
-				{$row['desc']}
-				<div class="expander" onClick="expand_desc();">показать</div>
-			  </div>
-            </div>
-          </div>
-</div>
+<div class="col-sm-4">
+<div class="white-box">
+	<div class="video-preview" style="background-image:url('{$row['preview_path']}');">
+		<a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<span class="label">{$row['duration']}</span>
+	</div>
+	<div class="video-info">
+		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
+		<div class="video-status">
+		
+E;
+
+	// Show icon for known services
+	$service = false;
+
+	// Youtube
+	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
+		$service = true;
+		print 'Источник: <i class="fa fa-youtube" style="color:red;"></i>';
+		if($row['local_path'] != ''){
+			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_w'].'x'.$row['local_h'].' '.$f->human_filesize($row['local_size']);
+		} else {
+			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
+			$key = $pu[1];
+			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+		}
+	}
+	// Vkontakte
+	if(strstr($row['player_uri'],'vk.com')) {
+		$service = true;
+		print 'Источник: <i class="fa fa-vk" style="color:#517397;"></i>';
+		if($row['local_path'] != ''){
+			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_h'].'p '.$f->human_filesize($row['local_size']);
+		} else {
+			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
+			$key = $pu[1].'_'.$pu[2];
+			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+		}
+	}
+	
+	if($service == false){
+		print 'Источник: <i class="fa fa-film"></i>';
+	}
+
+print <<<E
+		</div>
+		<div id="title-{$row['id']}" style="display:none;">
+			{$row['desc']}
+			<div class="expander" onClick="expand_desc();">показать</div>
+		</div>
+	</div>
+</div></div>
 E;
 }
 
@@ -92,13 +132,15 @@ $ex_bot = <<<E
 <script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
 <script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
 <script type="text/javascript">
-
 $(document).ready(function() {
 
 $('#video-list').jscroll({
 	debug:false,
     nextSelector: 'div.paginator-next > a:last',
-	padding: 20
+	padding: 20,
+	callback: function(){
+		$(".tip").tooltip();
+	}
 });
 
 	$(".various").fancybox({
@@ -140,7 +182,8 @@ $('#video-list').jscroll({
         }
 
 	});
-		
+	
+	$(".tip").tooltip();
 });
 
 	function expand_desc(){

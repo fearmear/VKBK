@@ -150,15 +150,6 @@ try {
 } // end if token else
 print '</li>';
 
-if($vk_session['vk_token'] != '' && $token_valid == true){
-print <<<E
-			<li><a href="sync.php?do=albums">Синхр. альбомы</a>
-            <a href="sync.php?do=photo">Синхр. фото</a>
-            <a href="sync.php?do=music">Синхр. музыку</a>
-            <a href="sync.php?do=video">Синхр. видео</a>
-			<a href="sync-wall.php?offset=0">Синхр. стену</a></li>
-E;
-}
 print <<<E
           </ul>
         </div>
@@ -166,6 +157,7 @@ E;
 
 // Get LOCAL counters for media
 $counters = $db->query_row("SELECT * FROM vk_counters");
+$music_albums = $db->query_row("SELECT count(id) as count FROM vk_music_albums");
 
 print <<<E
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -173,19 +165,27 @@ print <<<E
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$counters['album']}</h1>
-              <span class="text-muted">Альбомы</span>
+              <span class="text-muted">Альбомы<br/><a href="/sync.php?do=albums">синхронизировать</a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$counters['photo']}</h1>
-              <span class="text-muted">Фотографии</span>
+              <span class="text-muted">Фотографии<br/><a href="/sync.php?do=photo">синхронизировать</a></span>
+            </div>
+			<div class="col-xs-6 col-sm-3 placeholder">
+              <h1>{$music_albums['count']}</h1>
+              <span class="text-muted">Альбомы музыки<br/><a href="/sync.php?do=musicalbums">синхронизировать</a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$counters['music']}</h1>
-              <span class="text-muted">Музыка</span>
+              <span class="text-muted">Музыка<br/><a href="/sync.php?do=music">синхронизировать</a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$counters['video']}</h1>
-              <span class="text-muted">Видео</span>
+              <span class="text-muted">Видео<br/><a href="/sync.php?do=video">синхронизировать</a></span>
+            </div>
+			<div class="col-xs-6 col-sm-3 placeholder">
+              <h1>{$counters['wall']}</h1>
+              <span class="text-muted">Стена<br/><a href="/sync-wall.php?offset=0">синхронизировать</a></span>
             </div>
           </div>
           <!--<h2 class="sub-header">Section title</h2>-->

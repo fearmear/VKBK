@@ -266,12 +266,20 @@ CREATE TABLE IF NOT EXISTS `vk_videos` (
   `date_done` int(10) unsigned NOT NULL,
   `deleted` tinyint(1) NOT NULL,
   `in_queue` tinyint(1) NOT NULL,
+  `local_path` text NOT NULL,
+  `local_size` int(11) NOT NULL,
+  `local_format` varchar(50) NOT NULL,
+  `local_w` smallint(5) unsigned NOT NULL,
+  `local_h` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `dur` (`duration`),
   KEY `dadded` (`date_added`),
   KEY `dsaved` (`date_done`),
   KEY `deleted` (`deleted`),
-  KEY `queue` (`in_queue`)
+  KEY `queue` (`in_queue`),
+  KEY `local_w` (`local_w`),
+  KEY `local_h` (`local_h`),
+  KEY `format` (`local_format`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
