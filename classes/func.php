@@ -313,13 +313,21 @@ E;
 $output .= <<<E
     <div class="wall-link-img"><a class="fancybox" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-chain"></i>&nbsp;{$lph_row['caption']}</a></div>
 E;
-			}
 $output .= <<<E
 <div class="col-sm-12" style="border:1px solid rgba(0,20,51,.12);">
 	<h4>{$lph_row['title']}</h4>
 	<p class="wall-description">{$lph_row['text']}</p>
 </div>
 E;
+			} else {
+$output .= <<<E
+<div class="col-sm-12">
+	<h5><a href="{$lph_row['link_url']}" rel="nofollow noreferrer" target="_blank"><i class="fa fa-share"></i> {$lph_row['title']}</a></h5>
+	<p class="wall-description">{$lph_row['text']}</p>
+</div>
+E;
+			}
+
 		} // end of attach link
 		
 		// Remote Audio Attach
@@ -371,6 +379,12 @@ E;
 	    } else {
 		return false;
 	    }
+	}
+	
+	function human_filesize($bytes, $decimals = 2) {
+		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+		$factor = floor((strlen($bytes) - 1) / 3);
+		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 	}
 
 } // end of class
