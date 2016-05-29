@@ -245,7 +245,8 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_video', ''),
 ('version', '0.5 beta'),
 ('auto-queue-audio', '0'),
-('auto-queue-photo', '0');
+('auto-queue-photo', '0'),
+('play-local-video', '0');
 
 -- --------------------------------------------------------
 

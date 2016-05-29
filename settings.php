@@ -31,10 +31,11 @@ print $skin->navigation($lc);
 
 $settings = array();
 
-$q = $db->query("SELECT * FROM vk_status WHERE `key` = 'auto-queue-photo' OR `key` = 'auto-queue-audio'");
+$q = $db->query("SELECT * FROM vk_status");
 while($row = $db->return_row($q)){
 	if($row['key'] == 'auto-queue-photo'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
 	if($row['key'] == 'auto-queue-audio'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
+	if($row['key'] == 'play-local-video'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
 	$settings[$row['key']] = $row['val'];
 }
 
@@ -61,6 +62,19 @@ print <<<E
 						</div>
 					</div>
 				</div>
+				<div class="col-sm-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Видео</h3>
+						</div>
+						<div class="panel-body">
+							Воспроизводить локальное видео вместо онлайн-плеера.<br/>
+							<div style="text-align:right;">
+								<input id="play-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['play-local-video']}>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
           </div>
 </div>
@@ -75,6 +89,9 @@ $(document).ready(function() {
     });
 	$('#auto-queue-audio').change(function() {
 		$.get("ajax/settings-save-bool.php", { "auto-queue-audio":$(this).prop('checked') } );
+    });
+	$('#play-local-video').change(function() {
+		$.get("ajax/settings-save-bool.php", { "play-local-video":$(this).prop('checked') } );
     });
 });
 </script>
