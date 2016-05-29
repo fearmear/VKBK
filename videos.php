@@ -40,6 +40,7 @@ print <<<E
           <div class="container" id="video-list">
 E;
 
+	$play = $db->query_row("SELECT val as local FROM vk_status WHERE `key` = 'play-local-video'");
 
 	$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 0;
 	$npage = $page+1;
@@ -69,7 +70,17 @@ print <<<E
 <div class="col-sm-4">
 <div class="white-box">
 	<div class="video-preview" style="background-image:url('{$row['preview_path']}');">
+E;
+	if($row['local_path'] != '' && $play['local'] == 1){
+print <<<E
+		<a class="various-local fancybox.iframe" href="{$cfg['vkbk_url']}ajax/local-video.php?id={$row['id']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+E;
+	} else {
+print <<<E
 		<a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+E;
+	}
+print <<<E
 		<span class="label">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
@@ -112,43 +123,32 @@ E;
 
 print <<<E
 		</div>
+E;
+
+	if($play['local'] == 0){
+print <<<E
 		<div id="title-{$row['id']}" style="display:none;">
 			{$row['desc']}
 			<div class="expander" onClick="expand_desc();">показать</div>
 		</div>
+E;
+	}
+
+print <<<E
 	</div>
 </div></div>
 E;
 }
 
 print <<<E
-			<div class="paginator-next" style="display:none;"><a href="ajax/videos-paginator.php?page={$npage}">следующая страница</a></div>
+			<div class="paginator-next" style="display:none;"><span class="paginator-val">{$npage}</span><a href="/ajax/videos-paginator.php?page={$npage}">следующая страница</a></div>
           </div>
 </div>
 E;
 
-$ex_bot = <<<E
-<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
-<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-
-$('#video-list').jscroll({
-	debug:false,
-    nextSelector: 'div.paginator-next > a:last',
-	padding: 20,
-	callback: function(){
-		$(".tip").tooltip();
-	}
-});
-
-	$(".various").fancybox({
-		maxWidth	: 1280,
-		maxHeight	: 720,
+// Fancybox Options
+$fancybox_options = <<<E
 		fitToView	: false,
-		width		: '70%',
-		height		: '70%',
 		autoSize	: false,
 		closeClick	: false,
 		openEffect	: 'none',
@@ -180,7 +180,63 @@ $('#video-list').jscroll({
                 }
             }
         }
+E;
 
+$ex_bot = <<<E
+<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/js/hashnav.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var notload = false;
+	var list = jQuery("#video-list");
+
+	// Hash URL commands
+	urlCommands.bind('page', function(id) {
+		if($.isNumeric(id) && id >= 2){
+			notload = true;
+			for(i=2;i<=id;i++){
+				jQuery.ajax({
+					async : false,
+					method : "GET",
+					url : "http://bkvk.local/ajax/videos-paginator.php?page="+i+""
+				}).done( function(data){
+					jQuery(".paginator-next").remove();
+					list.append(data);
+				});
+			}
+			notload = false;
+		}
+	});
+
+	if(notload == false){
+$('#video-list').jscroll({
+	debug:true,
+    nextSelector: 'div.paginator-next > a:last',
+	padding: 20,
+	callback: function(){
+		$(".tip").tooltip();
+		var pval = jQuery("div.paginator-next:last .paginator-val").html();
+		if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+	}
+});
+	}
+
+	$(".various").fancybox({
+		maxWidth	: 1280,
+		maxHeight	: 720,
+		width		: '70%',
+		height		: '70%',
+		{$fancybox_options}
+	});
+	
+	$(".various-local").fancybox({
+		maxWidth	: 1340,
+		maxHeight	: 820,
+		width		: '95%',
+		height		: '95%',
+		{$fancybox_options}
 	});
 	
 	$(".tip").tooltip();

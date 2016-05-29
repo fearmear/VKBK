@@ -24,6 +24,12 @@ if(isset($_GET['auto-queue-audio']) && ($_GET['auto-queue-audio'] == 'true' || $
 	print $b;
 }
 
+if(isset($_GET['play-local-video']) && ($_GET['play-local-video'] == 'true' || $_GET['play-local-video'] == 'false' )){
+	$b = ($_GET['play-local-video'] == 'true') ? 1 : 0;
+	$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = 'play-local-video'");
+	print $b;
+}
+
 $db->close($res);
 
 ?>

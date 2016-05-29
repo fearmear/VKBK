@@ -27,6 +27,8 @@ $skin = new skin();
 require_once(ROOT.'classes/func.php');
 $f = new func();
 
+$play = $db->query_row("SELECT val as local FROM vk_status WHERE `key` = 'play-local-video'");
+
 $offset_page = ($page > 0) ? $cfg['perpage_video']*$page : 0;
 // Get 1 more video to see do we have something on the next page
 $perpage = $cfg['perpage_video']+1;
@@ -56,7 +58,17 @@ print <<<E
 <div class="col-sm-4">
 <div class="white-box">
 	<div class="video-preview" style="background-image:url('{$row['preview_path']}');">
+E;
+	if($row['local_path'] != '' && $play['local'] == 1){
+print <<<E
+		<a class="various-local fancybox.iframe" href="{$cfg['vkbk_url']}ajax/local-video.php?id={$row['id']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+E;
+	} else {
+print <<<E
 		<a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+E;
+	}
+print <<<E
 		<span class="label">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
@@ -68,19 +80,19 @@ E;
 	// Show icon for known services
 	$service = false;
 
-	// Youtube disable fkn Anontation Z
+	// Youtube
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
 		$service = true;
-		$row['player_uri'] = $row['player_uri'].'?iv_load_policy=3';
 		print 'Источник: <i class="fa fa-youtube" style="color:red;"></i>';
 		if($row['local_path'] != ''){
 			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_w'].'x'.$row['local_h'].' '.$f->human_filesize($row['local_size']);
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'" target="_blank">скачать?</a>';
+			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
+	// Vkontakte
 	if(strstr($row['player_uri'],'vk.com')) {
 		$service = true;
 		print 'Источник: <i class="fa fa-vk" style="color:#517397;"></i>';
@@ -99,10 +111,18 @@ E;
 
 print <<<E
 		</div>
+E;
+
+	if($play['local'] == 0){
+print <<<E
 		<div id="title-{$row['id']}" style="display:none;">
 			{$row['desc']}
 			<div class="expander" onClick="expand_desc();">показать</div>
 		</div>
+E;
+	}
+	
+print <<<E
 	</div>
 </div></div>
 E;
@@ -114,7 +134,7 @@ E;
 
 if($next > $cfg['perpage_video']){
 	$page++;
-	print '<div class="paginator-next" style="display:none;"><a href="ajax/videos-paginator.php?page='.$page.'">следующая страница</a></div>';
+	print '<div class="paginator-next" style="display:none;"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'">следующая страница</a></div>';
 }
 
 $db->close($res);

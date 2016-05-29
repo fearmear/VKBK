@@ -78,6 +78,11 @@ print <<<E
 </div>
 <h4>версия 0.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-05-29</div>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлена настройка для проигрывания локального видео по умолчанию.</li>
+<li><label><span class="label label-primary">новое</span></label> Добавлен плеер для локальных видео.</li>
+<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение локального пути для видеофайла.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-05-28</div>
 <li><label><span class="label label-warning">обновлено</span></label> Раздел видео обновлен.</li>
 <li><label><span class="label label-primary">новое</span></label> Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-chain"></i> youtube-dl</a> (необходимо установить отдально!)</li>
