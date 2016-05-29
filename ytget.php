@@ -131,14 +131,14 @@ if(file_exists($info)){
 	$youtubeDLlog = json_decode($content);
 	
 	if(isset($youtubeDLlog->_filename)){
-		$local['path'] = $youtubeDLlog->_filename;
+		$local['path'] = preg_replace("@\\\@","/",$youtubeDLlog->_filename);
 		if($s == 'yt'){ $local['size'] = filesize($cfg['video_path'].'data/'.$key.'.'.$youtubeDLlog->ext); }
 		if($s == 'vk'){ $local['size'] = filesize($cfg['video_path'].'data/vk-'.$vid['id'].'.'.$youtubeDLlog->ext); }
 		$local['format'] = $youtubeDLlog->ext;
 		$local['w'] = (isset($youtubeDLlog->width)) ? $youtubeDLlog->width : 0;
 		$local['h'] = (isset($youtubeDLlog->height)) ? $youtubeDLlog->height : 0;
 		
-		$q = $db->query("UPDATE vk_videos SET `local_path` = '{$local['path']}', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']}");
+		$q = $db->query("UPDATE vk_videos SET `local_path` = '".mysql_real_escape_string($local['path'])."', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']}");
 		if($q){
 print <<<E
 <tr>
