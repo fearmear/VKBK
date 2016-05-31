@@ -78,6 +78,9 @@ print <<<E
 </div>
 <h4>версия 0.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-06-01</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлена возможность поиска видео по типу, сервису и качеству.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-05-29</div>
 <li><label><span class="label label-warning">обновлено</span></label> Добавлена настройка для проигрывания локального видео по умолчанию.</li>
 <li><label><span class="label label-primary">новое</span></label> Добавлен плеер для локальных видео.</li>

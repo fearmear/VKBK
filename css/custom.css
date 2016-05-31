@@ -297,6 +297,18 @@ body {
     background-color: #000;
     opacity: .6;
 }
+.video-filter-btn {
+    position:absolute;right:20px;top:20px;
+}
+.video-filter-box {
+    position:absolute;right:20px;top:55px;z-index:2;box-shadow:0px 3px 5px rgba(0,0,0,.3);width:340px;padding-bottom:10px;display: none;
+}
+.video-filter-box label {
+    min-width: 70px;
+    line-height: 35px;
+    text-align: right;
+    margin-right:10px;
+}
 .play-icon {
     position: absolute;
     width: 60px;

@@ -29,13 +29,48 @@ $lc = $db->query_row("SELECT * FROM vk_counters");
 $ex_top = <<<E
 <link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
 <link rel="stylesheet" href="/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/bootstrap-select.min.css" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
 print $skin->navigation($lc);
 
 print <<<E
-<div class="container">
+<div class="container" style="position:relative;">
+
+<button type="button" class="btn btn-default video-filter-btn"><i class="fa fa-filter"></i></button>
+<div class="col-sm-4 white-box video-filter-box">
+	<h4><i class="fa fa-filter"></i> Фильтр</h4>
+	<div class="row">
+	<label for="type">Тип</label>
+	<select class="selectpicker show-tick" name="type" id="f-type">
+		<option value="all">Любой</option>
+		<option data-icon="fa-globe" value="online">Только онлайн</option>
+		<option data-icon="fa-hdd-o" value="local">Только локальные</option>
+	</select>
+	</div>
+	<div class="row">
+	<label for="service">Сервис</label>
+	<select class="selectpicker show-tick" name="service" id="f-service">
+		<option value="any">Все видео</option>
+		<option data-icon="fa-youtube" value="yt">Youtube</option>
+		<option data-icon="fa-vk" value="vk">VK.com</option>
+	</select>
+	</div>
+	<div class="row">
+	<label for="quality">Качество</label>
+	<select class="selectpicker show-tick" name="quality" id="f-quality">
+		<option value="0">Любое</option>
+		<option value="1080">1080p</option>
+		<option value="720">720p</option>
+		<option value="480">480p</option>
+		<option value="360">360p</option>
+		<option value="240">240p</option>
+	</select>
+	</div>
+	
+</div>
+
           <h2 class="sub-header"><i class="fa fa-film"></i> Видео</h2>
           <div class="container" id="video-list">
 E;
@@ -186,13 +221,38 @@ $ex_bot = <<<E
 <script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
 <script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
 <script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="/js/hashnav.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var notload = false;
 	var list = jQuery("#video-list");
-
+	
+	// Default options
+	var page = 1;
+	var type = 'all';
+	var service = 'any';
+	var quality = 0;
+	
+	// Bootstrip select
+	$('.selectpicker').selectpicker({
+		iconBase: 'fa',
+		tickIcon: 'fa-check'
+	});
+	
+	jQuery('.video-filter-btn').click(function(){ jQuery('.video-filter-box').toggle(); });
+	
 	// Hash URL commands
+	urlCommands.bind('type', function(id) { type = id; jQuery("#f-type").selectpicker('val',id); });
+	urlCommands.bind('service', function(id) { service = id; jQuery("#f-service").selectpicker('val',id); });
+	urlCommands.bind('quality', function(id) { quality = id; jQuery("#f-quality").selectpicker('val',id); });
+	
+	// Not default options -> reload
+	if(type != 'all' || service != 'any' || quality != 0){
+		urlCommands.urlPush({page:0});
+		video_reload();
+	}
+	
 	urlCommands.bind('page', function(id) {
 		if($.isNumeric(id) && id >= 2){
 			notload = true;
@@ -200,7 +260,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+""
+					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+""
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -209,7 +269,43 @@ $(document).ready(function() {
 			notload = false;
 		}
 	});
-
+	
+	// If filter command changed, update url and reload data with new filter
+	jQuery("#f-type").on('change', function(){
+		urlCommands.urlPush({type:this.value});
+		if(type != this.value){
+			type = this.value;
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
+	jQuery("#f-service").on('change', function(){
+		urlCommands.urlPush({service:this.value});
+		if(service != this.value){
+			service = this.value;
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
+	jQuery("#f-quality").on('change', function(){
+		urlCommands.urlPush({quality:this.value});
+		if(quality != this.value){
+			quality = this.value;
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
+	
+	function video_reload(){
+		jQuery.ajax({
+			async : false,
+			method : "GET",
+			url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+""
+		}).done( function(data){
+			jQuery("#video-list").html(data);
+		});
+	}
+	
 	if(notload == false){
 $('#video-list').jscroll({
 	debug:false,

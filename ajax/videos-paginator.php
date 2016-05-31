@@ -33,8 +33,23 @@ $offset_page = ($page > 0) ? $cfg['perpage_video']*$page : 0;
 // Get 1 more video to see do we have something on the next page
 $perpage = $cfg['perpage_video']+1;
 $next = 0;
+
+// Filter Options
+$options = '';
+$f_type = (isset($_GET['type'])) ? mysql_real_escape_string($_GET['type']) : 'all';
+$f_service = (isset($_GET['service'])) ? mysql_real_escape_string($_GET['service']) : 'any';
+$f_quality = (isset($_GET['quality'])) ? intval($_GET['quality']) : 0;
+
+if($f_type == "online"){ $options .= " AND `local_path` = ''"; }
+if($f_type == "local"){ $options .= " AND `local_path` != ''"; }
+
+if($f_service == "yt"){ $options .= " AND `player_uri` LIKE '%youtube%'"; }
+if($f_service == "vk"){ $options .= " AND `player_uri` LIKE '%vk.com%'"; }
+
+if($f_quality > 0){ $options .= " AND `local_h` = ".$f_quality; }
+
 mb_internal_encoding("UTF-8");
-$q = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' ORDER BY `date_added` DESC LIMIT {$offset_page},{$perpage}");
+$q = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' {$options} ORDER BY `date_added` DESC LIMIT {$offset_page},{$perpage}");
 while($row = $db->return_row($q)){
 	if($next < $cfg['perpage_video']){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
@@ -134,7 +149,7 @@ E;
 
 if($next > $cfg['perpage_video']){
 	$page++;
-	print '<div class="paginator-next" style="display:none;"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'">следующая страница</a></div>';
+	print '<div class="paginator-next" style="display:none;"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'&type='.$f_type.'&service='.$f_service.'&quality='.$f_quality.'">следующая страница</a></div>';
 }
 
 $db->close($res);
