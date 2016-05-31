@@ -200,7 +200,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "http://bkvk.local/ajax/videos-paginator.php?page="+i+""
+					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+""
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -212,7 +212,7 @@ $(document).ready(function() {
 
 	if(notload == false){
 $('#video-list').jscroll({
-	debug:true,
+	debug:false,
     nextSelector: 'div.paginator-next > a:last',
 	padding: 20,
 	callback: function(){
