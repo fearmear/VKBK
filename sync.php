@@ -821,7 +821,7 @@ E;
 							'preview_uri' => $v['uri'],
 							'date' => $v['adding_date'],
 							'player_uri' => $v['player'],
-							'access_key' => $v['access_key']
+							'access_key' => ($v['access_key'] == '' ? '' : $v['access_key'])
 						);
 					}
 				} // foreach end
@@ -841,7 +841,7 @@ E;
 					}
 					
 					foreach($data_sql as $k => $v){
-						$q = $db->query("INSERT INTO vk_videos (`id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`,`local_path`,`local_size`,local_format`,`local_w`,`local_h`) VALUES {$v}");
+						$q = $db->query("INSERT INTO vk_videos (`id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`,`local_path`,`local_size`,`local_format`,`local_w`,`local_h`) VALUES {$v}");
 					}
 
 					array_unshift($log,'<tr><td>Новые видеозаписи добавлены в очередь. Всего - <b>'.sizeof($video_create).'</b></td></tr>');
