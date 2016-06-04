@@ -218,7 +218,7 @@ $fancybox_options = <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="/js/jquery.jscroll.js"></script>
 <script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
 <script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
 <script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
@@ -303,20 +303,12 @@ $(document).ready(function() {
 			url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+""
 		}).done( function(data){
 			jQuery("#video-list").html(data);
+			jscroller();
 		});
 	}
 	
 	if(notload == false){
-$('#video-list').jscroll({
-	debug:false,
-    nextSelector: 'div.paginator-next > a:last',
-	padding: 20,
-	callback: function(){
-		$(".tip").tooltip();
-		var pval = jQuery("div.paginator-next:last .paginator-val").html();
-		if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
-	}
-});
+		jscroller();
 	}
 
 	$(".various").fancybox({
@@ -347,6 +339,19 @@ $('#video-list').jscroll({
 			el.css("height","40px");
 			jQuery(".fancybox-title-inside-wrap > .expander").html("показать");
 		}
+	}
+	function jscroller(){
+$('#video-list').jscroll({
+	debug:false,
+	refresh:true,
+    nextSelector: 'div.paginator-next > a:last',
+	padding: 20,
+	callback: function(){
+		$(".tip").tooltip();
+		var pval = jQuery("div.paginator-next:last .paginator-val").html();
+		if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+	}
+});
 	}
 </script>
 E;

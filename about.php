@@ -76,6 +76,13 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
 </ul>
 </div>
+<h4>версия 0.5.5</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-06-05</div>
+<li><label><span class="label label-warning">обновлено</span></label> Изменен урл загрузки роиков для ВКонтакте, чтобы можно было сохранять "приватные" видео.</li>
+<li><label><span class="label label-danger">багфикс</span></label> Исправлен баг в поиске видео когда при прокрутке следующая страница загружалась без фильтра.</li>
+</ul>
+</div>
 <h4>версия 0.5</h4>
 <div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-06-01</div>

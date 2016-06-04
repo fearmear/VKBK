@@ -29,7 +29,8 @@
             nextSelector: 'a:last',
             contentSelector: '',
             pagingSelector: '',
-            callback: false
+            callback: false,
+            refresh: false
         }
     };
 
@@ -190,10 +191,16 @@
             };
 
         // Initialization
-        $e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref}));
-        _wrapInnerContent();
-        _preloadImage();
-        _setBindings();
+	if (_nextHref != 'undefined') {
+	    $e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref, refresh: _options.refresh}));
+	    _wrapInnerContent();
+	    _preloadImage();
+	    _setBindings();
+	} else {
+	    _debug('warn', 'jScroll: nextSelector not found - destroying');
+	    _destroy();
+	    return false;
+	}
 
         // Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
         $.extend($e.jscroll, {
@@ -209,7 +216,7 @@
                 data = $this.data('jscroll'), jscroll;
 
             // Instantiate jScroll on this element if it hasn't been already
-            if (data && data.initialized) {
+            if (data && data.initialized && data.refresh === false) {
                 return;
             }
             jscroll = new jScroll($this, m);

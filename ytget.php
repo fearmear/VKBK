@@ -50,7 +50,7 @@ E;
 }
 
 // Check video ID
-$vid = $db->query_row("SELECT id FROM `vk_videos` WHERE id = {$id}");
+$vid = $db->query_row("SELECT id, player_uri FROM `vk_videos` WHERE id = {$id}");
 if(!isset($vid['id']) || empty($vid['id'])){
 print <<<E
 <tr>
@@ -105,7 +105,7 @@ if($s == 'yt'){
 }
 // VK.com
 if($s == 'vk'){
-	$youtubeDLcmd = $cfg['yt_dl_path'].'youtube-dl.exe -4 --restrict-filenames -w --no-part --write-info-json -o "'.$cfg['video_path'].'data/vk-'.$vid['id'].'.%(ext)s" http://vk.com/video'.$key;
+	$youtubeDLcmd = $cfg['yt_dl_path'].'youtube-dl.exe -4 --restrict-filenames -w --no-part --write-info-json -o "'.$cfg['video_path'].'data/vk-'.$vid['id'].'.%(ext)s" "'.$vid['player_uri'].'"';
 }
 
 	ob_implicit_flush(true);
@@ -130,7 +130,7 @@ if(file_exists($info)){
 	fclose($handle);
 	$youtubeDLlog = json_decode($content);
 	
-	if(isset($youtubeDLlog->_filename)){
+	if(isset($youtubeDLlog->_filename) && file_exists(preg_replace("@\\\@","/",$youtubeDLlog->_filename))){
 		$local['path'] = preg_replace("@\\\@","/",$youtubeDLlog->_filename);
 		if($s == 'yt'){ $local['size'] = filesize($cfg['video_path'].'data/'.$key.'.'.$youtubeDLlog->ext); }
 		if($s == 'vk'){ $local['size'] = filesize($cfg['video_path'].'data/vk-'.$vid['id'].'.'.$youtubeDLlog->ext); }
