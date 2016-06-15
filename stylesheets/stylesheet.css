@@ -879,3 +879,16 @@ footer a:hover {
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
 
+.sc-container {
+  display: block;
+}
+.sc-tn {
+  width: 320px;
+  height: 240px;
+  float: left;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+.sc-tn a {
+  display:block;
+}
