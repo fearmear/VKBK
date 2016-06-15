@@ -165,10 +165,7 @@ $('.free-wall').jscroll({
     nextSelector: 'div.paginator-next > a:last',
 	padding: 200,
 	callback: function(){
-		$(".jscroll-added:last").each(function(){
-			wall.fitWidth();
-			$(window).trigger("resize");
-		});
+		$(".jscroll-added").last().delay(250).trigger("resize");
 	}
 });
 
@@ -203,17 +200,23 @@ $(window).resize(function() {
 	picalbschk();
 });
 
+/* Toggle Visibility of Albums List */
 function pic_albs(){
 	$(".pic-albums").css({"overflow":"visible","height":"auto"});
 	$(".pic-albums-more").hide();
 }
+
+/* Check and Place `show all alums` button */
 function picalbschk(){
-	var picalbs = $(".pic-albums .col-sm-3:nth-child(4)");
-	if($(window).width() <= 768){
-		var picalbs = $(".pic-albums .col-sm-3:nth-child(1)");
+	var ww = $(window).width();
+	if(jQuery(".pic-albums").css("overflow") === "hidden"){
+		$(".pic-albums-more").remove();
+		var picalbs = $(".pic-albums .col-sm-3:nth-child(4)");
+		if(ww <= 768){
+			var picalbs = $(".pic-albums .col-sm-3:nth-child(1)");
+		}
+		picalbs.after("<div class=\"pic-albums-more\" onclick=\"javascript:pic_albs();\">показать все альбомы</div>");
 	}
-	$(".pic-albums-more").remove();
-	picalbs.after("<div class=\"pic-albums-more\" onclick=\"javascript:pic_albs();\">показать все альбомы</div>");
 }
 </script>
 
