@@ -240,7 +240,7 @@ $(document).ready(function() {
 		tickIcon: 'fa-check'
 	});
 	
-	jQuery('.video-filter-btn').click(function(){ jQuery('.video-filter-box').toggle(); });
+	jQuery('.video-filter-btn').click(function(){ jQuery('.video-filter-box').show(); });
 	
 	// Hash URL commands
 	urlCommands.bind('type', function(id) { type = id; jQuery("#f-type").selectpicker('val',id); });
@@ -328,6 +328,16 @@ $(document).ready(function() {
 	});
 	
 	$(".tip").tooltip();
+});
+
+$(document).mouseup(function (e){
+	var container = $(".video-filter-box");
+	if (!container.is(e.target) // if the target of the click isn't the container...
+    && container.has(e.target).length === 0) // ... nor a descendant of the container
+	{
+		container.hide();
+		container.unbind( 'click', clickDocument );
+	}
 });
 
 	function expand_desc(){
