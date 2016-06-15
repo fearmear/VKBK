@@ -884,10 +884,11 @@ footer a:hover {
 }
 .sc-tn {
   width: 320px;
-  height: 240px;
+  height: 260px;
   float: left;
-  margin-right: 5px;
-  margin-bottom: 5px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 .sc-tn a {
   display:block;
