@@ -44,7 +44,7 @@ print <<<E
 		<div class="jp-gui jp-interface">
 			<div class="jp-controls">
 				<button class="jp-previous" role="button" tabindex="0"><i class="fa fa-backward"></i></button>
-				<button class="jp-play" role="button" tabindex="0"><i class="fa fa-play"></i><i class="fa fa-pause" style="display:none;"></i></button>
+				<button class="jp-play" role="button" tabindex="0"><i class="fa fa-play jpi-play"></i><i class="fa fa-pause jpi-pause" style="display:none;"></i></button>
 				<button class="jp-next" role="button" tabindex="0"><i class="fa fa-forward"></i></button>
 				<button class="jp-stop" role="button" tabindex="0"><i class="fa fa-stop"></i></button>
 			</div>

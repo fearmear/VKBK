@@ -26,6 +26,7 @@
 		this.loop = false; // Flag used with the jPlayer repeat event
 		this.shuffled = false;
 		this.removing = false; // Flag is true during remove animation, disabling the remove() method until complete.
+		this.playing = false;
 
 		this.cssSelector = $.extend({}, this._cssSelector, cssSelector); // Object: Containing the css selectors for jPlayer and its cssSelectorAncestor
 		this.options = $.extend(true, {
@@ -68,8 +69,8 @@
 		this.cssSelector.shuffleOff = this.cssSelector.cssSelectorAncestor + " .jp-shuffle-off";
 		this.cssSelector.sorter = this.cssSelector.cssSelectorAncestor + " .jp-sorter";
 		this.cssSelector.albums = this.cssSelector.cssSelectorAncestor + " .jp-albums";
-		this.cssSelector.playpauA = this.cssSelector.cssSelectorAncestor + " .fa-play";
-		this.cssSelector.playpauB = this.cssSelector.cssSelectorAncestor + " .fa-pause";
+		this.cssSelector.playpauA = this.cssSelector.cssSelectorAncestor + " .jpi-play";
+		this.cssSelector.playpauB = this.cssSelector.cssSelectorAncestor + " .jpi-pause";
 
 		// Override the cssSelectorAncestor given in options
 		this.options.cssSelectorAncestor = this.cssSelector.cssSelectorAncestor;
@@ -318,6 +319,17 @@
 					self.play(index);
 				} else {
 					$(self.cssSelector.jPlayer).jPlayer("play");
+					if(self.playing === true){
+					    self.pause();
+					    self.playing = false;
+					    $(self.cssSelector.playpauB).hide();
+					    $(self.cssSelector.playpauA).show();
+					} else {
+					    self.play();
+					    self.playing = true;
+					    $(self.cssSelector.playpauA).hide();
+					    $(self.cssSelector.playpauB).show();
+					}
 				}
 				self.blur(this);
 			});
@@ -461,9 +473,11 @@
 			} else if(index === undefined) {
 				$(this.cssSelector.jPlayer).jPlayer("play");
 			}
+			this.playing = true;
 		},
 		pause: function() {
 			$(this.cssSelector.jPlayer).jPlayer("pause");
+			this.playing = false;
 		},
 		next: function() {
 			var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
