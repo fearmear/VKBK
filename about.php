@@ -78,6 +78,9 @@ print <<<E
 </div>
 <h4>версия 0.5.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-06-16</div>
+<li><label><span class="label label-warning">обновлено</span></label> В плейлисте изменена иконка для активного трека.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-06-15</div>
 <li><label><span class="label label-danger">багфикс</span></label> Исправлен баг с упорядочиванием фото на последней странице.</li>
 <li><label><span class="label label-danger">багфикс</span></label> Исправлен баг с отображением кнопки "показать все альбомы" при ресайзе окна.</li>
