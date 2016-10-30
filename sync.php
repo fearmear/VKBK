@@ -245,6 +245,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			$album_id = (isset($_GET['album'])) ? intval($_GET['album']) : '';
 			$album_total = (isset($_GET['at'])) ? intval($_GET['at']) : 0;
 			$album_process = (isset($_GET['ap'])) ? intval($_GET['ap']) : 0;
+			$fast_sync = (isset($_GET['fast'])) ? (bool)$_GET['fast'] : false;
 			
 			if($album_total > 0 && $album_process <= $album_total){
 				$per = $album_total/100;
@@ -269,7 +270,10 @@ E;
 				$log = array();
 
 				// Set all local photos to album -9000
-				$q = $db->query("UPDATE vk_photos SET `album_id` = -9000");
+				// For fast sync move only 'system' albums
+				$fsync_q1 = "";
+				if($fast_sync == true){ $fsync_q1 = " WHERE `album_id` < 1"; }
+				$q = $db->query("UPDATE vk_photos SET `album_id` = -9000".$fsync_q1);
 				$moved = $db->affected_rows();
 				array_unshift($log,"<tr><td>Перемещаю фотографии в системный альбом. Всего - <b>".$moved."</b></td></tr>");
 				print $log[0];
@@ -281,12 +285,15 @@ E;
 			
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_photo'");
 				// Get first album ID
-				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 LIMIT 1");
+				// For fast sync get only 'system' albums
+				$fsync_q2 = "";
+				if($fast_sync == true){ $fsync_q2 = " AND `id` < 1"; }
+				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 ".$fsync_q2." LIMIT 1");
 				// Get albums count
-				$alb_c = $db->query_row("SELECT COUNT(*) as count FROM vk_albums WHERE id > -9000");
+				$alb_c = $db->query_row("SELECT COUNT(*) as count FROM vk_albums WHERE id > -9000".$fsync_q2);
 				$album_total = $alb_c['count'];
 				// Reload page
-				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через  <span id=\"gcd\">".$cfg['sync_photo_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0&at=".$album_total."&ap=1",$cfg['sync_photo_start_cd']);
+				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через  <span id=\"gcd\">".$cfg['sync_photo_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0&at=".$album_total."&ap=1&fast=".$fast_sync,$cfg['sync_photo_start_cd']);
 			} // if album is not found
 
 			// Album ID found
@@ -440,12 +447,15 @@ E;
 					$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_photo'");
 				
 					// Get NEXT album id
-					$row = $db->query_row("SELECT id FROM vk_albums WHERE id > ".$album_id." LIMIT 1");
+					// For fast sync get only 'system' albums
+					$fsync_q3 = "";
+					if($fast_sync == true){ $fsync_q3 = " AND `id` < 1"; }
+					$row = $db->query_row("SELECT id FROM vk_albums WHERE id > ".$album_id.$fsync_q3." LIMIT 1");
 					if(!empty($row['id']) && $row['id'] > $album_id){
 						$album_next = $row['id'];
 						$album_process++;
 						// Got next album, let's reload page
-						print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
+						print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0&at=".$album_total."&ap=".$album_process."&fast=".$fast_sync,$cfg['sync_photo_next_cd']);
 					} else {
 						// No unsynced photos left and all abums was synced too. This is the end...
 						// Let's make recount photos

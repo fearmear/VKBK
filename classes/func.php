@@ -386,6 +386,18 @@ E;
 		$factor = floor((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 	}
+	
+	function human_thousand($num) {
+		if(!is_numeric($num)){
+			return false;
+		} else {
+			if($num >= 1000){
+				return sprintf("%.1f", $num / 1000) . "k";
+			}  else {
+				return $num;
+			}
+		}
+	}
 
 } // end of class
 

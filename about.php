@@ -78,6 +78,9 @@ print <<<E
 </div>
 <h4>версия 0.5.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-10-30</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлена быстрая синхронизация (только системные альбомы).</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-06-16</div>
 <li><label><span class="label label-warning">обновлено</span></label> В плейлисте изменена иконка для активного трека.</li>
 </ul>

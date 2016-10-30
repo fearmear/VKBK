@@ -16,6 +16,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$f = new func();
+
 $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
 $version = $row['version'];
 
@@ -30,9 +34,8 @@ print <<<E
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+		  <li style="padding:10px 20px;">
 E;
-
-print '<li style="padding:10px 20px;">';
 
 // Include VK.API
 require_once(ROOT.'classes/VK/VK.php');
@@ -41,6 +44,14 @@ require_once(ROOT.'classes/VK/VK.php');
 $q = $db->query("SELECT * FROM vk_session WHERE `vk_id` = 1");
 $vk_session = $row = $db->return_row($q);
 $token_valid = false;
+
+// Empty counters
+$counters_show = array(
+	'albums' => 0,
+	'photos' => 0,
+	'audios' => 0,
+	'videos' => 0
+);
 
 if($vk_session['vk_token']){
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret'], $vk_session['vk_token']);
@@ -62,17 +73,20 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			
 			$u = $user['response'][0];
 			
-print '<center>';
+	print "<center>";
 			if($u['has_photo']){
 print <<<E
 <img class="img-thumbnail" alt="200x200" style="width: 200px;" src="{$u['photo_200_orig']}" data-holder-rendered="true">
 E;
 			}
 print <<<E
-<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a></h4>
-{$u['first_name']} {$u['last_name']}
+			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href=""><i class="fa fa-sign-out"></i></a></h4>
+			{$u['first_name']} {$u['last_name']}
+		    </center>
+		  </li>
+		  <li>
+		    <ul class="nav nav-pills">
 E;
-print '</center></li><li><ul class="nav nav-pills">';
 			
 			// GET REAL ALBUMS
 			$albums = $vk->api('photos.getAlbums', array(
@@ -115,7 +129,7 @@ print '</center></li><li><ul class="nav nav-pills">';
 				print '<li style="width:100%;"><a href="#">'.$k.': <span class="badge">'.$v.'</span></a></li>';
 			}
 			
-print '</ul>';
+		print '</ul>';
 
 	} catch (Exception $error) {
 		echo $error->getMessage();
@@ -123,7 +137,7 @@ print '</ul>';
 
 } else {
 
-try {
+	try {
     
     if (!isset($_REQUEST['code'])) {
         /**
@@ -131,8 +145,7 @@ try {
          * add another parameter "true". Default value "false".
          * Ex. $vk->getAuthorizeURL($api_settings, $callback_url, true);
          */
-        $authorize_url = $vk->getAuthorizeURL('offline,status,photos,audio,video', $cfg['vk_uri']);
-            
+        $authorize_url = $vk->getAuthorizeURL('offline,status,photos,audio,video,docs',$cfg['vk_uri']);
         echo '<a href="' . $authorize_url . '" class="btn btn-success" role="button">Авторизация</a>';
     } else {
         $access_token = $vk->getAccessToken($_REQUEST['code'], $cfg['vk_uri']);
@@ -144,13 +157,13 @@ try {
 		
 		print '<h4><span class="label label-success">Авторизация пройдена</span></h4>';
     }
-} catch (Exception $error) {
+	} catch (Exception $error) {
     echo $error->getMessage();
-}
+	}
 } // end if token else
-print '</li>';
 
 print <<<E
+				</li>
           </ul>
         </div>
 E;
@@ -158,37 +171,46 @@ E;
 // Get LOCAL counters for media
 $counters = $db->query_row("SELECT * FROM vk_counters");
 $music_albums = $db->query_row("SELECT count(id) as count FROM vk_music_albums");
+$wall_attachments = $db->query_row("SELECT count(uid) as count FROM vk_attach");
 
 print <<<E
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header"><i class="fa fa-cogs"></i> Панель управления</h1>
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$counters['album']}</h1>
-              <span class="text-muted">Альбомы<br/><a href="/sync.php?do=albums">синхронизировать</a></span>
+              <h1>{$f->human_thousand($counters['album'])}</h1>
+              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="/sync.php?do=albums"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$counters['photo']}</h1>
-              <span class="text-muted">Фотографии<br/><a href="/sync.php?do=photo">синхронизировать</a></span>
+              <h1>{$f->human_thousand($counters['photo'])}</h1>
+              <span class="text-muted">Фотографии&nbsp;&nbsp;<a href="/sync.php?do=photo"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="/sync.php?do=photo&fast=true"><i class="fa fa-retweet"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$music_albums['count']}</h1>
-              <span class="text-muted">Альбомы музыки<br/><a href="/sync.php?do=musicalbums">синхронизировать</a></span>
+              <h1>{$f->human_thousand($music_albums['count'])}</h1>
+              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="/sync.php?do=musicalbums"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$counters['music']}</h1>
-              <span class="text-muted">Музыка<br/><a href="/sync.php?do=music">синхронизировать</a></span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$counters['video']}</h1>
-              <span class="text-muted">Видео<br/><a href="/sync.php?do=video">синхронизировать</a></span>
+              <h1>{$f->human_thousand($counters['music'])}</h1>
+              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="/sync.php?do=music"><i class="fa fa-refresh"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$counters['wall']}</h1>
-              <span class="text-muted">Стена<br/><a href="/sync-wall.php?offset=0">синхронизировать</a></span>
+              <h1>{$f->human_thousand($counters['video'])}</h1>
+              <span class="text-muted">Видео&nbsp;&nbsp;<a href="/sync.php?do=video"><i class="fa fa-refresh"></i></a></span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <h1>{$f->human_thousand($counters['wall'])}</h1>
+              <span class="text-muted">Стена&nbsp;&nbsp;<a href="/sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a></span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <h1>--</h1>
+              <span class="text-muted">Документы&nbsp;&nbsp;<a href="#"><i class="fa fa-refresh"></i></a></span>
+            </div>
+			<div class="col-xs-6 col-sm-3 placeholder">
+              <h1>{$f->human_thousand($wall_attachments['count'])}</h1>
+              <span class="text-muted">Вложения</span>
             </div>
           </div>
-          <!--<h2 class="sub-header">Section title</h2>-->
+          
 		  <div class="row white-box">
 			<div class="table-responsive">
 				<h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
@@ -231,7 +253,7 @@ print <<<E
 		  <div class="row white-box">
 E;
 
-// Get LOCAL queue
+// Get LOCAL queue (photo,music,video)
 $queue_count = array('p'=>0,'m'=>0,'v'=>0);
 $queue_photo = $db->query_row("SELECT COUNT(*) as count FROM vk_photos WHERE `in_queue` = 1");
 $queue_count['p'] = $queue_photo['count'];
