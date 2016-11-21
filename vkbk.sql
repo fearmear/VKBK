@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Mar 16, 2016 at 03:19 AM
+-- Generation Time: Nov 21, 2016 at 11:03 PM
 -- Server version: 5.1.59
 -- PHP Version: 5.2.17
 
@@ -97,8 +97,26 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
 -- Dumping data for table `vk_counters`
 --
 
-INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`) VALUES
+INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`) VALUES
 (0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_docs`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_docs` (
+  `id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `size` int(11) NOT NULL,
+  `ext` varchar(25) NOT NULL,
+  `uri` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -114,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `vk_groups` (
   `photo_path` varchar(255) NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -182,7 +199,8 @@ CREATE TABLE IF NOT EXISTS `vk_photos` (
   KEY `width` (`width`),
   KEY `height` (`height`),
   KEY `dsaved` (`date_done`),
-  KEY `saved` (`saved`)
+  KEY `saved` (`saved`),
+  KEY `dadded` (`date_added`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
