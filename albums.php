@@ -27,9 +27,9 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="/css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -134,11 +134,11 @@ print <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="/js/freewall.js"></script>
-<script type="text/javascript" src="/js/jquery.jscroll.min.js"></script>
-<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="/js/perfect-scrollbar.jquery.min.js?v=0.6.11"></script>
+<script type="text/javascript" src="js/freewall.js"></script>
+<script type="text/javascript" src="js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="js/perfect-scrollbar.jquery.min.js?v=0.6.11"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.sidebar').perfectScrollbar();

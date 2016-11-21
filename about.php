@@ -78,6 +78,9 @@ print <<<E
 </div>
 <h4>версия 0.5.5</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-11-21</div>
+<li><label><span class="label label-danger">багфикс</span></label> Поправлены пути для установки скрипта в суб-директорию. Спасибо Ивану за багрепорт.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-10-30</div>
 <li><label><span class="label label-primary">новое</span></label> Добавлена быстрая синхронизация (только системные альбомы).</li>
 </ul>

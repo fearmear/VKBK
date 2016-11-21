@@ -27,9 +27,9 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="/css/bootstrap-select.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -136,7 +136,7 @@ E;
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
 	// Vkontakte
@@ -148,7 +148,7 @@ E;
 		} else {
 			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
 			$key = $pu[1].'_'.$pu[2];
-			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
 		}
 	}
 	
@@ -176,7 +176,7 @@ E;
 }
 
 print <<<E
-			<div class="paginator-next" style="display:none;"><span class="paginator-val">{$npage}</span><a href="/ajax/videos-paginator.php?page={$npage}">следующая страница</a></div>
+			<div class="paginator-next" style="display:none;"><span class="paginator-val">{$npage}</span><a href="ajax/videos-paginator.php?page={$npage}">следующая страница</a></div>
           </div>
 </div>
 E;
@@ -218,11 +218,11 @@ $fancybox_options = <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="/js/jquery.jscroll.js"></script>
-<script type="text/javascript" src="/js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="/js/hashnav.js"></script>
+<script type="text/javascript" src="js/jquery.jscroll.js"></script>
+<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/hashnav.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var notload = false;

@@ -28,7 +28,7 @@ require_once(ROOT.'classes/func.php');
 $f = new func();
 
 $ex_top = <<<E
-<link rel="stylesheet" href="/jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
 <style type="text/css">
 body {padding-top:10px;margin-bottom:10px;}
 .wall-box{margin-bottom:0;}
@@ -103,8 +103,8 @@ if($list['local_format'] == 'mp4') {
 print <<<E
           </div>
 </div>
-<script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#jquery_jplayer_1").jPlayer({
@@ -119,7 +119,7 @@ $(document).ready(function() {
 			width: jQuery(document).width()-60,
 			height: jQuery(document).height()-90,
 		},
-		swfPath: "/jplayer",
+		swfPath: "jplayer",
         cssSelectorAncestor: "#jp_container_1",
 		backgroundColor: "#e8e8e8",
 		solution: "{$solution}",

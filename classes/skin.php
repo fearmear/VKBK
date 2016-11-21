@@ -20,10 +20,10 @@ class skin {
     <base href="{$cfg['vkbk_url']}"/>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="/css/custom.css" rel="stylesheet">
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     {$s['extend']}
   </head>
   <body>
@@ -39,9 +39,9 @@ E;
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     {$s['extend']}
   </body>
 </html>

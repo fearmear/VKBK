@@ -104,7 +104,7 @@ E;
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
 	// Vkontakte
@@ -116,7 +116,7 @@ E;
 		} else {
 			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
 			$key = $pu[1].'_'.$pu[2];
-			print ' | Копия: <b>нет</b> <a href="/ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
 		}
 	}
 	

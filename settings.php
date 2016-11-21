@@ -23,7 +23,7 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="/css/bootstrap2-toggle.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/bootstrap2-toggle.css" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -81,7 +81,7 @@ print <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="/js/bootstrap2-toggle.min.js"></script>
+<script type="text/javascript" src="js/bootstrap2-toggle.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#auto-queue-photo').change(function() {

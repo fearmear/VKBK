@@ -27,8 +27,8 @@ $version = $row['version'];
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
 $ex_top = <<<E
-<link rel="stylesheet" href="/css/bootstrap-select.min.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="/jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
 E;
 
 print $skin->header(array('extend'=>$ex_top));
@@ -167,9 +167,9 @@ E;
 $playlist .= '],{';
 
 $ex_bot = <<<E
-<script type="text/javascript" src="/jplayer/jquery.jplayer.min.js"></script>
-<script type="text/javascript" src="/jplayer/jplayer.playlist.js"></script>
-<script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="jplayer/jplayer.playlist.js"></script>
+<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 jQuery(document).ready(function(){

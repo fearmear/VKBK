@@ -179,27 +179,27 @@ print <<<E
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['album'])}</h1>
-              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="/sync.php?do=albums"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['photo'])}</h1>
-              <span class="text-muted">Фотографии&nbsp;&nbsp;<a href="/sync.php?do=photo"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="/sync.php?do=photo&fast=true"><i class="fa fa-retweet"></i></a></span>
+              <span class="text-muted">Фотографии&nbsp;&nbsp;<a href="sync.php?do=photo"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="sync.php?do=photo&fast=true"><i class="fa fa-retweet"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($music_albums['count'])}</h1>
-              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="/sync.php?do=musicalbums"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="sync.php?do=musicalbums"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['music'])}</h1>
-              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="/sync.php?do=music"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="sync.php?do=music"><i class="fa fa-refresh"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['video'])}</h1>
-              <span class="text-muted">Видео&nbsp;&nbsp;<a href="/sync.php?do=video"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['wall'])}</h1>
-              <span class="text-muted">Стена&nbsp;&nbsp;<a href="/sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Стена&nbsp;&nbsp;<a href="sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>--</h1>

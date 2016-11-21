@@ -192,7 +192,7 @@ class func {
 	    $tmp_box = '';
 	    $tmp_class = 'col-sm-6 col-sm-offset-3 wall-box';
 $tmp_postid = <<<E
-    <a class="post-id wallious fancybox.iframe" href="/ajax/wall-post.php?p={$row['id']}" onClick="javascript:urlCommands.urlPush({post:{$row['id']}});">#{$row['id']}</a>
+    <a class="post-id wallious fancybox.iframe" href="ajax/wall-post.php?p={$row['id']}" onClick="javascript:urlCommands.urlPush({post:{$row['id']}});">#{$row['id']}</a>
 E;
 	    if($repost === true){
 		$tmp_box = 'repost';
@@ -207,7 +207,7 @@ $output .= <<<E
 <div class="row {$tmp_box}">
     <div class="{$tmp_class}">
 	{$tmp_postid}
-	<img src="/data/{$path}/{$pr['photo_path']}" class="wall-ava" />
+	<img src="data/{$path}/{$pr['photo_path']}" class="wall-ava" />
 	<div class="wall-head">
 		<a href="#">{$who}</a><br/><span class="full-date" data-placement="right" data-toggle="tooltip" data-original-title="{$full_date}">{$row['date']}</span>
 	</div>
