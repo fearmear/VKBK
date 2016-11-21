@@ -63,9 +63,14 @@ E;
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+	    <li><a href="index.php"><i class="fa fa-home"></i></a></li>
+            <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>
+            <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
+            <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>
+	    <li><a href="wall.php"><i class="fa fa-comments-o"></i>Сообщения <span class="badge">{$s['wall']}</span></a></li>
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
                 <ul class="dropdown-menu">
-		  <li><a href="index.php"><i class="fa fa-home"></i> Главная страница</a></li>
+		  
 		  <li><a href="queue.php"><i class="fa fa-cloud-download"></i> Очередь закачки</a></li>
 		  <li role="separator" class="divider"></li>
                   <li><a href="settings.php"><i class="fa fa-sliders"></i> Настройки</a></li>
@@ -73,10 +78,6 @@ E;
 		  <li><a href="about.php"><i class="fa fa-code-fork"></i> История версий</a></li>
                 </ul>
 	    </li>
-            <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>
-            <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
-            <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>
-	    <li><a href="wall.php"><i class="fa fa-comments-o"></i>Сообщения <span class="badge">{$s['wall']}</span></a></li>
           </ul>
         </div>
       </div>
