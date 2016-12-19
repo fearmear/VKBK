@@ -562,6 +562,15 @@ E;
 				$music_vk = $api['response']['items'];
 				$music_vk_total = $api['response']['count'];
 				
+				// Checking availabiliy of API
+				if($music_vk_total == 1 && $music_vk[0]['owner_id'] == 100){
+					array_unshift($log,'<tr><td><div class="alert alert-danger" role="alert"><strong>API Вконтакте для аудиозаписей отключен.</strong><br/>Синхронизация остановлена.</div></td></tr>');
+					print $log[0];
+					$q0 = $db->query("UPDATE vk_music SET `deleted` = 0 WHERE `saved` = 1 AND `deleted` = 1");
+					print $skin->reload('warning',"Возвращаемся на главную страницу через <span id=\"gcd\">10</span> сек.",$cfg['vkbk_url']."index.php",10);
+					exit;
+				}
+				
 				$music_vk_list = array();
 				// Get VK IDs
 				foreach($music_vk as $k => $v){

@@ -74,6 +74,10 @@ print <<<E
 <ul class="list-group list-unstyled">
 <li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
+<h4>версия 0.5.6</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-12-19</div>
+<li><label><span class="label label-danger">отключено</span></label> API Вконтакте для музыки был отключен. Надеюсь, что через некоторое время он вновь будет доступен для всех.</li>
 </ul>
 </div>
 <h4>версия 0.5.5</h4>

@@ -86,6 +86,7 @@ print <<<E
 		  </li>
 		  <li>
 		    <ul class="nav nav-pills">
+				<li style="width:100%;text-align:center;">Данные из ВК:</li>
 E;
 			
 			// GET REAL ALBUMS
