@@ -76,6 +76,9 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
 <h4>версия 0.5.6</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-12-28</div>
+<li><label><span class="label label-danger">отключено</span></label> Добавлена проверка на отключенный API Вконтакте для музыки при синхронизации стены.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2016-12-19</div>
 <li><label><span class="label label-danger">отключено</span></label> API Вконтакте для музыки был отключен. Надеюсь, что через некоторое время он вновь будет доступен для всех.</li>
 </ul>

@@ -277,6 +277,8 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					
 					// Attach - Audio
 					if($atk['type'] == 'audio'){
+						// Checking availabiliy of API
+						if($atk['audio']['duration'] != 25 && strpos($atk['audio']['url'],"audio_api_unavailable") !== false){
 						// Check do we have this attach already?
 						$at = $db->query_row("SELECT id FROM vk_music WHERE id = ".$atk['audio']['id']);
 						// Attach found, make a link
@@ -290,6 +292,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							// Save information about attach
 							$f->wall_attach_insert($v['id'],$atk,$photo_uri);
 						}
+					}
 					}
 					
 				}
@@ -383,6 +386,8 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							
 							// Attach - Audio
 							if($rpatk['type'] == 'audio'){
+								// Checking availabiliy of API
+								if($rpatk['audio']['duration'] != 25 && strpos($rpatk['audio']['url'],"audio_api_unavailable") !== false){
 								// Check do we have this attach already?
 								$at = $db->query_row("SELECT id FROM vk_music WHERE id = ".$rpatk['audio']['id']);
 								// Attach found, make a link
@@ -397,6 +402,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 									$f->wall_attach_insert($rp['id'],$rpatk,$photo_uri);
 								}
 							}
+						}
 						}
 					} // attachments
 					
