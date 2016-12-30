@@ -20,9 +20,6 @@ $skin = new skin();
 require_once(ROOT.'classes/func.php');
 $f = new func();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -509,7 +506,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version,'extend'=>''));
+print $skin->footer(array('extend'=>''));
 
 $db->close($res);
 

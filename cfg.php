@@ -8,6 +8,8 @@ date_default_timezone_set("Europe/Minsk");
 
 // VKBK Configuration
 $cfg = array();
+$cfg['version'] = "0.6 beta";
+$cfg['version_db'] = "2016123001";
 
 /* Script URL
   Example: http://your.host/
@@ -48,6 +50,7 @@ $cfg['vk_uri'] = '';
   Alias "/vkbk-photo" "C:/VKBK/photo"
   Alias "/vkbk-music" "D:/VKBK/music"
   Alias "/vkbk-video" "E:/VKBK/video"
+  Alias "/vkbk-docs"  "F:/VKBK/docs"
 */
 // Enable this if you use Alias for windows
 $cfg['vhost_alias'] = false;
@@ -63,6 +66,10 @@ $cfg['music_path'] = '';
   Example: E:/VKBK/video/
 */
 $cfg['video_path'] = '';
+/* Documents dir
+  Example: F:/VKBK/docs/
+*/
+$cfg['docs_path']  = '';
 
 
 /* Albums
@@ -78,6 +85,12 @@ $cfg['perpage_photo'] = 24;
   perpage_video - how much videos load per page
 */
 $cfg['perpage_video'] = 24;
+
+/* Documents
+  Settings
+  perpage_docs - how much documents load per page
+*/
+$cfg['perpage_docs'] = 24;
 
 /* Wall
   Settings
@@ -104,6 +117,11 @@ $cfg['sync_music_start_cd'] = 5;
 $cfg['sync_music_error_cd'] = 5;
 $cfg['sync_music_next_cd'] = 3;
 $cfg['sync_music_auto_cd'] = 10;
+
+$cfg['sync_docs_start_cd'] = 5;
+$cfg['sync_docs_error_cd'] = 5;
+$cfg['sync_docs_next_cd'] = 3;
+$cfg['sync_docs_auto_cd'] = 10;
 
 $cfg['sync_video_start_cd'] = 5;
 $cfg['sync_video_next_cd'] = 3;

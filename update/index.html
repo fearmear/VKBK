@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>VKBK Manual Update</title>
+
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/custom.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    
+    <style type="text/css">
+	pre { max-height: 200px; }
+    </style>
+  </head>
+  <body>
+
+<div class="container">
+    <h2 class="sub-header">VKBK Обновления</h2>
+    <div class="well">
+	На этой странице вы найдете обновления структуры базы данных VKBK. Обновления необходимо добавлять последовательно начиная с вашей версии и до актуальной.<br/>
+	<b>Версии ниже 0.5.6 (от 28 Дек.) необходимо обновлять вручную, сравнивая структуру. Версии начиная с 0.6 можно будет обновлять по инструкции.</b>
+    </div>
+    
+    <div class="col-sm-12">
+
+    <div class="panel panel-success">
+	<div class="panel-heading"><h3 class="panel-title">0.5.6 (от 28 Дек.) &rarr; 0.6</h3></div>
+        <div class="panel-body">
+<pre>
+ALTER TABLE `vk_counters` ADD `docs` MEDIUMINT UNSIGNED NOT NULL AFTER `wall`;
+
+ALTER TABLE `vk_counters` DROP INDEX `counters` ,
+ADD UNIQUE `counters` ( `album` , `photo` , `music` , `video` , `wall` , `docs` );
+
+DROP TABLE `vk_docs`;
+
+CREATE TABLE IF NOT EXISTS `vk_docs` (
+  `id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `size` int(11) NOT NULL,
+  `ext` varchar(25) NOT NULL,
+  `uri` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `preview_uri` text NOT NULL,
+  `preview_path` text NOT NULL,
+  `width` smallint(5) unsigned NOT NULL,
+  `height` smallint(5) unsigned NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `in_queue` tinyint(1) NOT NULL,
+  `local_path` text NOT NULL,
+  `local_size` int(11) NOT NULL,
+  `local_w` smallint(6) NOT NULL,
+  `local_h` smallint(6) NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `type` (`type`),
+  KEY `deleted` (`deleted`),
+  KEY `queue` (`in_queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `vk_status` ( `key` , `val` ) VALUES ( 'log_docs', '' );
+
+UPDATE `vk_status` SET `val` = '2016123001' WHERE `key` = 'version';
+</pre>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    
+  </body>
+</html>

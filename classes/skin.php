@@ -8,6 +8,7 @@ class skin {
 	
 	function header($s){
 	    global $cfg;
+	    $db_check = $this->check_db_ver() ? '' : '<div class="label label-danger db-expired"><i class="fa fa-warning"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению.</div>';
 		return <<<E
 <!DOCTYPE html>
 <html lang="en">
@@ -27,14 +28,16 @@ class skin {
     {$s['extend']}
   </head>
   <body>
+    {$db_check}
 E;
 	}
 	
 	function footer($s){
+	    global $cfg;
 		return <<<E
     <footer class="footer">
       <div class="container">
-        <p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$s['v']} &copy; 2016 Megumin</p>
+        <p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$cfg['version']} &copy; 2016 - 2017 Megumin</p>
       </div>
     </footer>
 
@@ -68,6 +71,7 @@ E;
             <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
             <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>
 	    <li><a href="wall.php"><i class="fa fa-comments-o"></i>Сообщения <span class="badge">{$s['wall']}</span></a></li>
+	    <li><a href="docs.php"><i class="fa fa-file-o"></i>Документы <span class="badge">{$s['docs']}</span></a></li>
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
                 <ul class="dropdown-menu">
 		  
@@ -89,9 +93,9 @@ E;
 	    if(isset($bar['per'])  && $bar['per']  < 0){ $bar['per']  = 0; }
 	    if(isset($bar['perx']) && $bar['perx'] < 0){ $bar['perx'] = 0; }
 return <<<E
-<div class="row">
-<div class="col-sm-2"><i class="fa fa-{$bar['fa']}"></i> {$bar['name']} <span class="label label-default">{$bar['perx']}%</span></div>
-<div class="col-sm-10">
+<div class="row col-sm-6">
+<div class="col-sm-6 col-md-5 col-lg-4"><i class="fa fa-{$bar['fa']}"></i> {$bar['name']} <span class="label label-default">{$bar['perx']}%</span></div>
+<div class="col-sm-6 col-md-7 col-lg-8">
 <div class="progress">
 	<div class="progress-bar progress-bar-{$bar['bar']}" role="progressbar" aria-valuenow="{$bar['per']}" aria-valuemin="0" aria-valuemax="100" style="width:{$bar['per']}%"><span class="sr-only">{$bar['per']}% Complete</span></div>
 </div>
@@ -195,6 +199,11 @@ E;
 	    }
 	}
 
+	function check_db_ver(){
+	    global $db, $cfg;
+	    $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
+	    return ($cfg['version_db'] != $row['version']) ? false : true;
+	}
 }
 
 ?>

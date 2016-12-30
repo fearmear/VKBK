@@ -16,9 +16,6 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -97,10 +94,7 @@ $(document).ready(function() {
 </script>
 
 E;
-print $skin->footer(array(
-	'v'=>$version,
-	'extend'=> $ex_bot,
-));
+print $skin->footer(array('extend'=> $ex_bot));
 
 $db->close($res);
 

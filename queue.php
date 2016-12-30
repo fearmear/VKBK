@@ -16,9 +16,6 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -61,7 +58,16 @@ $done['att'] = round(($bar_total['at'] - $bar_queue['at']) / $per, 2);
 $done['at'] = ceil($done['att']);
 } else { $done['at'] = $done['att'] = 0; }
 
-$all_queue = $bar_queue['p'] + $bar_queue['m'] + $bar_queue['v'] + $bar_queue['at'];
+$bar_total = $db->query_row("SELECT COUNT(*) as dc FROM vk_docs WHERE `deleted` = 0");
+$bar = $db->query_row("SELECT COUNT(*) as dc FROM vk_docs WHERE `in_queue` = 1");
+$bar_queue['dc'] = $bar['dc'];
+$per = $bar_total['dc']/100;
+if($bar_total['dc'] > 0){
+$done['dcc'] = round(($bar_total['dc'] - $bar_queue['dc']) / $per, 2);
+$done['dc'] = ceil($done['dcc']);
+} else { $done['dc'] = $done['dcc'] = 0; }
+
+$all_queue = $bar_queue['p'] + $bar_queue['m'] + $bar_queue['v'] + $bar_queue['at'] + $bar_queue['dc'];
 $no_queue = true;
 
 // Profiles & Groups
@@ -77,7 +83,7 @@ print <<<E
 <div class="container">
           <h2 class="sub-header"><i class="fa fa-cloud-download"></i> Очередь закачки {$all_queue}</h2>
           <div class="table-responsive">
-			<div class="white-box" style="padding-top:20px;margin-bottom:10px;">
+			<div class="white-box" style="padding:20px 0;margin-bottom:10px;">
 E;
 
 // Show last queue records
@@ -97,11 +103,15 @@ $bar[2] = array('fa' => 'film','name' => 'Видеозаписи','perx' => $don
 // Attachments
 $bar[3] = array('fa' => 'paperclip','name' => 'Вложения','perx' => $done['att'],'per' => $done['at'],'bar' => 'primary');
 
+// Documents
+$bar[4] = array('fa' => 'file-o','name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
+
 foreach($bar as $bark => $barv){
 	print $skin->queue_progress_bar($barv);
 }
 
 print <<<E
+<div class="clearfix"></div>
 </div>
 E;
 unset($done);
@@ -310,6 +320,83 @@ print <<<E
 E;
 		}
 	} // End of T = V
+	
+	// Documents
+	if($queue_id > 0 && $_GET['t']=='dc'){
+		$don = true;
+		// Get document info
+		$q = $db->query_row("SELECT * FROM vk_docs WHERE `id` = {$queue_id}");
+		if($q['uri'] != ''){
+			
+			// Are you reagy kids? YES Capitan Curl!
+			require_once(ROOT.'classes/curl.php');
+			$c = new cu();
+			$c->curl_on();
+			$f = date("Y-m",$q['date']);
+			$out = $c->curl_req(array(
+					'uri' => $q['uri'],
+					'method'=>'',
+					'return'=>1
+			));
+			
+			if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+				$saved = $c->file_save(array('path'=>$cfg['docs_path'].$f.'/','name'=>$q['id'].'.'.$q['ext']),$out['content']);
+				if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+E;
+
+					$prev_q = '';
+					if(($q['type'] == 3 || $q['type'] == 4) && $q['preview_uri'] != ''){
+						$out_pre = $c->curl_req(array(
+							'uri' => $q['preview_uri'],
+							'method'=>'',
+							'return'=>1
+						));
+						if($out_pre['err'] == 0 && $out_pre['errmsg'] == '' && $out_pre['content'] != '' && substr($out_pre['content'],0,5) != '<html' && substr($out_pre['content'],0,9) != '<!DOCTYPE'){
+							preg_match("/[^\.]+$/",$q['preview_uri'],$np);
+							$saved_pre = $c->file_save(array('path'=>$cfg['docs_path'].'preview/','name'=>$q['id'].'.'.$np['0']),$out_pre['content']);
+							if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Превью сохранено</div>
+E;
+								$prev_q = ", `preview_path` = '".$cfg['docs_path']."preview/".$q['id'].".".$np[0]."'";
+							}
+						}
+					}
+
+					$q = $db->query("UPDATE vk_docs SET `in_queue` = 0, `local_path` = '".$cfg['docs_path'].$f."/".$q['id'].".".$q['ext']."'".$prev_q." WHERE `id` = ".$queue_id."");
+					
+					if($_GET['auto'] == '1'){
+						$nrow = $db->query_row("SELECT id FROM vk_docs WHERE `in_queue` = 1 ORDER BY date DESC");
+						if($nrow['id'] > 0){
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=dc&id=".$nrow['id']."&auto=1",$cfg['sync_docs_next_cd']);
+						}
+					}
+					
+				} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+E;
+				}
+			} else {
+				// If error, let's try to see wtf is going on
+				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+					$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
+					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+				}
+				// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+			}
+			
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = DC
 	
 	// Profiles
 	if($queue_id > 0 && $_GET['t']=='pr'){
@@ -870,6 +957,26 @@ print <<<E
 E;
 	}
 }
+$first['dc'] = true;
+if($bar_queue['dc'] > 0){
+	$r = $db->query("SELECT * FROM vk_docs WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date DESC LIMIT 0,{$show}");
+	while($row = $db->return_row($r)){
+		$row['date'] = date("Y-m-d H:i:s",$row['date']);
+		// Add a autodownload for the first element in list
+		if($first['dc'] == true){
+			$first['dc'] = false;
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+		} else { $auto = ''; }
+print <<<E
+<tr>
+  <td>{$row['id']}</td>
+  <td><a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
+  <td>{$row['date']}</td>
+  <td style="text-align:center;"><a href="queue.php?t=dc&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+</tr>
+E;
+	}
+}
 
 // Profiles
 $first['pr'] = true;
@@ -955,7 +1062,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version,'extend'=>''));
+print $skin->footer(array('extend'=>''));
 
 $db->close($res);
 

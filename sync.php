@@ -16,9 +16,6 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -913,6 +910,217 @@ E;
 			} // end if part
 			
 		} // DO Video end
+		
+		// Documents sync
+		if($do == 'docs'){
+			$don = true;
+			
+			// Check do we have documents PART in GET
+			$part = (isset($_GET['part'])) ? intval($_GET['part']) : '';
+
+			// No part? Let's start from the beginning
+			if($part == ''){
+				
+				// Clean DB log before write something new
+				$q4 = $db->query("UPDATE vk_status SET `val` = '' WHERE `key` = 'log_documents'");
+
+				$log = array();
+				
+				// Set all documents to `deleted` state
+				$q = $db->query("UPDATE vk_docs SET `deleted` = 1 WHERE `in_queue` = 0");
+				
+				// Save log
+				array_unshift($log,"<tr><td>Начинаю синхронизацию...</td></tr>");
+				print $log[0];
+			
+				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_docs'");
+				
+				// Reload page
+				print $skin->reload('warning',"<b>Предъявите ваши документы!</b> Начинаю синхронизацию документов через  <span id=\"gcd\">".$cfg['sync_docs_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=docs&part=1",$cfg['sync_docs_start_cd']);
+				
+			} // if docs part is not found
+			
+			// Docs PART found
+			if($part >= 1){
+				
+				// Logging
+				$log = array();
+				
+				array_unshift($log,"<tr><td>Синхронизация документов начата.</td></tr>");
+				print $log[0];
+			
+				$docs_vk_total = 0;
+				$count = 100;
+				$offset = ($part-1)*$count;
+				
+				// We logged in, get VK videos
+				$api = $vk->api('docs.get', array(
+					'owner_id' => $vk_session['vk_user'],
+					'type' => 0, // фильтр по типу документа
+					'offset' => $offset,
+					'count' => $count
+				));
+				
+				$docs_vk = $api['response']['items'];
+				$docs_vk_total = $api['response']['count'];
+				
+				$docs_vk_list = array();
+				// Get VK IDs
+				foreach($docs_vk as $k => $v){
+					$docs_vk_list[] = $v['id'];
+				}
+				
+				// I want this logic in one line, but this blow my mind so...
+				$to = 0;
+				if($offset == 0){
+					$to = $count;
+					if($count > $docs_vk_total){
+						$to = $docs_vk_total;
+					}
+				} else {
+					if(($count+$offset) > $docs_vk_total){
+						$to = $docs_vk_total;
+					} else {
+						$to = $count+$offset;
+					}
+				}
+				if($offset > 0){ $ot = $offset; } else { $ot = 1; }
+				
+				array_unshift($log,'<tr><td>Получаем документы <b> '.$ot.' - '.$to.' / '.$docs_vk_total.'</b> из ВК.</td></tr>');
+				print $log[0];
+				
+				$docs_list = array();
+				// get local IDs
+				$q = $db->query("SELECT id FROM vk_docs WHERE `id` IN(".implode(',',$docs_vk_list).")");
+				while($row = $db->return_row($q)){
+					$docs_list[] = $row['id'];
+				}
+			
+				// Get list of IDs which is NOT in local DB. so they are NEW
+				// Compare VK IDs with local IDs
+				$docs_create = array_diff($docs_vk_list,$docs_list);
+			
+				if(sizeof($docs_list) > 0){
+					// Update status for local IDs which was found
+					$q = $db->query("UPDATE vk_docs SET `deleted` = 0 WHERE `id` IN(".implode(',',$docs_list).") AND `in_queue` = 0");
+					$moved = $db->affected_rows();
+					array_unshift($log,'<tr><td>Пропускаем сохраненные ранее документы. Всего - <b>'.$moved.'</b></td></tr>');
+					print $log[0];
+					unset($moved);
+				}
+				
+				// Put new docs to queue
+				$docs_data = array();
+				foreach($docs_vk as $k => $v){
+					if(in_array($v['id'],$docs_create)){
+						
+						$v['pre'] = '';
+						$v['prew'] = 0;
+						$v['preh'] = 0;
+						if(isset($v['preview'])){
+							// Images
+							if(isset($v['preview']['photo'])){
+								// Get biggest preview
+								foreach($v['preview']['photo']['sizes'] as $pk => $pv){
+									if(    $pv['type'] == 's'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 75px
+									elseif($pv['type'] == 'm'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 130 px
+									elseif($pv['type'] == 'x'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 604 px
+									elseif($pv['type'] == 'o'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 3:2 130 px
+									elseif($pv['type'] == 'p'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 3:2 200 px
+									elseif($pv['type'] == 'q'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 3:2 320 px
+									elseif($pv['type'] == 'r'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 3:2 510 px
+									elseif($pv['type'] == 'y'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 807 px
+									elseif($pv['type'] == 'z'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 1082x1024
+									elseif($pv['type'] == 'w'){ $v['pre'] = $pv['src']; $v['prew'] = $pv['width']; $v['preh'] = $pv['height'];} // 2560x2048
+								}
+							}
+							// Audio MSG
+							// no reason to do until VK disabled audio api
+						} // Preview end
+						
+						$docs_data[$v['id']] = array(
+							'owner_id' => (!is_numeric($v['owner_id']) ? 0 : $v['owner_id']),
+							'title' => ($v['title'] == '' ? 'Unknown '.$v['id'].'' : $v['title']),
+							'size' => (!is_numeric($v['size']) ? 0 : $v['size']),
+							'ext' => ($v['ext'] == '' ? 'unknown' : $v['ext']),
+							'uri' => ($v['url'] == '' ? '' : $v['url']),
+							'date' => $v['date'],
+							'type' => $v['type'],
+							'preview_uri' => $v['pre'],
+							'width' => $v['prew'],
+							'height' => $v['preh']
+						);
+					}
+				} // foreach end
+				
+				if(!empty($docs_data) && (sizeof($docs_create) == sizeof($docs_data))){
+					$data_sql = array(0=>'');
+					$data_limit = 250;
+					$data_i = 1;
+					$data_k = 0;
+					foreach($docs_data as $k => $v){
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},{$v['owner_id']},'".mysql_real_escape_string($v['title'])."',{$v['size']},'".mysql_real_escape_string($v['ext'])."','{$v['uri']}',{$v['date']},{$v['type']},'{$v['preview_uri']}','','{$v['width']}','{$v['height']}',0,1,'',0,0,0)";
+						$data_i++;
+						if($data_i > $data_limit){
+							$data_i = 1;
+							$data_k++;
+						}
+					}
+					
+					foreach($data_sql as $k => $v){
+						$q = $db->query("INSERT INTO vk_docs (`id`,`owner_id`,`title`,`size`,`ext`,`uri`,`date`,`type`,`preview_uri`,`preview_path`,`width`,`height`,`deleted`,`in_queue`,`local_path`,`local_size`,`local_w`,`local_h`) VALUES {$v}");
+					}
+
+					array_unshift($log,'<tr><td>Новые документы добавлены в очередь. Всего - <b>'.sizeof($docs_create).'</b></td></tr>');
+					print $log[0];
+				}
+
+				// Offset done
+				// Now check DO we need an another run
+				// Or we done
+
+				// If we done with all docs
+				if(($offset+$count) >= $docs_vk_total){
+
+						// No unsynced docs left. This is the end...
+						// Let's make recount docs
+						$total = array('docs'=>0,'deleted'=>0);
+
+							$q1 = $db->query_row("SELECT COUNT(id) as v FROM vk_docs WHERE `deleted` = 0");
+							$total['docs'] = $q1['v'];
+							
+							$q2 = $db->query_row("SELECT COUNT(id) as v FROM vk_docs WHERE `deleted` = 1");
+							$total['deleted'] = $q2['v'];
+							
+						
+						// Update counters
+						$q5 = $db->query("UPDATE vk_counters SET `docs` = (SELECT COUNT(*) FROM vk_docs WHERE `deleted` = 0)");
+					
+						array_unshift($log,'<tr><td><div class="alert alert-success" role="alert"><strong>Распишитесь!</strong> Синхронизация всех документов завершена.<br/>Документов - <b>'.$total['docs'].'</b>, на удаление - <b>'.$total['deleted'].'</b></div></td></tr>');
+						print $log[0];
+
+				} else {
+					// Some docs is not synced yed
+					array_unshift($log,'<tr><td>Перехожу к следующей порции документов...</td></tr>');
+					print $log[0];
+				
+					// Save log to the DB
+					$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_docs'");
+				
+					// Calculate offset and reload page
+					$part_new = $part+1;
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=docs&part=".$part_new."",$cfg['sync_docs_next_cd']);
+				}
+			
+				// Get log if any process rinning
+				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_docs'");
+				if($old_log['p'] != ''){
+					print '<tr><td><h4>Лог</h4></td></tr>'.$old_log['p'];
+				}
+				
+			} // end if part
+			
+		} // DO Documents end
 
 	// END Of catch :: All DO methods should be INSIDE
 
@@ -958,7 +1166,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version,'extend'=>''));
+print $skin->footer(array('extend'=>''));
 
 $db->close($res);
 

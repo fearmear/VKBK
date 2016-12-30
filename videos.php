@@ -20,9 +20,6 @@ $skin = new skin();
 require_once(ROOT.'classes/func.php');
 $f = new func();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -336,7 +333,7 @@ $(document).mouseup(function (e){
     && container.has(e.target).length === 0) // ... nor a descendant of the container
 	{
 		container.hide();
-		container.unbind( 'click', clickDocument );
+		container.unbind( 'click' );
 	}
 });
 
@@ -366,10 +363,7 @@ $('#video-list').jscroll({
 </script>
 E;
 
-print $skin->footer(array(
-	'v'=>$version,
-	'extend'=> $ex_bot,
-));
+print $skin->footer(array('extend'=> $ex_bot));
 
 $db->close($res);
 

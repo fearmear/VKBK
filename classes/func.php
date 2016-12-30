@@ -10,6 +10,7 @@ class func {
 	    if($type == 'video'){ return preg_replace("/^Y\:\/VKBK\/video\//","/vkbk-video/",$url); }
 	    if($type == 'photo'){ return preg_replace("/^K\:\/VKBK\/photo\//","/vkbk-photo/",$url); }
 	    if($type == 'audio'){ return preg_replace("/^W\:\/VKBK\/music\//","/vkbk-music/",$url); }
+	    if($type == 'docs'){  return preg_replace("/^K\:\/VKBK\/docs\//" ,"/vkbk-docs/" ,$url); }
 	}
 	
 	/*

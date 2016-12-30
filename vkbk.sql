@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
   `music` mediumint(8) unsigned NOT NULL,
   `video` mediumint(8) unsigned NOT NULL,
   `wall` mediumint(8) unsigned NOT NULL,
+  `docs` mediumint(8) unsigned NOT NULL,
   UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -97,8 +98,8 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
 -- Dumping data for table `vk_counters`
 --
 
-INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`) VALUES
-(0, 0, 0, 0, 0);
+INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`, `docs`) VALUES
+(0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -109,13 +110,26 @@ INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`) VALUES
 CREATE TABLE IF NOT EXISTS `vk_docs` (
   `id` int(11) NOT NULL,
   `owner_id` int(11) NOT NULL,
-  `name` text NOT NULL,
+  `title` text NOT NULL,
   `size` int(11) NOT NULL,
   `ext` varchar(25) NOT NULL,
   `uri` text NOT NULL,
   `date` int(11) NOT NULL,
   `type` smallint(6) NOT NULL,
-  UNIQUE KEY `id` (`id`)
+  `preview_uri` text NOT NULL,
+  `preview_path` text NOT NULL,
+  `width` smallint(5) unsigned NOT NULL,
+  `height` smallint(5) unsigned NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `in_queue` tinyint(1) NOT NULL,
+  `local_path` text NOT NULL,
+  `local_size` int(11) NOT NULL,
+  `local_w` smallint(6) NOT NULL,
+  `local_h` smallint(6) NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `type` (`type`),
+  KEY `deleted` (`deleted`),
+  KEY `queue` (`in_queue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -258,10 +272,11 @@ CREATE TABLE IF NOT EXISTS `vk_status` (
 --
 
 INSERT INTO `vk_status` (`key`, `val`) VALUES
+('log_docs', ''),
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '0.5.6 beta'),
+('version', '2016123001'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0'),
 ('play-local-video', '0');

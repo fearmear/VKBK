@@ -20,9 +20,6 @@ $skin = new skin();
 require_once(ROOT.'classes/func.php');
 $f = new func();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -121,12 +118,23 @@ E;
 			} else {
 				$counters_show['videos'] = 'n/a';
 			}
+		
+		// GET DOCUMENTS Count
+		$docs = $vk->api('docs.get', array(
+			'owner_id' => $vk_session['vk_user'],
+			'count' => 1,
+			'offset' => 0
+		));
+		if($docs['response']){
+			$counters_show['docs'] = $docs['response']['count'];
+		}
 
 			foreach($counters_show as $k => $v){
 				if($k == 'albums') { $k = '<i class="fa fa-folder"></i> Альбомы'; }
 				if($k == 'photos') { $k = '<i class="fa fa-image"></i> Фото'; }
 				if($k == 'audios') { $k = '<i class="fa fa-music"></i> Музыка'; }
 				if($k == 'videos') { $k = '<i class="fa fa-film"></i> Видео'; }
+			if($k == 'docs') { $k = '<i class="fa fa-file"></i> Документы'; }
 				print '<li style="width:100%;"><a href="#">'.$k.': <span class="badge">'.$v.'</span></a></li>';
 			}
 			
@@ -203,8 +211,8 @@ print <<<E
               <span class="text-muted">Стена&nbsp;&nbsp;<a href="sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>--</h1>
-              <span class="text-muted">Документы&nbsp;&nbsp;<a href="#"><i class="fa fa-refresh"></i></a></span>
+              <h1>{$f->human_thousand($counters['docs'])}</h1>
+              <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-refresh"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($wall_attachments['count'])}</h1>
@@ -245,6 +253,13 @@ print <<<E
 <tr><td>Количество <b>видеозаписей</b> изменилось {$d}, необходима синхронизация. <a href="sync.php?do=video">Синхронизировать</a> сейчас?</td></tr>
 E;
 }
+if($counters_show['docs'] != 0 && $counters_show['docs'] > $counters['docs']){
+	$d = $counters_show['docs'] - $counters['docs'];
+	if($d > 0){ $d = '(+<b>'.$d.'</b>)'; }
+print <<<E
+<tr><td>Количество <b>документов</b> изменилось {$d}, необходима синхронизация. <a href="sync.php?do=docs">Синхронизировать</a> сейчас?</td></tr>
+E;
+}
 
 print <<<E
 			      </tbody>
@@ -254,15 +269,17 @@ print <<<E
 		  <div class="row white-box">
 E;
 
-// Get LOCAL queue (photo,music,video)
-$queue_count = array('p'=>0,'m'=>0,'v'=>0);
+// Get LOCAL queue (photo,music,video,docs)
+$queue_count = array('p'=>0,'m'=>0,'v'=>0,'dc'=>0);
 $queue_photo = $db->query_row("SELECT COUNT(*) as count FROM vk_photos WHERE `in_queue` = 1");
 $queue_count['p'] = $queue_photo['count'];
 $queue_music = $db->query_row("SELECT COUNT(*) as count FROM vk_music WHERE `in_queue` = 1");
 $queue_count['m'] = $queue_music['count'];
 $queue_video = $db->query_row("SELECT COUNT(*) as count FROM vk_videos WHERE `in_queue` = 1");
 $queue_count['v'] = $queue_video['count'];
-$queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v'];
+$queue_docs = $db->query_row("SELECT COUNT(*) as count FROM vk_docs WHERE `in_queue` = 1");
+$queue_count['dc'] = $queue_docs['count'];
+$queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v']+$queue_count['dc'];
 
 print <<<E
           <div class="table-responsive">
@@ -321,6 +338,20 @@ E;
 	}
 }
 
+if($queue_count['dc'] > 0) {
+	$r = $db->query("SELECT * FROM vk_docs WHERE `in_queue` = 1 ORDER BY date DESC LIMIT 0,5");
+	while($row = $db->return_row($r)){
+		$row['date'] = date("Y-m-d H:i:s",$row['date']);
+print <<<E
+<tr>
+  <td>{$row['id']}</td>
+  <td><i class="fa fa-file-o"></i> <a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
+  <td>{$row['date']}</td>
+</tr>
+E;
+	}
+}
+
 if($queue_total == 0) {
 	print '<tr><td colspan="3" style="text-align:center;color:#bbb;">Очередь закачки пуста</td></tr>';
 }
@@ -345,7 +376,7 @@ print <<<E
 
 E;
 
-print $skin->footer(array('v'=>$version,'extend'=>''));
+print $skin->footer(array('extend'=>''));
 
 $db->close($res);
 

@@ -16,9 +16,6 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
-$row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");
-$version = $row['version'];
-
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
@@ -72,8 +69,14 @@ print <<<E
 <h4>ToDo</h4>
 <div class="wall-box">
 <ul class="list-group list-unstyled">
-<li><label><span class="label label-default">сделать</span></label> синхронизация > диалоги</li>
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
+<h4>версия 0.6</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2016-12-30</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация документов.</li>
+<li><label><span class="label label-primary">новое</span></label> Добавлена проверка версии структуры базы данных и инструкция по обновлению.</li>
+</ul>
+</div>
 <h4>версия 0.5.6</h4>
 <div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-12-28</div>
@@ -251,7 +254,7 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('v'=>$version,'extend'=>''));
+print $skin->footer(array('extend'=>''));
 
 $db->close($res);
 
