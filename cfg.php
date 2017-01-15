@@ -8,8 +8,7 @@ date_default_timezone_set("Europe/Minsk");
 
 // VKBK Configuration
 $cfg = array();
-$cfg['version'] = "0.6 beta";
-$cfg['version_db'] = "2016123001";
+require_once('version.php');
 
 /* Script URL
   Example: http://your.host/
@@ -136,4 +135,13 @@ $cfg['sync_found_local'] = 1;
   Example: C:\Users\%USER%\AppData\Local\Programs\Python\Python35\
 */
 $cfg['yt_dl_path'] = "";
+/* Addon: youtube-dl
+   VK.com Authorization Details
+   WARNING! YOUTUBE-DL AUTHORIZATION WORKS ONLY WITH LOGIN AND PASSWORD
+   USE IT AT YOUR OWN RISK AND ONLY ON TRUSTED COMPUTER
+   yt_dl_login - your VK.com email
+   yt_dl_passw - your VK.com password
+*/
+$cfg['yt_dl_login'] = "";
+$cfg['yt_dl_passw'] = "";
 ?>

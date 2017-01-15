@@ -70,6 +70,14 @@ print <<<E
 <div class="wall-box">
 <ul class="list-group list-unstyled">
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
+</ul>
+</div>
+<h4>версия 0.6.1</h4>
+<div class="wall-box">
+<ul class="list-group list-unstyled"><div>2017-01-15</div>
+<li><label><span class="label label-primary">новое</span></label> Добавлена возможность скачивать видео из ВКонтакте с авторизацией через youtube-dl.</li>
+</ul>
+</div>
 <h4>версия 0.6</h4>
 <div class="wall-box">
 <ul class="list-group list-unstyled"><div>2016-12-30</div>

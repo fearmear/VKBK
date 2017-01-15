@@ -28,6 +28,8 @@ $key = isset($_GET['key']) ? $_GET['key'] : '';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 // Service type
 $s = isset($_GET['s']) ? preg_replace("/[^a-z]+/","",$_GET['s']) : '';
+// Force authorization
+$force_auth = (isset($_GET['force_auth']) && !empty($cfg['yt_dl_login']) && !empty($cfg['yt_dl_passw'])) ? true : false;
 
 print <<<E
 <div class="container">
@@ -102,7 +104,11 @@ if($s == 'yt'){
 }
 // VK.com
 if($s == 'vk'){
+	if($force_auth === true){
+		$youtubeDLcmd = $cfg['yt_dl_path'].'youtube-dl.exe -4 --restrict-filenames -w --no-part --write-info-json -u "'.$cfg['yt_dl_login'].'" -p "'.$cfg['yt_dl_passw'].'" -o "'.$cfg['video_path'].'data/vk-'.$vid['id'].'.%(ext)s" "'.$vid['player_uri'].'"';
+	} else {
 	$youtubeDLcmd = $cfg['yt_dl_path'].'youtube-dl.exe -4 --restrict-filenames -w --no-part --write-info-json -o "'.$cfg['video_path'].'data/vk-'.$vid['id'].'.%(ext)s" "'.$vid['player_uri'].'"';
+	}
 }
 
 	ob_implicit_flush(true);
@@ -153,6 +159,16 @@ print <<<E
 <tr>
   <td>
     <div class="alert alert-danger" role="alert">Шеф, всё пропало! ):</div>
+E;
+
+	// Try authorization for VK
+	if($s == "vk" && !empty($cfg['yt_dl_login']) && !empty($cfg['yt_dl_passw'])){
+print <<<E
+    <div class="alert alert-warning" role="alert">Попробовать <a href="ytget.php?id={$id}&key={$key}&s=vk&force_auth=true"">скачать с авторизацией?</a></div>
+E;
+	}
+
+print <<<E
   </td>
 </tr>
 E;
