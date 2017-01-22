@@ -26,13 +26,19 @@ E;
 print $skin->header(array('extend'=>$ex_top));
 print $skin->navigation($lc);
 
-$settings = array();
+$settings = array(
+	'auto-queue-photo'=>0,
+	'auto-queue-audio'=>0,
+	'play-local-video'=>0,
+	'start-local-video'=>0
+);
 
 $q = $db->query("SELECT * FROM vk_status");
 while($row = $db->return_row($q)){
 	if($row['key'] == 'auto-queue-photo'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
 	if($row['key'] == 'auto-queue-audio'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
 	if($row['key'] == 'play-local-video'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
+	if($row['key'] == 'start-local-video'){ $row['val'] == '1' ? $row['val'] = 'checked' : $row['val'] = '';	}
 	$settings[$row['key']] = $row['val'];
 }
 
@@ -69,6 +75,11 @@ print <<<E
 							<div style="text-align:right;">
 								<input id="play-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['play-local-video']}>
 							</div>
+							<hr/>
+							Автоматически воспроизводить локальное видео.<br/>
+							<div style="text-align:right;">
+								<input id="start-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['start-local-video']}>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -82,13 +93,16 @@ $ex_bot = <<<E
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#auto-queue-photo').change(function() {
-		$.get("ajax/settings-save-bool.php", { "auto-queue-photo":$(this).prop('checked') } );
+		$.get("ajax/settings-save-bool.php", { "option":"auto-queue-photo","v":$(this).prop('checked') } );
     });
 	$('#auto-queue-audio').change(function() {
-		$.get("ajax/settings-save-bool.php", { "auto-queue-audio":$(this).prop('checked') } );
+		$.get("ajax/settings-save-bool.php", { "option":"auto-queue-audio","v":$(this).prop('checked') } );
     });
 	$('#play-local-video').change(function() {
-		$.get("ajax/settings-save-bool.php", { "play-local-video":$(this).prop('checked') } );
+		$.get("ajax/settings-save-bool.php", { "option":"play-local-video","v":$(this).prop('checked') } );
+    });
+	$('#start-local-video').change(function() {
+		$.get("ajax/settings-save-bool.php", { "option":"start-local-video","v":$(this).prop('checked') } );
     });
 });
 </script>

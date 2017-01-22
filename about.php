@@ -74,6 +74,10 @@ print <<<E
 </div>
 <h4>версия 0.6.1</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2017-01-23</div>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлена опция для автовоспроизведения локального видео.</li>
+<li><label><span class="label label-warning">обновлено</span></label> Переработан дизайн локального видео плеера.</li>
+<li><label><span class="label label-danger">баг</span></label> Полноэкранный режим не поддерживается в IE10 при проигрывании видео.</li>
 <ul class="list-group list-unstyled"><div>2017-01-15</div>
 <li><label><span class="label label-primary">новое</span></label> Добавлена возможность скачивать видео из ВКонтакте с авторизацией через youtube-dl.</li>
 </ul>

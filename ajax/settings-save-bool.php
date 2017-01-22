@@ -12,22 +12,24 @@ require_once(ROOT.'classes/db.php');
 $db = new db();
 $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 
-if(isset($_GET['auto-queue-photo']) && ($_GET['auto-queue-photo'] == 'true' || $_GET['auto-queue-photo'] == 'false' )){
-	$b = ($_GET['auto-queue-photo'] == 'true') ? 1 : 0;
-	$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = 'auto-queue-photo'");
-	print $b;
-}
+$bool_opions = array(
+	'auto-queue-photo',
+	'auto-queue-audio',
+	'play-local-video',
+	'start-local-video'
+);
 
-if(isset($_GET['auto-queue-audio']) && ($_GET['auto-queue-audio'] == 'true' || $_GET['auto-queue-audio'] == 'false' )){
-	$b = ($_GET['auto-queue-audio'] == 'true') ? 1 : 0;
-	$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = 'auto-queue-audio'");
+if(isset($_GET['option']) && isset($_GET['v']) && in_array($_GET['option'],$bool_opions) && ($_GET['v'] == 'true' || $_GET['v'] == 'false')){
+	$b = ($_GET['v'] == 'true') ? 1 : 0;
+	$q = $db->query_row("SELECT `key` FROM vk_status WHERE `key` = '".mysql_escape_string($_GET['option'])."'");
+	if($q['key'] != ''){
+		$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = '".mysql_escape_string($_GET['option'])."'");
+	} else {
+		$q = $db->query("INSERT INTO vk_status (`key`,`val`) VALUES ('".mysql_escape_string($_GET['option'])."','".$b."')");
+	}
 	print $b;
-}
-
-if(isset($_GET['play-local-video']) && ($_GET['play-local-video'] == 'true' || $_GET['play-local-video'] == 'false' )){
-	$b = ($_GET['play-local-video'] == 'true') ? 1 : 0;
-	$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = 'play-local-video'");
-	print $b;
+} else {
+	print 'Unknown option';
 }
 
 $db->close($res);

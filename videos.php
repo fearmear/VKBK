@@ -186,7 +186,7 @@ $fancybox_options = <<<E
 		openEffect	: 'none',
 		closeEffect	: 'none',
 		
-		padding : 5,
+		padding : 0,
 		arrows : false,
 		closeBtn : false,
 		nextClick : false,
@@ -322,6 +322,9 @@ $(document).ready(function() {
 		width		: '95%',
 		height		: '95%',
 		{$fancybox_options}
+		,afterShow	: function(){
+			jQuery("iframe.fancybox-iframe").focus();
+		}
 	});
 	
 	$(".tip").tooltip();
