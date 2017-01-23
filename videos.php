@@ -65,6 +65,23 @@ print <<<E
 		<option value="240">240p</option>
 	</select>
 	</div>
+	<div class="row">
+	<label for="length">Длительность</label>
+	<select class="selectpicker show-tick" name="length" id="f-length">
+		<option value="0">Любая</option>
+		<option value="5">до 5 мин</option>
+		<option value="15">15+ мин</option>
+		<option value="30">30+ мин</option>
+		<option value="60">60+ мин</option>
+	</select>
+	</div>
+	<div class="row">
+	<label for="date">Дата</label>
+	<select class="selectpicker show-tick" name="date" id="f-date">
+		<option value="new">Сначала новые</option>
+		<option value="old">Сначала старые</option>
+	</select>
+	</div>
 	
 </div>
 
@@ -230,6 +247,8 @@ $(document).ready(function() {
 	var type = 'all';
 	var service = 'any';
 	var quality = 0;
+	var length = 0;
+	var date = 'new';
 	
 	// Bootstrip select
 	$('.selectpicker').selectpicker({
@@ -243,9 +262,11 @@ $(document).ready(function() {
 	urlCommands.bind('type', function(id) { type = id; jQuery("#f-type").selectpicker('val',id); });
 	urlCommands.bind('service', function(id) { service = id; jQuery("#f-service").selectpicker('val',id); });
 	urlCommands.bind('quality', function(id) { quality = id; jQuery("#f-quality").selectpicker('val',id); });
+	urlCommands.bind('length', function(id) { length = id; jQuery("#f-length").selectpicker('val',id); });
+	urlCommands.bind('date', function(id) { date = id; jQuery("#f-date").selectpicker('val',id); });
 	
 	// Not default options -> reload
-	if(type != 'all' || service != 'any' || quality != 0){
+	if(type != 'all' || service != 'any' || quality != 0 || length != 0 || date != 'new'){
 		urlCommands.urlPush({page:0});
 		video_reload();
 	}
@@ -257,7 +278,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+""
+					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+""
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -292,12 +313,28 @@ $(document).ready(function() {
 			video_reload();
 		}
 	});
+	jQuery("#f-length").on('change', function(){
+		urlCommands.urlPush({length:this.value});
+		if(length != this.value){
+			length = this.value;
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
+	jQuery("#f-date").on('change', function(){
+		urlCommands.urlPush({date:this.value});
+		if(date != this.value){
+			date = this.value;
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
 	
 	function video_reload(){
 		jQuery.ajax({
 			async : false,
 			method : "GET",
-			url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+""
+			url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+""
 		}).done( function(data){
 			jQuery("#video-list").html(data);
 			jscroller();

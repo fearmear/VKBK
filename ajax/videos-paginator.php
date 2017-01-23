@@ -39,6 +39,8 @@ $options = '';
 $f_type = (isset($_GET['type'])) ? mysql_real_escape_string($_GET['type']) : 'all';
 $f_service = (isset($_GET['service'])) ? mysql_real_escape_string($_GET['service']) : 'any';
 $f_quality = (isset($_GET['quality'])) ? intval($_GET['quality']) : 0;
+$f_length = (isset($_GET['length'])) ? intval($_GET['length']) : 0;
+$f_date = (isset($_GET['date']) && $_GET['date'] == 'old') ? 'old' : 'new';
 
 if($f_type == "online"){ $options .= " AND `local_path` = ''"; }
 if($f_type == "local"){ $options .= " AND `local_path` != ''"; }
@@ -48,8 +50,19 @@ if($f_service == "vk"){ $options .= " AND `player_uri` LIKE '%vk.com%'"; }
 
 if($f_quality > 0){ $options .= " AND `local_h` = ".$f_quality; }
 
+if($f_length > 0){
+	if($f_length == 5){
+		$options .= " AND `duration` <= ".$f_length*60;
+	} else {
+		$options .= " AND `duration` >= ".$f_length*60;
+	}
+}
+
+if($f_date == "new"){ $options .= " ORDER BY `date_added` DESC"; }
+if($f_date == "old"){ $options .= " ORDER BY `date_added` ASC"; }
+
 mb_internal_encoding("UTF-8");
-$q = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' {$options} ORDER BY `date_added` DESC LIMIT {$offset_page},{$perpage}");
+$q = $db->query("SELECT * FROM vk_videos WHERE preview_path != '' {$options} LIMIT {$offset_page},{$perpage}");
 while($row = $db->return_row($q)){
 	if($next < $cfg['perpage_video']){
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
@@ -149,7 +162,7 @@ E;
 
 if($next > $cfg['perpage_video']){
 	$page++;
-	print '<div class="paginator-next" style="display:none;"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'&type='.$f_type.'&service='.$f_service.'&quality='.$f_quality.'">следующая страница</a></div>';
+	print '<div class="paginator-next"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'&type='.$f_type.'&service='.$f_service.'&quality='.$f_quality.'&length='.$f_length.'&date='.$f_date.'">следующая страница</a></div>';
 }
 
 $db->close($res);
