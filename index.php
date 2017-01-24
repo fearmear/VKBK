@@ -208,7 +208,7 @@ print <<<E
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['wall'])}</h1>
-              <span class="text-muted">Стена&nbsp;&nbsp;<a href="sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Стена&nbsp;&nbsp;<a href="sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="sync-wall.php?offset=0&fast=true"><i class="fa fa-retweet"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['docs'])}</h1>

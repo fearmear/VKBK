@@ -74,6 +74,9 @@ print <<<E
 </div>
 <h4>версия 0.6.1</h4>
 <div class="wall-box">
+<ul class="list-group list-unstyled"><div>2017-01-24</div>
+<li><label><span class="label label-warning">обновлено</span></label> Добавлена быстрая синхронизация для стены.</li>
+</ul>
 <ul class="list-group list-unstyled"><div>2017-01-23</div>
 <li><label><span class="label label-warning">обновлено</span></label> Добавлены фильтры по дате и длительности для видео.</li>
 <li><label><span class="label label-warning">обновлено</span></label> Добавлена опция для автовоспроизведения локального видео.</li>

@@ -73,6 +73,9 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	$api_profiles = array();
 	$api_groups = array();
 	$vk_post_total = 0;
+	$fast_sync = (isset($_GET['fast'])) ? (bool)$_GET['fast'] : false;
+	$fast_sync_date = 0;
+	$fast_sync_stop = false;
 	
 	if($api['response'] != ''){
 		
@@ -82,6 +85,12 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 		$api_posts = $api['response']['items'];
 		$vk_post_total = $api['response']['count'];
 		
+	}
+	
+	// If we do fast sync, get the date of the last post in DB
+	if($fast_sync == true){
+		$lp = $db->query_row("SELECT date FROM `vk_wall` ORDER BY date DESC LIMIT 1");
+		if(!empty($lp['date'])){ $fast_sync_date = intval($lp['date']); }
 	}
 	
 	// Check & process profiles
@@ -419,11 +428,14 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			// Insert OR update post
 			$f->wall_post_insert($v,$attach,$origin,0);
 			
-
+			// Fast sync option
+			// Check the date of the last post to our posts. If found, stop sync.
+			if($fast_sync == true && $fast_sync_date > 0 && $v['date'] <= $fast_sync_date){
+				$fast_sync_stop = true;
+			}
 		}
 		
 	}
-	
 	
 	// I want this logic in one line, but this blow my mind so...
 	$to = 0;
@@ -443,23 +455,28 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	
 	print '<tr><td>Получаем записи <b> '.$ot.' - '.$to.' / '.$vk_post_total.'</b> со стены ВК.</td></tr>';
 	
-	// If we done with all videos
-	if(($offset+$count) >= $vk_post_total){
-
+	// Let's recount wall
+	$q5 = $db->query("UPDATE vk_counters SET `wall` = (SELECT COUNT(*) FROM vk_wall WHERE `is_repost` = 0)");
+	
+	if($fast_sync == true && $fast_sync_stop == true){
 		// No unsynced posts left. This is the end...
-		// Let's make recount wall
-		$q5 = $db->query("UPDATE vk_counters SET `wall` = (SELECT COUNT(*) FROM vk_wall WHERE `is_repost` = 0)");
-		
+		print '<tr><td><div class="alert alert-success" role="alert"><strong>Великая китайская!</strong> Быстрая синхронизация сообщений завершена.</div></td></tr>';
+	} else {
+	
+		// If we done with all posts
+	if(($offset+$count) >= $vk_post_total){
+		// No unsynced posts left. This is the end...
 		print '<tr><td><div class="alert alert-success" role="alert"><strong>Великая китайская!</strong> Синхронизация всех сообщений со стены завершена.</div></td></tr>';
-
 	} else {
 		// Some posts on the wall is not synced yed
 		print '<tr><td>Перехожу к следующей порции сообщений...</td></tr>';
 		
 		// Calculate offset and reload page
 		$offset_new = $offset+$count;
-		print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_wall_next_cd']."</span> сек.",$cfg['vkbk_url']."sync-wall.php?offset=".$offset_new."",$cfg['sync_wall_next_cd']);
+			print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_wall_next_cd']."</span> сек.",$cfg['vkbk_url']."sync-wall.php?offset=".$offset_new."&fast=".$fast_sync."",$cfg['sync_wall_next_cd']);
 	}
+	
+	} // Fast sync end
 	
 	
 	// END Of catch

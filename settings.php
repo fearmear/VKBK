@@ -53,14 +53,18 @@ print <<<E
 							<h3 class="panel-title">Редиректы</h3>
 						</div>
 						<div class="panel-body">
-							Автоматически переходить к очереди закачек после синхронизации фотографий.<br/>
-							<div style="text-align:right;">
+							<div class="clearfix">
+							<div style="float:left;margin:0 10px 10px 0">
 								<input id="auto-queue-photo" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['auto-queue-photo']}>
 							</div>
+							<div>Автоматически переходить к очереди закачек после синхронизации фотографий.</div>
+							</div>
 							<hr/>
-							Автоматически переходить к очереди закачек после синхронизации аудиофайлов.<br/>
-							<div style="text-align:right;">
+							<div class="clearfix">
+							<div style="float:left;margin:0 10px 10px 0">
 								<input id="auto-queue-audio" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['auto-queue-audio']}>
+							</div>
+							<div>Автоматически переходить к очереди закачек после синхронизации аудиофайлов.</div>
 							</div>
 						</div>
 					</div>
@@ -71,14 +75,18 @@ print <<<E
 							<h3 class="panel-title">Видео</h3>
 						</div>
 						<div class="panel-body">
-							Воспроизводить локальное видео вместо онлайн-плеера.<br/>
-							<div style="text-align:right;">
+							<div class="clearfix">
+							<div style="float:left;margin:0 10px 10px 0">
 								<input id="play-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['play-local-video']}>
 							</div>
+							<div>Воспроизводить локальное видео вместо онлайн-плеера.</div>
+							</div>
 							<hr/>
-							Автоматически воспроизводить локальное видео.<br/>
-							<div style="text-align:right;">
+							<div class="clearfix">
+							<div style="float:left;margin:0 10px 10px 0">
 								<input id="start-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['start-local-video']}>
+							</div>
+							<div>Автоматически воспроизводить локальное видео.</div>
 							</div>
 						</div>
 					</div>
