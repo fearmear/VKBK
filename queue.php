@@ -121,6 +121,7 @@ if(!isset($_GET['auto'])){ $_GET['auto'] = false; }
 
 if(isset($_GET['id']) && isset($_GET['t'])){
 	$queue_id = is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
+	$queue_oid = is_numeric($_GET['oid']) ? intval($_GET['oid']) : 0;
 	$don = false;
 	$error_code = '';
 	mb_internal_encoding("UTF-8");
@@ -549,10 +550,10 @@ E;
 	} // End of T = GR
 	
 	// Attach - Photo
-	if($queue_id > 0 && $_GET['t']=='atph'){
+	if($queue_id > 0 && $_GET['t']=='atph' && $queue_oid != 0){
 		$don = true;
 		// Get photo info
-		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id}");
+		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
 		if($q['uri'] != ''){
 			
 			// Get file name
@@ -564,12 +565,12 @@ E;
 print <<<E
 <div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
 E;
-				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -591,12 +592,12 @@ E;
 print <<<E
 <div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
 E;
-						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 						
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 					
@@ -625,10 +626,10 @@ E;
 	} // End of T = ATPH
 	
 	// Attach - Video (preview)
-	if($queue_id > 0 && $_GET['t']=='atvi'){
+	if($queue_id > 0 && $_GET['t']=='atvi' && $queue_oid != 0){
 		$don = true;
 		// Get video preview info
-		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id}");
+		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
 		if($q['uri'] != ''){
 			
 			// Get file name
@@ -640,12 +641,12 @@ E;
 print <<<E
 <div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
 E;
-				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -667,12 +668,12 @@ E;
 print <<<E
 <div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
 E;
-						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 					
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -701,10 +702,10 @@ E;
 	} // End of T = ATVI
 	
 	// Attach - Link
-	if($queue_id > 0 && $_GET['t']=='atli'){
+	if($queue_id > 0 && $_GET['t']=='atli' && $queue_oid != 0){
 		$don = true;
 		// Get photo info
-		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id}");
+		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
 		if($q['uri'] != ''){
 			
 			// Get file name
@@ -716,12 +717,12 @@ E;
 print <<<E
 <div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
 E;
-				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -743,12 +744,12 @@ E;
 print <<<E
 <div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
 E;
-						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id."");
+						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 						
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -777,10 +778,10 @@ E;
 	} // End of T = ATLI
 	
 	// Attach - Music
-	if($queue_id > 0 && $_GET['t']=='atau'){
+	if($queue_id > 0 && $_GET['t']=='atau' && $queue_oid != 0){
 		$don = true;
 		// Get audio info
-		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id}");
+		$q = $db->query_row("SELECT * FROM vk_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
 		if($q['uri'] != ''){
 			
 			// Are you reagy kids? YES Capitan Curl!
@@ -810,12 +811,12 @@ print <<<E
 <div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл <b>{$nam}</b> найден локально</div>
 E;
 				
-				$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.mysql_real_escape_string($cnam)."' WHERE `attach_id` = ".$queue_id."");
+				$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.mysql_real_escape_string($cnam)."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'audio' AND `uri` != '' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -833,12 +834,12 @@ print <<<E
 <div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл <b>{$nam}</b> сохранен</div>
 E;
 				
-						$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.mysql_real_escape_string($cnam)."' WHERE `attach_id` = ".$queue_id."");
+						$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.mysql_real_escape_string($cnam)."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 						
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id FROM vk_attach WHERE `path` = '' AND `type` = 'audio' AND `uri` != '' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&auto=1",$cfg['sync_music_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_music_next_cd']);
 							}
 						}
 					

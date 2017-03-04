@@ -72,200 +72,222 @@ print <<<E
 <li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
 </ul>
 </div>
-<h4>версия 0.6.1</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2017-01-24</div>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлена быстрая синхронизация для стены.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2017-01-23</div>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлены фильтры по дате и длительности для видео.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлена опция для автовоспроизведения локального видео.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Переработан дизайн локального видео плеера.</li>
-<li><label><span class="label label-danger">баг</span></label> Полноэкранный режим не поддерживается в IE10 при проигрывании видео.</li>
-<ul class="list-group list-unstyled"><div>2017-01-15</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлена возможность скачивать видео из ВКонтакте с авторизацией через youtube-dl.</li>
-</ul>
-</div>
-<h4>версия 0.6</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-12-30</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация документов.</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлена проверка версии структуры базы данных и инструкция по обновлению.</li>
-</ul>
-</div>
-<h4>версия 0.5.6</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-12-28</div>
-<li><label><span class="label label-danger">отключено</span></label> Добавлена проверка на отключенный API Вконтакте для музыки при синхронизации стены.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-12-19</div>
-<li><label><span class="label label-danger">отключено</span></label> API Вконтакте для музыки был отключен. Надеюсь, что через некоторое время он вновь будет доступен для всех.</li>
-</ul>
-</div>
-<h4>версия 0.5.5</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-11-21</div>
-<li><label><span class="label label-danger">багфикс</span></label> Поправлены пути для установки скрипта в суб-директорию. Спасибо Ивану за багрепорт.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-10-30</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлена быстрая синхронизация (только системные альбомы).</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-06-16</div>
-<li><label><span class="label label-warning">обновлено</span></label> В плейлисте изменена иконка для активного трека.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-06-15</div>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлен баг с упорядочиванием фото на последней странице.</li>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлен баг с отображением кнопки "показать все альбомы" при ресайзе окна.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-06-05</div>
-<li><label><span class="label label-warning">обновлено</span></label> Изменен урл загрузки роиков для ВКонтакте, чтобы можно было сохранять "приватные" видео.</li>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлен баг в поиске видео когда при прокрутке следующая страница загружалась без фильтра.</li>
-</ul>
-</div>
-<h4>версия 0.5</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-06-01</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлена возможность поиска видео по типу, сервису и качеству.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-29</div>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлена настройка для проигрывания локального видео по умолчанию.</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлен плеер для локальных видео.</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение локального пути для видеофайла.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-28</div>
-<li><label><span class="label label-warning">обновлено</span></label> Раздел видео обновлен.</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-chain"></i> youtube-dl</a> (необходимо установить отдально!)</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-24</div>
-<li><label><span class="label label-warning">обновлено</span></label> Улучшена сортировка плейлиста по исполнителю и названию трека.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-19</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлены красивые списки (Bootstrap Select)</li>
-<li><label><span class="label label-primary">новое</span></label> Плеер audio.js заменен на более продвинутый jPlayer.js в связи с этим добавились новые опции а так же изменился дизайн</li>
-<li><label><span class="label label-warning">обновлено</span></label> В аудиозаписях добавлено отображение удаленных треков</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация альбомов для аудиозаписей.</li>
-</ul>
-</div>
-<h4>версия 0.4.5</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-05-12</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлен perfect-scrollbar.js.</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлен вывод альбомов (в которых есть хотя бы одно изображение) с превьюшками.</li>
-<li><label><span class="label label-warning">обновлено</span></label> В альбомах фото выводятся в порядке убывания.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-07</div>
-<li><label><span class="label label-warning">обновлено</span></label> Для синхронизации аттачей добавлена проверка на наличие файла локально.</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение ссылки для репоста.</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено сохранение аудиозаписи для репоста.</li>
-</ul>
-</div>
-<h4>версия 0.4</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-05-06</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлена возможность смотреть отдельные посты со стены в лайтбоксе.</li>
-<li><label><span class="label label-primary">новое</span></label> Хэш навигация (hashnav.js).</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Исправлен баг с зависанием загрузки стены в хроме.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-05</div>
-<li><label><span class="label label-danger">багфикс</span></span></label> Добавлена дополнительная проверка на контент для закачек.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлен код ошибки если закачка не удалась.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлен интерактивный отсчет для таймеров.</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Исправлено отображение чекбокса в настройках для IE 11.</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): аудиозаписи.</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): репосты (в том числе вложенные).</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): ссылки.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-05-04</div>
-<li><label><span class="label label-warning">обновлено</span></label> Множественные изменения в коде.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Опция для виртуальных хостов вынесена отдельно. Теперь для её включения необходимо отредактировать конфиг и одну функцию вместо множества файлов.</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена): добавлен парсинг видео аттачей, а так же обработка репостов (фото, видео).</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-04-30</div>
-<li><label><span class="label label-warning">обновлено</span></label> Общий стиль изменен под новый дизайн ВК.</li>
-<li><label><span class="label label-danger">багфикс</span></span></label> Не работал оптимизатор изображений в альбомах на FireFox.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-04-29</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлен раздел &laquo;Сообщения&raquo;.</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация сообщений (стена). Альфа-версия.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-04-28</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлены настройки (Авто-редиректы)</li>
-<li><label><span class="label label-primary">новое</span></label> Красивые чекбоксы (Bootstrap Toggle)</li>
-</ul>
-</div>
-<h4>версия 0.3</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-04-24</div>
-<li><label><span class="label label-warning">обновлено</span></label> Добавлена полоса прогресса при синхронизации фотографий.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-04-21</div>
-<li><label><span class="label label-warning">обновлено</span></label> Обновление названий альбомов при синхронизации.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-27</div>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлен баг при синхронизации если альбом пустой.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-21</div>
-<li><label><span class="label label-warning">обновлено</span></label> Код немного приведен в порядок для работы на PHP 5.3.x.</li>
-<li><label><span class="label label-danger">багфикс</span></label> Неправильные флаги при повторной синхронизации музыки.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-19</div>
-<li><label><span class="label label-warning">обновлено</span></label> Настройки таймаутов перенесены в конфиг.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Обновление количества фото в альбомах при синхронизации.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Не отображалась кнопка автоматического скачивания.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-15</div>
-<li><label><span class="label label-primary">новое</span></label> Просмотр видеозаписей</li>
-<li><label><span class="label label-warning">обновлено</span></label> При ошибке синхронизации в автоматическом режиме и html ответе сервера (прим. ошибка Bad Gateway) добавлен пропуск данных ID.</li>
-<li><label><span class="label label-primary">новое</span></label> Добавлена синхронизация видеозаписей</li>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлено отображение смешенного контента в очереди закачек.</li>
-</ul>
-</div>
-<h4>версия 0.2</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-03-14</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлен плеер в раздел музыки (audio.js)</li>
-<li><label><span class="label label-danger">багфикс</span></label> Добавлена проверка на содержимое ответа сервера.</li>
-<li><label><span class="label label-danger">багфикс</span></label> Некоторые кириллические названия треков не сохранялись в базу.</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-13</div>
-<li><label><span class="label label-primary">новое</span></label> Добавлены иконки (FontAwesome)</li>
-<li><label><span class="label label-info">инфо</span></label> Имена аудиозаписей чистятся от не ASCII символов, так как PHP для Windows более чем точно будет скомпилирован без поддержки юникода.</li>
-<li><label><span class="label label-danger">баг</span></label> Непонятно почему ВК не отдает некоторые аудиозаписи через API, хотя они не являются заблокированными.</li>
-<li><label><span class="label label-warning">обновлено</span></label> Обновлен блок и страница очереди закачки. Объединены фотографии и аудиозаписи.</li>
-<li><label><span class="label label-primary">новое</span></label> Синхронизация аудиозаписей</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-12</div>
-<li><label><span class="label label-warning">обновлено</span></label> Раздел Альбомы по-умолчанию отображают 25 последних добавленных фотографий</li>
-<li><label><span class="label label-danger">багфикс</span></label> Добавлена проверка на размер файла при сохранении</li>
-</ul>
-</div>
-<h4>версия 0.1</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled"><div>2016-03-09</div>
-<li><label><span class="label label-primary">новое</span></label> Просмотр фотографий (Fancyfox)</li>
-<li><label><span class="label label-danger">баг</span></label> Необходима проверка на размер файла при закачке</li>
-<li><label><span class="label label-warning">обновлено</span></label> Ссылку на очередь отображается если есть хотя бы один элемент</li>
-<li><label><span class="label label-primary">новое</span></label> Подгрузка фотографий при скроллинге (jscroll.js)</li>
-<li><label><span class="label label-primary">новое</span></label> Responsive макет для фотографий (freewall.js)</li>
-<li><label><span class="label label-primary">новое</span></label> Отображение фотографий в альбомах</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-08</div>
-<li><label><span class="label label-primary">новое</span></label> Получение и сохранение фото</li>
-<li><label><span class="label label-primary">новое</span></label> Очередь закачки</li>
-<li><label><span class="label label-warning">обновлено</span></label> Блок очереди закачки в панели управления</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-07</div>
-<li><label><span class="label label-success">функционал</span></label> Синхронизация фотографий</li>
-<li><label><span class="label label-danger">багфикс</span></label> Исправлены баги в синхронизации альбомов</li>
-</ul>
-<ul class="list-group list-unstyled"><div>2016-03-06</div>
-<li><label><span class="label label-success">функционал</span></label> Синхронизация альбомов</li>
-<li><label><span class="label label-success">функционал</span></label> Авторизация</li>
-<li><label><span class="label label-primary">новое</span></label> Интерфейс, структура</li>
-<li><label><span class="label label-info">инфо</span></label> Начало разработки</li>
-</ul>
-</div>
+E;
 
+$changelog = array(
+	'0.6.2' => array(
+		'2017-03-04' => array(
+			array('u',"Небольшие изменения в дизайне."),
+			array('bf',"На стене могли неверно отображаться фото, видео, музыка групп и пользователей если их id совпадал с id материалами владельца."),
+		),
+	),
+	'0.6.1' => array(
+		'2017-01-24' => array(
+			array('u',"Добавлена быстрая синхронизация для стены."),
+		),
+		'2017-01-23' => array(
+			array('u',"Добавлены фильтры по дате и длительности для видео."),
+			array('u',"Добавлена опция для автовоспроизведения локального видео."),
+			array('u',"Переработан дизайн локального видео плеера."),
+			array('b',"Полноэкранный режим не поддерживается в IE10 при проигрывании видео."),
+		),
+		'2017-01-15' => array(
+			array('n',"Добавлена возможность скачивать видео из ВКонтакте с авторизацией через youtube-dl."),
+		),
+	),
+	'0.6' => array(
+		'2016-12-30' => array(
+			array('n',"Добавлена синхронизация документов."),
+			array('n',"Добавлена проверка версии структуры базы данных и инструкция по обновлению."),
+		),
+	),
+	'0.5.6' => array(
+		'2016-12-28' => array(
+			array('d',"Добавлена проверка на отключенный API Вконтакте для музыки при синхронизации стены."),
+		),
+		'2016-12-19' => array(
+			array('d',"API Вконтакте для музыки был отключен. Надеюсь, что через некоторое время он вновь будет доступен для всех."),
+		),
+	),
+	'0.5.5' => array(
+		'2016-11-21' => array(
+			array('bf',"Поправлены пути для установки скрипта в суб-директорию. Спасибо Ивану за багрепорт."),
+		),
+		'2016-10-30' => array(
+			array('n',"Добавлена быстрая синхронизация (только системные альбомы)."),
+		),
+		'2016-06-16' => array(
+			array('u',"В плейлисте изменена иконка для активного трека."),
+		),
+		'2016-06-15' => array(
+			array('bf',"Исправлен баг с упорядочиванием фото на последней странице."),
+			array('bf','Исправлен баг с отображением кнопки "показать все альбомы" при ресайзе окна.'),
+		),
+		'2016-06-05' => array(
+			array('u','Изменен урл загрузки роиков для ВКонтакте, чтобы можно было сохранять "приватные" видео.'),
+			array('bf',"Исправлен баг в поиске видео когда при прокрутке следующая страница загружалась без фильтра."),
+		),
+	),
+	'0.5' => array(
+		'2016-06-01' => array(
+			array('n',"Добавлена возможность поиска видео по типу, сервису и качеству."),
+		),
+		'2016-05-29' => array(
+			array('u',"Добавлена настройка для проигрывания локального видео по умолчанию."),
+			array('n',"Добавлен плеер для локальных видео."),
+			array('bf',"Исправлено сохранение локального пути для видеофайла."),
+		),
+		'2016-05-28' => array(
+			array('u',"Раздел видео обновлен."),
+			array('n','Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-chain"></i> youtube-dl</a> (необходимо установить отдально!)'),
+		),
+		'2016-05-24' => array(
+			array('u',"Улучшена сортировка плейлиста по исполнителю и названию трека."),
+		),
+		'2016-05-19' => array(
+			array('n',"Добавлены красивые списки (Bootstrap Select)"),
+			array('n',"Плеер audio.js заменен на более продвинутый jPlayer.js в связи с этим добавились новые опции а так же изменился дизайн"),
+			array('u',"В аудиозаписях добавлено отображение удаленных треков"),
+			array('n',"Добавлена синхронизация альбомов для аудиозаписей."),
+		),
+	),
+	'0.4.5' => array(
+		'2016-05-12' => array(
+			array('n',"Добавлен perfect-scrollbar.js."),
+			array('n',"Добавлен вывод альбомов (в которых есть хотя бы одно изображение) с превьюшками."),
+			array('u',"В альбомах фото выводятся в порядке убывания."),
+		),
+		'2016-05-07' => array(
+			array('u',"Для синхронизации аттачей добавлена проверка на наличие файла локально."),
+			array('bf',"Исправлено сохранение ссылки для репоста."),
+			array('bf',"Исправлено сохранение аудиозаписи для репоста."),
+		),
+	),
+	'0.4' => array(
+		'2016-05-06' => array(
+			array('n',"Добавлена возможность смотреть отдельные посты со стены в лайтбоксе."),
+			array('n',"Хэш навигация (hashnav.js)."),
+			array('bf',"Исправлен баг с зависанием загрузки стены в хроме."),
+		),
+		'2016-05-05' => array(
+			array('bf',"Добавлена дополнительная проверка на контент для закачек."),
+			array('u',"Добавлен код ошибки если закачка не удалась."),
+			array('u',"Добавлен интерактивный отсчет для таймеров."),
+			array('bf',"Исправлено отображение чекбокса в настройках для IE 11."),
+			array('n',"Синхронизация сообщений (стена): аудиозаписи."),
+			array('n',"Синхронизация сообщений (стена): репосты (в том числе вложенные)."),
+			array('n',"Синхронизация сообщений (стена): ссылки."),
+		),
+		'2016-05-04' => array(
+			array('u',"Множественные изменения в коде."),
+			array('u',"Опция для виртуальных хостов вынесена отдельно. Теперь для её включения необходимо отредактировать конфиг и одну функцию вместо множества файлов."),
+			array('n',"Синхронизация сообщений (стена): добавлен парсинг видео аттачей, а так же обработка репостов (фото, видео)."),
+		),
+		'2016-04-30' => array(
+			array('u',"Общий стиль изменен под новый дизайн ВК."),
+			array('bf',"Не работал оптимизатор изображений в альбомах на FireFox."),
+		),
+		'2016-04-29' => array(
+			array('n',"Добавлен раздел «Сообщения»."),
+			array('n',"Синхронизация сообщений (стена). Альфа-версия."),
+		),
+		'2016-04-28' => array(
+			array('n',"Добавлены настройки (Авто-редиректы)"),
+			array('n',"Красивые чекбоксы (Bootstrap Toggle)"),
+		),
+	),
+	'0.3' => array(
+		'2016-04-24' => array(
+			array('u',"Добавлена полоса прогресса при синхронизации фотографий."),
+		),
+		'2016-04-21' => array(
+			array('u',"Обновление названий альбомов при синхронизации."),
+		),
+		'2016-03-27' => array(
+			array('bf',"Исправлен баг при синхронизации если альбом пустой."),
+		),
+		'2016-03-21' => array(
+			array('u',"Код немного приведен в порядок для работы на PHP 5.3.x."),
+			array('bf',"Неправильные флаги при повторной синхронизации музыки."),
+		),
+		'2016-03-19' => array(
+			array('u',"Настройки таймаутов перенесены в конфиг."),
+			array('u',"Обновление количества фото в альбомах при синхронизации."),
+			array('u',"Не отображалась кнопка автоматического скачивания."),
+		),
+		'2016-03-15' => array(
+			array('n',"Просмотр видеозаписей"),
+			array('u',"При ошибке синхронизации в автоматическом режиме и html ответе сервера (прим. ошибка Bad Gateway) добавлен пропуск данных ID."),
+			array('n',"Добавлена синхронизация видеозаписей"),
+			array('bf',"Исправлено отображение смешенного контента в очереди закачек."),
+		),
+	),
+	'0.2' => array(
+		'2016-03-14' => array(
+			array('n',"Добавлен плеер в раздел музыки (audio.js)"),
+			array('bf',"Добавлена проверка на содержимое ответа сервера."),
+			array('bf',"Некоторые кириллические названия треков не сохранялись"),
+		),
+		'2016-03-13' => array(
+			array('n',"Добавлены иконки (FontAwesome)"),
+			array('i',"Имена аудиозаписей чистятся от не ASCII символов, так как PHP для Windows более чем точно будет скомпилирован без поддержки юникода."),
+			array('b',"Непонятно почему ВК не отдает некоторые аудиозаписи через API, хотя они не являются заблокированными."),
+			array('u',"Обновлен блок и страница очереди закачки. Объединены фотографии и аудиозаписи."),
+			array('n',"Синхронизация аудиозаписей"),
+		),
+		'2016-03-12' => array(
+			array('u',"Раздел Альбомы по-умолчанию отображают 25 последних добавленных фотографий"),
+			array('bf',"Добавлена проверка на размер файла при сохранении"),
+		),
+	),
+	'0.1' => array(
+		'2016-03-09' => array(
+			array('n',"Просмотр фотографий (Fancyfox)"),
+			array('b',"Необходима проверка на размер файла при закачке"),
+			array('u',"Ссылку на очередь отображается если есть хотя бы один элемент"),
+			array('n',"Подгрузка фотографий при скроллинге (jscroll.js)"),
+			array('n',"Responsive макет для фотографий (freewall.js)"),
+			array('n',"Отображение фотографий в альбомах"),
+		),
+		'2016-03-08' => array(
+			array('n',"Получение и сохранение фото"),
+			array('n',"Очередь закачки"),
+			array('u',"Блок очереди закачки в панели управления"),
+		),
+		'2016-03-07' => array(
+			array('fx',"Синхронизация фотографий"),
+			array('bf',"Исправлены баги в синхронизации альбомов"),
+		),
+		'2016-03-06' => array(
+			array('fx',"Синхронизация альбомов"),
+			array('fx',"Авторизация"),
+			array('n',"Интерфейс, структура"),
+			array('i',"Начало разработки"),
+		),
+	),
+);
+
+foreach($changelog as $k => $v){
+	print '<h4>версия '.$k.'</h4>';
+	print '<div class="wall-box">';
+	foreach($v as $d => $c){
+		print '<ul class="list-group list-unstyled"><div>'.$d.'</div>';
+		foreach($c as $t => $m){
+			if($m[0] == 'u'){   $l = 'warning">обновлено'; }
+			if($m[0] == 'b'){   $l = 'danger">баг'; }
+			if($m[0] == 'bf'){  $l = 'danger">багфикс'; }
+			if($m[0] == 'd'){   $l = 'danger">отключено'; }
+			if($m[0] == 'n'){   $l = 'primary">новое'; }
+			if($m[0] == 'fx'){  $l = 'success">функционал'; }
+			if($m[0] == 'i'){   $l = 'info">инфо'; }
+			print '<li><label><span class="label label-'.$l.'</span></label> '.$m[1].'</li>';
+		}
+		print '</ul>';
+	}
+	print '</div>';
+}
+
+print <<<E
           </div>
 </div>
 E;

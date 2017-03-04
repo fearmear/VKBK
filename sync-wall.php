@@ -214,7 +214,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Check do we have this attach already?
 						$at = $db->query_row("SELECT id FROM vk_photos WHERE id = ".$atk['photo']['id']);
 						// Attach found, make a link
-						if(!empty($at['id'])){
+						if(!empty($at['id']) && $atk['photo']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
 							$f->wall_attach_update($v['id'],$atk);
 						} else {
@@ -230,7 +230,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Check do we have this attach already?
 						$at = $db->query_row("SELECT id FROM vk_videos WHERE id = ".$atk['video']['id']);
 						// Attach found, make a link
-						if(!empty($at['id'])){
+						if(!empty($at['id']) && $atk['video']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
 							$f->wall_attach_update($v['id'],$atk);
 						} else {
@@ -288,7 +288,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Check do we have this attach already?
 						$at = $db->query_row("SELECT id FROM vk_music WHERE id = ".$atk['audio']['id']);
 						// Attach found, make a link
-						if(!empty($at['id'])){
+							if(!empty($at['id']) && $atk['audio']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
 							$f->wall_attach_update($v['id'],$atk);
 						} else {
@@ -323,7 +323,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 								// Check do we have this attach already?
 								$at = $db->query_row("SELECT id FROM vk_photos WHERE id = ".$rpatk['photo']['id']);
 								// Attach found, make a link
-								if(!empty($at['id'])){
+								if(!empty($at['id']) && $rpatk['photo']['owner_id'] == $vk_session['vk_user']){
 									// Insert OR update
 									$f->wall_attach_update($rp['id'],$rpatk);
 								} else {
@@ -339,7 +339,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 								// Check do we have this attach already?
 								$at = $db->query_row("SELECT id FROM vk_videos WHERE id = ".$rpatk['video']['id']);
 								// Attach found, make a link
-								if(!empty($rpat['id'])){
+								if(!empty($rpat['id']) && $rpatk['video']['owner_id'] == $vk_session['vk_user']){
 									// Insert OR update
 									$f->wall_attach_update($rp['id'],$rpatk);
 								} else {
@@ -397,7 +397,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 								// Check do we have this attach already?
 								$at = $db->query_row("SELECT id FROM vk_music WHERE id = ".$rpatk['audio']['id']);
 								// Attach found, make a link
-								if(!empty($at['id'])){
+									if(!empty($at['id']) && $rpatk['audio']['owner_id'] == $vk_session['vk_user']){
 									// Insert OR update
 									$f->wall_attach_update($rp['id'],$rpatk);
 								} else {

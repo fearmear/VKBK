@@ -46,6 +46,9 @@ E;
     <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	$(".tip").tooltip();
+    </script>
     {$s['extend']}
   </body>
 </html>
@@ -67,17 +70,22 @@ E;
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-	    <li><a href="index.php"><i class="fa fa-home"></i></a></li>
-            <li><a href="albums.php"><i class="fa fa-camera"></i>Альбомы <span class="badge">{$s['album']}</span></a></li>
-            <li><a href="music.php"><i class="fa fa-music"></i>Музыка <span class="badge">{$s['music']}</span></a></li>
-            <li><a href="videos.php"><i class="fa fa-film"></i>Видео <span class="badge">{$s['video']}</span></a></li>
-	    <li><a href="wall.php"><i class="fa fa-comments-o"></i>Сообщения <span class="badge">{$s['wall']}</span></a></li>
-	    <li><a href="docs.php"><i class="fa fa-file-o"></i>Документы <span class="badge">{$s['docs']}</span></a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Панель управления</a>
+	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Главная">
+		<a href="index.php"><i class="fa fa-home"></i><span class="xs-show">Главная</span></a></li>
+            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Альбомы">
+		<a href="albums.php"><i class="fa fa-camera"></i><span class="xs-show">Альбомы</span> <span class="badge badge-sup">{$s['album']}</span></a></li>
+            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Музыка">
+		<a href="music.php"><i class="fa fa-music"></i><span class="xs-show">Музыка</span> <span class="badge badge-sup">{$s['music']}</span></a></li>
+            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Видео">
+		<a href="videos.php"><i class="fa fa-film"></i><span class="xs-show">Видео</span> <span class="badge badge-sup">{$s['video']}</span></a></li>
+	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Сообщения">
+		<a href="wall.php"><i class="fa fa-comments-o"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
+	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Документы">
+		<a href="docs.php"><i class="fa fa-file-o"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
+	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
+		<a href="queue.php"><i class="fa fa-cloud-download"></i><span class="xs-show">Очередь закачки</span></a></li>
+            <li class="dropdown tip" data-placement="left" data-toggle="tooltip" data-original-title="Панель управления"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i><span class="xs-show">Панель управления</span></a>
                 <ul class="dropdown-menu">
-		  
-		  <li><a href="queue.php"><i class="fa fa-cloud-download"></i> Очередь закачки</a></li>
-		  <li role="separator" class="divider"></li>
                   <li><a href="settings.php"><i class="fa fa-sliders"></i> Настройки</a></li>
 		  <li role="separator" class="divider"></li>
 		  <li><a href="about.php"><i class="fa fa-code-fork"></i> История версий</a></li>
@@ -136,14 +144,14 @@ E;
 	    
 	    // Add a autodownload for the first element in list
 	    if($first == true){
-		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}&oid={$row['owner_id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
 	    } else { $auto = ''; }
 return <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
   <td>{$row['date']}</td>
-  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}&oid={$row['owner_id']}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
 </tr>
 E;
 	}

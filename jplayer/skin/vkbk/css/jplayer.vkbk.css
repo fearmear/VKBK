@@ -616,6 +616,16 @@ span.jp-artist {
 .jp-state-looped .jp-repeat:hover
 { background-color: #597da3; border-radius: 4px; color: #FFF; height: 22px !important }
 
+.jp-video .jp-repeat
+{ color: #fff; background-color: transparent; }
+
+.jp-video.jp-repeat:focus,
+.jp-video.jp-repeat:hover,
+.jp-video.jp-state-looped .jp-repeat,
+.jp-video.jp-state-looped .jp-repeat:focus,
+.jp-video.jp-state-looped .jp-repeat:hover
+{ color: #d22727; background-color: transparent; }
+
 .jp-filters{
     position: absolute;
     left: 440px;

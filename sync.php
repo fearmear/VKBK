@@ -837,7 +837,7 @@ E;
 							'preview_uri' => $v['uri'],
 							'date' => $v['adding_date'],
 							'player_uri' => $v['player'],
-							'access_key' => ($v['access_key'] == '' ? '' : $v['access_key'])
+							'access_key' => (isset($v['access_key']) ? '' : $v['access_key'])
 						);
 					}
 				} // foreach end

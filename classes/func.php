@@ -227,7 +227,7 @@ if($qk == 'local_photo' && $qv != ''){
 	$qclass = 'free-wall';
 }
 if($qk == 'attach_photo' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.")");
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
 	$attach_query = true;
 	$qclass = 'free-wall';
 }
@@ -237,12 +237,12 @@ if($qk == 'local_video' && $qv != ''){
 	$attach_query = true;
 }
 if($qk == 'attach_video' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.")");
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
 	$attach_query = true;
 }
 
 if($qk == 'attach_link' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.")");
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
 	$attach_query = true;
 	$qclass = 'free-wall';
 }
@@ -252,7 +252,7 @@ if($qk == 'local_audio' && $qv != ''){
 	$attach_query = true;
 }
 if($qk == 'attach_audio' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.")");
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
 	$attach_query = true;
 }
     
