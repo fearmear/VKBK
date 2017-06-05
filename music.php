@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -23,13 +24,10 @@ $f = new func();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-$ex_top = <<<E
-<link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
-E;
-
-print $skin->header(array('extend'=>$ex_top));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 print <<<E
 <div class="container">
@@ -164,9 +162,6 @@ E;
 $playlist .= '],{';
 
 $ex_bot = <<<E
-<script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
-<script type="text/javascript" src="jplayer/jplayer.playlist.js"></script>
-<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 jQuery(document).ready(function(){
@@ -211,7 +206,12 @@ jQuery(document).ready(function(){
 </script>
 
 E;
-print $skin->footer(array('extend'=> $ex_bot));
+
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=> $ex_bot));
+} else {
+	print $ex_bot;
+}
 
 $db->close($res);
 

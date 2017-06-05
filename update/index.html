@@ -29,6 +29,17 @@
     <div class="col-sm-12">
 
     <div class="panel panel-success">
+	<div class="panel-heading"><h3 class="panel-title">0.6 &rarr; 0.7</h3></div>
+        <div class="panel-body">
+<pre>
+ALTER TABLE `vk_attach` CHANGE `duration` `duration` INT( 11 ) NOT NULL;
+
+UPDATE `vk_status` SET `val` = '2017031201' WHERE `key` = 'version';
+</pre>
+        </div>
+    </div>    
+    
+    <div class="panel panel-success">
 	<div class="panel-heading"><h3 class="panel-title">0.5.6 (от 28 Дек.) &rarr; 0.6</h3></div>
         <div class="panel-body">
 <pre>

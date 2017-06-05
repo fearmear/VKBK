@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -23,14 +24,10 @@ $f = new func();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-$ex_top = <<<E
-<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
-E;
-
-print $skin->header(array('extend'=>$ex_top));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 print <<<E
 <div class="container" style="position:relative;">
@@ -146,11 +143,6 @@ $fancybox_options = <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="js/jquery.jscroll.js"></script>
-<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="js/hashnav.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var notload = false;
@@ -265,7 +257,11 @@ $('#docs-list').jscroll({
 </script>
 E;
 
-print $skin->footer(array('extend'=> $ex_bot));
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=> $ex_bot));
+} else {
+	print $ex_bot;
+}
 
 $db->close($res);
 

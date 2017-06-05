@@ -36,8 +36,8 @@ $next = 0;
 
 // Filter Options
 $options = '';
-$f_type = (isset($_GET['type'])) ? mysql_real_escape_string($_GET['type']) : 'all';
-$f_service = (isset($_GET['service'])) ? mysql_real_escape_string($_GET['service']) : 'any';
+$f_type = (isset($_GET['type'])) ? $db->real_escape($_GET['type']) : 'all';
+$f_service = (isset($_GET['service'])) ? $db->real_escape($_GET['service']) : 'any';
 $f_quality = (isset($_GET['quality'])) ? intval($_GET['quality']) : 0;
 $f_length = (isset($_GET['length'])) ? intval($_GET['length']) : 0;
 $f_date = (isset($_GET['date']) && $_GET['date'] == 'old') ? 'old' : 'new';
@@ -79,7 +79,7 @@ while($row = $db->return_row($q)){
 	}
 	
 	$row['stitle'] = $row['title'];
-	if(mb_strlen($row['title']) > 40){ $row['stitle'] = mb_substr($row['title'],0,40).'...'; }
+	if(mb_strlen($row['title']) > 38){ $row['stitle'] = mb_substr($row['title'],0,38).'...'; }
 	if($row['desc'] != ''){ $row['desc'] = nl2br($row['desc']); }
 	$row['duration'] = $skin->seconds2human($row['duration']);
 print <<<E
@@ -100,9 +100,8 @@ print <<<E
 		<span class="label">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
-		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
+		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']}</div>
 		<div class="video-status">
-		
 E;
 
 	// Show icon for known services
@@ -111,30 +110,30 @@ E;
 	// Youtube
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
 		$service = true;
-		print 'Источник: <i class="fa fa-youtube" style="color:red;"></i>';
+		print '<i class="fa fa-youtube" style="color:red;"></i>';
 		if($row['local_path'] != ''){
-			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_w'].'x'.$row['local_h'].' '.$f->human_filesize($row['local_size']);
+			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
 	// Vkontakte
 	if(strstr($row['player_uri'],'vk.com')) {
 		$service = true;
-		print 'Источник: <i class="fa fa-vk" style="color:#517397;"></i>';
+		print '<i class="fa fa-vk" style="color:#517397;"></i>';
 		if($row['local_path'] != ''){
-			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_h'].'p '.$f->human_filesize($row['local_size']);
+			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
 			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
 			$key = $pu[1].'_'.$pu[2];
-			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
 		}
 	}
 	
 	if($service == false){
-		print 'Источник: <i class="fa fa-film"></i>';
+		print '<i class="fa fa-film"></i>';
 	}
 
 print <<<E

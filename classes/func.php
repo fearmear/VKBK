@@ -66,9 +66,9 @@ class func {
 	    $q = $db->query("INSERT INTO `vk_attach`
 	    (`uid`,`wall_id`,`type`,`is_local`,`attach_id`,`owner_id`,`uri`,`path`,`width`,`height`,`text`,`date`,`access_key`,`title`,`duration`,`player`,`link_url`,`caption`)
 	    VALUES
-	    (NULL,{$id},'{$type}',0,{$atk[$type]['id']},{$atk[$type]['owner_id']},'{$photo_uri}','',{$atk[$type]['width']},{$atk[$type]['height']},'".mysql_real_escape_string($text)."',{$atk[$type]['date']},'{$atk[$type]['access_key']}','".mysql_real_escape_string($atk[$type]['title'])."',{$atk[$type]['duration']},'{$atk[$type]['player']}','{$atk[$type]['url']}','".mysql_real_escape_string($atk[$type]['caption'])."')
+	    (NULL,{$id},'{$type}',0,{$atk[$type]['id']},{$atk[$type]['owner_id']},'{$photo_uri}','',{$atk[$type]['width']},{$atk[$type]['height']},'".$db->real_escape($text)."',{$atk[$type]['date']},'{$atk[$type]['access_key']}','".$db->real_escape($atk[$type]['title'])."',{$atk[$type]['duration']},'{$atk[$type]['player']}','{$atk[$type]['url']}','".$db->real_escape($atk[$type]['caption'])."')
 	    ON DUPLICATE KEY UPDATE
-	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 0, `attach_id` = {$atk[$type]['id']}, `owner_id` = {$atk[$type]['owner_id']}, `uri` = '{$photo_uri}', `width` = {$atk[$type]['width']}, `height` = {$atk[$type]['height']}, `text` = '".mysql_real_escape_string($text)."', `date` = {$atk[$type]['date']}, `access_key` = '{$atk[$type]['access_key']}', `title` = '".mysql_real_escape_string($atk[$type]['title'])."', `duration` = {$atk[$type]['duration']}, `player` = '{$atk[$type]['player']}', `link_url` = '{$atk[$type]['url']}', `caption` = '".mysql_real_escape_string($atk[$type]['caption'])."'
+	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 0, `attach_id` = {$atk[$type]['id']}, `owner_id` = {$atk[$type]['owner_id']}, `uri` = '{$photo_uri}', `width` = {$atk[$type]['width']}, `height` = {$atk[$type]['height']}, `text` = '".$db->real_escape($text)."', `date` = {$atk[$type]['date']}, `access_key` = '{$atk[$type]['access_key']}', `title` = '".$db->real_escape($atk[$type]['title'])."', `duration` = {$atk[$type]['duration']}, `player` = '{$atk[$type]['player']}', `link_url` = '{$atk[$type]['url']}', `caption` = '".$db->real_escape($atk[$type]['caption'])."'
 	    ");
 	}
 	
@@ -87,9 +87,9 @@ class func {
 	    $q = $db->query("INSERT INTO `vk_wall`
 	    (`id`,`from_id`,`owner_id`,`date`,`post_type`,`text`,`attach`,`repost`,`is_repost`)
 	    VALUES
-	    ({$v['id']},{$v['from_id']},{$v['owner_id']},{$v['date']},'{$v['post_type']}','".mysql_real_escape_string($v['text'])."',{$attach},{$repost},{$is_repost})
+	    ({$v['id']},{$v['from_id']},{$v['owner_id']},{$v['date']},'{$v['post_type']}','".$db->real_escape($this->removeEmoji($v['text']))."',{$attach},{$repost},{$is_repost})
 	    ON DUPLICATE KEY UPDATE
-	    `from_id` = {$v['from_id']}, `owner_id` = {$v['owner_id']}, `date` = {$v['date']}, `post_type` = '{$v['post_type']}', `text` = '".mysql_real_escape_string($v['text'])."', `attach` = {$attach}, `repost` = {$repost}, `is_repost` = {$is_repost}
+	    `from_id` = {$v['from_id']}, `owner_id` = {$v['owner_id']}, `date` = {$v['date']}, `post_type` = '{$v['post_type']}', `text` = '".$db->real_escape($this->removeEmoji($v['text']))."', `attach` = {$attach}, `repost` = {$repost}, `is_repost` = {$is_repost}
 	    ");
 	}
 	
@@ -111,6 +111,39 @@ class func {
 	    elseif(isset($data['photo_130'])){  $photo_uri = $data['photo_130'];}
 	    elseif(isset($data['photo_75'])){   $photo_uri = $data['photo_75'];}
 	    return $photo_uri;
+	}
+	
+	/*
+	  function get_largest_doc_image
+	  Returns a largest image of document preview
+	  In: data array
+	  Out: array(uri, width, height)
+	*/
+	function get_largest_doc_image($data){
+		$image = array('pre'=>"",'prew'=>0,'preh'=>0);
+		foreach($data as $pk => $pv){
+			if(    $pv['type'] == 's'){ // 75px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'm'){ // 130 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'x'){ // 604 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'o'){ // 3:2 130 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'p'){ // 3:2 200 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'q'){ // 3:2 320 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'r'){ // 3:2 510 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'y'){ // 807 px
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'z'){ // 1082x1024
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			elseif($pv['type'] == 'w'){ // 2560x2048
+				$image['pre'] = $pv['src']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+		}
+		return $image;
 	}
 	
 	function wall_date_format($time){
@@ -157,7 +190,9 @@ class func {
 		'attach_video' => '',
 		'attach_link'  => '',
 		'local_audio'  => '',
-		'attach_audio' => ''
+		'attach_audio' => '',
+		'local_doc'    => '',
+		'attach_doc'   => ''
 	    );
 	
 	    if($row['attach'] == 1){
@@ -183,6 +218,12 @@ class func {
 			}
 			if($at_row['type'] == 'audio' && $at_row['is_local'] == 0 && $at_row['path'] != ''){
 				$attach['attach_audio'] .= ($attach['attach_audio'] != '' ? ',' : '').$at_row['attach_id'];
+			}
+			if($at_row['type'] == 'doc' && $at_row['is_local'] == 1){
+				$attach['local_doc'] .= ($attach['local_doc'] != '' ? ',' : '').$at_row['attach_id'];
+			}
+			if($at_row['type'] == 'doc' && $at_row['is_local'] == 0 && $at_row['player'] != ''){
+				$attach['attach_doc'] .= ($attach['attach_doc'] != '' ? ',' : '').$at_row['attach_id'];
 			}
 		}
 	    }
@@ -252,6 +293,14 @@ if($qk == 'local_audio' && $qv != ''){
 	$attach_query = true;
 }
 if($qk == 'attach_audio' && $qv != ''){
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$attach_query = true;
+}
+if($qk == 'local_doc' && $qv != ''){
+	$q = $db->query("SELECT * FROM vk_docs WHERE id IN(".$qv.")");
+	$attach_query = true;
+}
+if($qk == 'attach_doc' && $qv != ''){
 	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
 	$attach_query = true;
 }
@@ -351,6 +400,42 @@ E;
 			}
 
 		} // end of attach audio
+		
+		// Type - Document or attach document
+		if((isset($lph_row['type']) && $lph_row['type'] == 'doc')){
+			// Rewrite for Alias
+			if($cfg['vhost_alias'] == true && substr($lph_row['path'],0,4) != 'http'){
+				$lph_row['path'] = $this->windows_path_alias($lph_row['path'],'docs');
+			}
+			// Attach
+			if(isset($lph_row['player'])){
+				// Have preview
+				if($lph_row['path'] != ''){
+					// Rewrite for Alias
+					if($cfg['vhost_alias'] == true && substr($lph_row['player'],0,4) != 'http'){
+						$lph_row['player'] = $this->windows_path_alias($lph_row['player'],'docs');
+					}
+					$animated = '';
+					if(strtolower(substr($lph_row['player'],-3)) == "gif"){
+						$animated = 'class="doc-gif" data-docsrc="'.$lph_row['player'].'" data-docpre="'.$lph_row['path'].'"';
+					}
+$output .= <<<E
+    <div class="brick" style='width:100%;'><a class="fancybox" rel="p{$row['id']}" href="{$lph_row['player']}"><img {$animated} style="width:100%" src="{$lph_row['path']}"></a></div>
+E;
+				} else {
+					$lph_row['duration'] = $this->human_filesize($lph_row['duration']);
+					$lph_row['caption'] = strtoupper($lph_row['caption']);
+$output .= <<<E
+<div class="col-sm-12">
+	<h5><a href="{$lph_row['player']}" rel="nofollow noreferrer" target="_blank"><i class="fa fa-share"></i> {$lph_row['title']}</a></h5>
+	<p class="wall-description"><span class="label label-default">{$lph_row['caption']}</span> {$lph_row['duration']}</p>
+</div>
+E;
+				}
+			}
+			
+		} // end of attach document
+		
 	}
 	$output .= '</div>';
 }
@@ -398,6 +483,26 @@ E;
 				return $num;
 			}
 		}
+	}
+	
+	// Emoji clecn function by quantizer
+	// https://gist.github.com/quantizer/5744907
+	function removeEmoji($text) {
+        $cleanText = "";
+
+        // Match Emoticons
+        $regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
+        $cleanText = preg_replace($regexEmoticons, '', $text);
+
+        // Match Miscellaneous Symbols and Pictographs
+        $regexSymbols = '/[\x{1F300}-\x{1F5FF}]/u';
+        $cleanText = preg_replace($regexSymbols, '', $cleanText);
+
+        // Match Transport And Map Symbols
+        $regexTransport = '/[\x{1F680}-\x{1F6FF}]/u';
+        $cleanText = preg_replace($regexTransport, '', $cleanText);
+
+        return $cleanText;
 	}
 
 } // end of class

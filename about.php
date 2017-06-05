@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -19,8 +20,10 @@ $skin = new skin();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array('extend'=>''));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 print <<<E
 <div class="container">
@@ -31,7 +34,7 @@ print <<<E
 			<div class="row">
 			<div class="col-sm-3 libs-row">
 			<a href="http://getbootstrap.com/">Bootstrap</a>
-				<span class="label label-default">3.3.6</span><br/>
+				<span class="label label-default">3.3.7</span><br/>
 			<a href="https://github.com/vladkens/VK">PHP класс для VK.API</a>
 				<span class="label label-default">0.1.7</span><br/>
 			<a href="https://github.com/kombai/freewall">Freewall.js</a>
@@ -57,9 +60,15 @@ print <<<E
 			<a href="https://github.com/happyworm/jPlayer">jPlayer.js</a>
 				<span class="label label-default">2.9.2</span><br/>
 			<a href="https://github.com/silviomoreto/bootstrap-select">Bootstrap Select</a>
-				<span class="label label-default">1.10.0</span>
+				<span class="label label-default">1.12.1</span>
 			</div>
 			<div class="col-sm-3 libs-row">
+			<a href="https://github.com/defunkt/jquery-pjax">pjax</a>
+				<span class="label label-default">8 May 2017</span><br/>
+			<a href="https://github.com/customd/jquery-visible/">jQuery Visible</a>
+				<span class="label label-default">1.2.0</span><br/>
+			<a href="http://benalman.com/projects/jquery-throttle-debounce-plugin/">Debounce plugin</a>
+				<span class="label label-default">1.1</span>
 			</div>
 			</div>
 			
@@ -75,6 +84,24 @@ print <<<E
 E;
 
 $changelog = array(
+	'0.7' => array(
+		'0.7.1' => array(
+			array('i',"При ошибках скачивания youtube-dl обновитесь до версии от 2017.05.29."),
+			array('u',"jScroll обновлен до версии 2.3.9"),
+			array('u',"Bootstrap обновлен до версии 3.3.7"),
+			array('i',"Запросы изменены на MySQLi."),
+			array('bf',"Микрофикс ссылок аватаров групп и пользователей в очереди закачки."),
+			array('b',"Проблема с отображением записи &laquo;пользователь обновил фото&raquo;."),
+		),
+		'0.7.0' => array(
+			array('n',"Добавлено автоматическое проигрывание gif'ов на стене."),
+			array('n',"Добавлена синхронизация документов на стене."),
+			array('n',"Добавлена библиотека pjax."),
+			array('u',"Bootstrap Select обновлен до версии 1.12.1."),
+			array('bf',"Исправлен баг автоматической закачки для аттачей."),
+			array('bf',"Сообщение со стены не сохранялось если начиналось с эмодзи."),
+		),
+	),
 	'0.6.2' => array(
 		'2017-03-04' => array(
 			array('u',"Небольшие изменения в дизайне."),
@@ -292,7 +319,9 @@ print <<<E
 </div>
 E;
 
-print $skin->footer(array('extend'=>''));
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=>''));
+}
 
 $db->close($res);
 

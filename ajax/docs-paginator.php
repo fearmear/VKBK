@@ -34,7 +34,7 @@ $next = 0;
 
 // Filter Options
 $options = '';
-$f_type = (isset($_GET['type'])) ? mysql_real_escape_string($_GET['type']) : 'all';
+$f_type = (isset($_GET['type'])) ? $db->real_escape($_GET['type']) : 'all';
 
 if($f_type == "1"){ $options .= " AND `type` = 1"; }
 if($f_type == "2"){ $options .= " AND `type` = 2"; }

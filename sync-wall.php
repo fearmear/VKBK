@@ -132,7 +132,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					// Make import query string
 					foreach($profile_new_ids as $k => $v){
 						if(!isset($v['screen_name'])){ $v['screen_name']='id'.$v['id']; }
-						$profile_data .= ($profile_data != '' ? ',' : '')."({$v['id']},'".mysql_real_escape_string($v['first_name'])."','".mysql_real_escape_string($v['last_name'])."',{$v['sex']},'{$v['screen_name']}','{$v['photo_100']}','')";
+						$profile_data .= ($profile_data != '' ? ',' : '')."({$v['id']},'".$db->real_escape($v['first_name'])."','".$db->real_escape($v['last_name'])."',{$v['sex']},'{$v['screen_name']}','{$v['photo_100']}','')";
 					}
 					
 					// If we have data to import, do it!
@@ -183,7 +183,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				if(!empty($group_new_ids)){
 					// Make import query string
 					foreach($group_new_ids as $k => $v){
-						$group_data .= ($group_data != '' ? ',' : '')."({$v['id']},'".mysql_real_escape_string($v['name'])."','{$v['screen_name']}','{$v['photo_100']}','')";
+						$group_data .= ($group_data != '' ? ',' : '')."({$v['id']},'".$db->real_escape($v['name'])."','{$v['screen_name']}','{$v['photo_100']}','')";
 					}
 					
 					// If we have data to import, do it!
@@ -301,8 +301,55 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 					}
 					}
 					
-				}
+					// Attach - Document
+					/*
+						title -> title
+						size -> duration
+						ext -> text
+						url -> uri ( for local copy path )
+						date -> date
+						type -> not saved
+						preview (
+							photo -> link_url ( for local copy player )
+							width -> width
+							height -> height
+						)
+					*/
+					if($atk['type'] == 'doc'){
+						// Check do we have this attach already?
+						$at = $db->query_row("SELECT id FROM vk_docs WHERE id = ".$atk['doc']['id']);
+						$photo_uri = '';
+						// Attach found, make a link
+						if(!empty($at['id']) && $atk['doc']['owner_id'] == $vk_session['vk_user']){
+							// Insert OR update
+							$f->wall_attach_update($v['id'],$atk);
+						} else {
+							$atk['doc']['caption'] = $atk['doc']['ext'];
+							$atk['doc']['width'] = 0;
+							$atk['doc']['height'] = 0;
+							$atk['doc']['duration'] = $atk['doc']['size'];
+							$atk['doc']['text'] = $atk['doc']['ext'];
 				
+							if(isset($atk['doc']['preview'])){
+								// Images
+								if(isset($atk['doc']['preview']['photo'])){
+									// Get biggest preview
+									$sizes = $f->get_largest_doc_image($atk['doc']['preview']['photo']['sizes']);
+									if($sizes['pre'] != ''){
+										$photo_uri = $sizes['pre'];
+										$atk['doc']['width'] = $sizes['prew'];
+										$atk['doc']['height'] = $sizes['preh'];
+									}
+								}
+							} // Preview end
+							// Audio MSG
+							// no reason to do until VK disabled audio api
+
+							// Save information about attach
+							$f->wall_attach_insert($v['id'],$atk,$photo_uri);
+						}
+					}
+				}
 			}
 			
 			$origin = 0;

@@ -141,7 +141,7 @@ if(file_exists($info)){
 		$local['w'] = (isset($youtubeDLlog->width)) ? $youtubeDLlog->width : 0;
 		$local['h'] = (isset($youtubeDLlog->height)) ? $youtubeDLlog->height : 0;
 		
-		$q = $db->query("UPDATE vk_videos SET `local_path` = '".mysql_real_escape_string($local['path'])."', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']}");
+		$q = $db->query("UPDATE vk_videos SET `local_path` = '".$db->real_escape($local['path'])."', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']}");
 		if($q){
 print <<<E
 <tr>

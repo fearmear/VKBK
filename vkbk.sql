@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `vk_attach` (
   `date` int(11) NOT NULL,
   `access_key` varchar(255) NOT NULL,
   `title` text NOT NULL,
-  `duration` smallint(6) NOT NULL,
+  `duration` int(11) NOT NULL,
   `player` text NOT NULL,
   `link_url` text NOT NULL,
   `caption` varchar(255) NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
   `video` mediumint(8) unsigned NOT NULL,
   `wall` mediumint(8) unsigned NOT NULL,
   `docs` mediumint(8) unsigned NOT NULL,
-  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`)
+  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`,`docs`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -276,7 +276,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '2016123001'),
+('version', '2017031201'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0'),
 ('play-local-video', '0');

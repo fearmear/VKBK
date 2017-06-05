@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -23,14 +24,10 @@ $f = new func();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-$ex_top = <<<E
-<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
-E;
-
-print $skin->header(array('extend'=>$ex_top));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 print <<<E
 <div class="container" style="position:relative;">
@@ -112,7 +109,7 @@ while($row = $db->return_row($r)){
 	}
 	
 	$row['stitle'] = $row['title'];
-	if(mb_strlen($row['title']) > 40){ $row['stitle'] = mb_substr($row['title'],0,40).'...'; }
+	if(mb_strlen($row['title']) > 38){ $row['stitle'] = mb_substr($row['title'],0,38).'...'; }
 	if($row['desc'] != ''){ $row['desc'] = nl2br($row['desc']); }
 	$row['duration'] = $skin->seconds2human($row['duration']);
 print <<<E
@@ -133,9 +130,8 @@ print <<<E
 		<span class="label">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
-		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
+		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']} </div>
 		<div class="video-status">
-		
 E;
 
 	// Show icon for known services
@@ -144,30 +140,30 @@ E;
 	// Youtube
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
 		$service = true;
-		print 'Источник: <i class="fa fa-youtube" style="color:red;"></i>';
+		print '<i class="fa fa-youtube" style="color:red;"></i> ';
 		if($row['local_path'] != ''){
-			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_w'].'x'.$row['local_h'].' '.$f->human_filesize($row['local_size']);
+			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
 	// Vkontakte
 	if(strstr($row['player_uri'],'vk.com')) {
 		$service = true;
-		print 'Источник: <i class="fa fa-vk" style="color:#517397;"></i>';
+		print '<i class="fa fa-vk" style="color:#517397;"></i> ';
 		if($row['local_path'] != ''){
-			print ' | Копия: <b style="color:#33567f">есть</b>; '.strtoupper($row['local_format']).' '.$row['local_h'].'p '.$f->human_filesize($row['local_size']);
+			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
 			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
 			$key = $pu[1].'_'.$pu[2];
-			print ' | Копия: <b>нет</b> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
 		}
 	}
 	
 	if($service == false){
-		print 'Источник: <i class="fa fa-film"></i>';
+		print '<i class="fa fa-film"></i>';
 	}
 
 print <<<E
@@ -387,6 +383,23 @@ $(document).mouseup(function (e){
 			jQuery(".fancybox-title-inside-wrap > .expander").html("показать");
 		}
 	}
+	
+	// Load details of video
+	function show_details(id){
+		jQuery.ajax({
+			async : false,
+			method : "GET",
+			url : "{$cfg['vkbk_url']}ajax/video-details.php?id="+id+""
+		}).done( function(data){
+			jQuery("#pj-content").append(data);
+		});
+	}
+	// Kill details
+	function hide_details(){
+		jQuery("#video-details").remove();
+		jQuery("#video-details-bg").remove();
+	}
+	
 	function jscroller(){
 $('#video-list').jscroll({
 	debug:false,
@@ -403,7 +416,11 @@ $('#video-list').jscroll({
 </script>
 E;
 
-print $skin->footer(array('extend'=> $ex_bot));
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=> $ex_bot));
+} else {
+	print $ex_bot;
+}
 
 $db->close($res);
 

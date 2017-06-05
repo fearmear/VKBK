@@ -641,7 +641,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($music_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['artist'])."','".mysql_real_escape_string($v['title'])."',{$v['album_id']},{$v['duration']},'{$v['uri']}',{$v['date']},0,0,0,'','',true)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".$db->real_escape($v['artist'])."','".$db->real_escape($v['title'])."',{$v['album_id']},{$v['duration']},'{$v['uri']}',{$v['date']},0,0,0,'','',true)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;
@@ -848,7 +848,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($video_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".mysql_real_escape_string($v['title'])."','".mysql_real_escape_string($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true,'',0,'',0,0)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".$db->real_escape($v['title'])."','".$db->real_escape($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true,'',0,'',0,0)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;
@@ -1059,7 +1059,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($docs_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},{$v['owner_id']},'".mysql_real_escape_string($v['title'])."',{$v['size']},'".mysql_real_escape_string($v['ext'])."','{$v['uri']}',{$v['date']},{$v['type']},'{$v['preview_uri']}','','{$v['width']}','{$v['height']}',0,1,'',0,0,0)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},{$v['owner_id']},'".$db->real_escape($v['title'])."',{$v['size']},'".$db->real_escape($v['ext'])."','{$v['uri']}',{$v['date']},{$v['type']},'{$v['preview_uri']}','','{$v['width']}','{$v['height']}',0,1,'',0,0,0)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;

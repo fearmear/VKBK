@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -23,8 +24,10 @@ $f = new func();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-print $skin->header(array('extend'=>''));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 print <<<E
     <div class="container-fluid">
@@ -102,10 +105,11 @@ E;
 			$music = $vk->api('audio.getCount', array(
 				'owner_id' => $vk_session['vk_user']
 			));
-			if($music['response']){
+		if(isset($music['response'])){
 				$counters_show['audios'] = $music['response'];
+		} else {
+			$counters_show['audios'] = 0;
 			}
-			
 			// GET VIDEO Count
 			$video = $vk->api('video.get', array(
 				'owner_id' => $vk_session['vk_user'],
@@ -125,8 +129,10 @@ E;
 			'count' => 1,
 			'offset' => 0
 		));
-		if($docs['response']){
+		if(isset($docs['response'])){
 			$counters_show['docs'] = $docs['response']['count'];
+		} else {
+			$counters_show['docs'] = 0;
 		}
 
 			foreach($counters_show as $k => $v){
@@ -376,7 +382,9 @@ print <<<E
 
 E;
 
-print $skin->footer(array('extend'=>''));
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=>''));
+}
 
 $db->close($res);
 

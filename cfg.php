@@ -10,6 +10,8 @@ date_default_timezone_set("Europe/Minsk");
 $cfg = array();
 require_once('version.php');
 
+$cfg['pj'] = false;
+
 /* Script URL
   Example: http://your.host/
 */

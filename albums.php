@@ -6,6 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./cfg.php');
+if(isset($_GET['_pjax']) || isset($_POST['_pjax'])){ $cfg['pj'] = true; }
 
 // Get DB
 require_once(ROOT.'classes/db.php');
@@ -23,14 +24,10 @@ $f = new func();
 // Get local counters for top menu
 $lc = $db->query_row("SELECT * FROM vk_counters");
 
-$ex_top = <<<E
-<link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
-E;
-
-print $skin->header(array('extend'=>$ex_top));
-print $skin->navigation($lc);
+if(!$cfg['pj']){
+	print $skin->header(array('extend'=>''));
+	print $skin->navigation($lc);
+}
 
 $album_id = (isset($_GET['id'])) ? intval($_GET['id']) : '';
 $header = '';
@@ -50,9 +47,9 @@ while($album_list = $db->return_row($r)){
 	if(mb_strlen($album_list['name']) > 10){ $album_list['name'] = mb_substr($album_list['name'],0,12).'<small>...</small>'; }
 	
 	if($album_list['id'] == $album_id){
-		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'"><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
+		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'" data-pjax><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
 	} else {
-		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'"><i class="fa fa-folder" style="color:#777;"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
+		print '<a class="full-name" data-placement="top" data-toggle="tooltip" data-original-title="'.$full_name.'" href="albums.php?id='.$album_list['id'].'" data-pjax><i class="fa fa-folder" style="color:#777;"></i>&nbsp;&nbsp;'.$album_list['name'].'&nbsp;<span>'.$album_list['img_done'].'</span></a>';
 	}
 }
 
@@ -93,7 +90,7 @@ E;
 		if(mb_strlen($arow['name']) > 10){ $arow['name'] = mb_substr($arow['name'],0,12).'<small>...</small>'; }
 $pic_albums .= <<<E
 <div class="col-sm-3">
-<a href="albums.php?id={$arow['id']}" style="background-image:url('{$arow['path']}');"><span>{$arow['name']}</span></a>
+<a href="albums.php?id={$arow['id']}" data-pjax style="background-image:url('{$arow['path']}');"><span>{$arow['name']}</span></a>
 </div>
 E;
 	}
@@ -131,11 +128,6 @@ print <<<E
 E;
 
 $ex_bot = <<<E
-<script type="text/javascript" src="js/freewall.js"></script>
-<script type="text/javascript" src="js/jquery.jscroll.min.js"></script>
-<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-<script type="text/javascript" src="js/perfect-scrollbar.jquery.min.js?v=0.6.11"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.sidebar').perfectScrollbar();
@@ -218,7 +210,12 @@ function picalbschk(){
 </script>
 
 E;
-print $skin->footer(array('extend'=> $ex_bot));
+
+if(!$cfg['pj']){
+	print $skin->footer(array('extend'=> $ex_bot));
+} else {
+	print $ex_bot;
+}
 
 $db->close($res);
 

@@ -21,11 +21,11 @@ $bool_opions = array(
 
 if(isset($_GET['option']) && isset($_GET['v']) && in_array($_GET['option'],$bool_opions) && ($_GET['v'] == 'true' || $_GET['v'] == 'false')){
 	$b = ($_GET['v'] == 'true') ? 1 : 0;
-	$q = $db->query_row("SELECT `key` FROM vk_status WHERE `key` = '".mysql_escape_string($_GET['option'])."'");
+	$q = $db->query_row("SELECT `key` FROM vk_status WHERE `key` = '".$db->real_escape($_GET['option'])."'");
 	if($q['key'] != ''){
-		$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = '".mysql_escape_string($_GET['option'])."'");
+		$q = $db->query("UPDATE vk_status SET `val` = $b WHERE `key` = '".$db->real_escape($_GET['option'])."'");
 	} else {
-		$q = $db->query("INSERT INTO vk_status (`key`,`val`) VALUES ('".mysql_escape_string($_GET['option'])."','".$b."')");
+		$q = $db->query("INSERT INTO vk_status (`key`,`val`) VALUES ('".$db->real_escape($_GET['option'])."','".$b."')");
 	}
 	print $b;
 } else {

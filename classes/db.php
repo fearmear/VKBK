@@ -3,38 +3,41 @@
 class db {
 	
 	function db(){
+		$conn = null;
+		
 		return true;
 	}
 	
 	function connect($host,$user,$pass,$base){
-		$db = mysql_connect($host,$user,$pass);
+		$db = mysqli_connect($host,$user,$pass);
 		if(!$db){
-			die("Ошибка подключения к БД: ".mysql_error());
+			die("Ошибка подключения к БД: ".mysqli_error());
 		}
 		
-		if(!mysql_select_db($base,$db)){
-			die("Ошибка выбора БД: ".mysql_error());
+		if(!mysqli_select_db($db,$base)){
+			die("Ошибка выбора БД: ".mysqli_error());
 		}
-		mysql_set_charset('utf8');
-		mysql_query("SET NAMES 'utf8'");
+		mysqli_set_charset($db,'utf8');
+		mysqli_query($db,"SET NAMES 'utf8'");
+		$this->conn = $db;
 		return $db;
 	}
 	
 	function free_query($res){
-		return @mysql_free_result($res);
+		return @mysqli_free_result($res);
 	}
 
 	function query($query){
-		$responce = mysql_query($query);
+		$responce = mysqli_query($this->conn,$query);
 		if(!$responce){
-			die("<font style=\"color:red;font-weight:bold;\">Плохой запрос: {$query}\r\n".mysql_error()."</font>\r\n");
+			die("<font style=\"color:red;font-weight:bold;\">Плохой запрос: {$query}\r\n".mysqli_error()."</font>\r\n");
 		} else {
 			return $responce;
 		}
 	}
 	
 	function return_row($query){
-		return mysql_fetch_assoc($query);
+		return mysqli_fetch_assoc($query);
 	}
 	
 	function query_row($query){
@@ -47,15 +50,19 @@ class db {
 	}
 	
 	function affected_rows(){
-		return mysql_affected_rows();
+		return mysqli_affected_rows($this->conn);
 	}
 	
 	function affected_rows_sel(){
-		return mysql_num_rows();
+		return mysqli_num_rows();
+	}
+	
+	function real_escape($data){
+		if(!empty($data)){ return mysqli_real_escape_string($this->conn,$data); } else { return false; }
 	}
 	
 	function close($res) {
-		mysql_close($res);
+		mysqli_close($res);
 	}
 	
 }
