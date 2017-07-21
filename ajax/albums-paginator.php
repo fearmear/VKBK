@@ -43,7 +43,7 @@ while($row = $db->return_row($q)){
 		$row['path'] = $f->windows_path_alias($row['path'],'photo');
 	}
 print <<<E
-    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
+    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}" data-fancybox="images"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
 	}
 	// Increase NEXT so if we load a full page we would have in the end NEXT = perpage+1

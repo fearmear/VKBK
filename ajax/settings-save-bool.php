@@ -29,7 +29,7 @@ if(isset($_GET['option']) && isset($_GET['v']) && in_array($_GET['option'],$bool
 	}
 	print $b;
 } else {
-	print 'Unknown option';
+	print 'Неопознанный параметр';
 }
 
 $db->close($res);

@@ -27,12 +27,12 @@ if(!$cfg['pj']){
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header">VKBK история версий</h2>
+          <h2 class="sub-header"><i class="fa fa-code-fork"></i> История версий</h2>
 		  <div class="well">
-			<p>VKBK - это инструмент для создания и синхронизации локального бэкапа вашего лампового профиля ВК.</p>
+			<p><strong>VKBK</strong> - это инструмент для создания и синхронизации локального бэкапа вашего лампового профиля ВК.</p>
 			<p>Сторонние библиотеки:</p>
 			<div class="row">
-			<div class="col-sm-3 libs-row">
+			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="http://getbootstrap.com/">Bootstrap</a>
 				<span class="label label-default">3.3.7</span><br/>
 			<a href="https://github.com/vladkens/VK">PHP класс для VK.API</a>
@@ -42,7 +42,7 @@ print <<<E
 			<a href="https://github.com/pklauzinski/jscroll">jScroll.js</a>
 				<span class="label label-default">2.3.4</span>
 			</div>
-			<div class="col-sm-3 libs-row">
+			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
 				<span class="label label-default">2.1.5</span><br/>
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
@@ -52,7 +52,7 @@ print <<<E
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
 				<span class="label label-default">2.2.2</span>
 			</div>
-			<div class="col-sm-3 libs-row">
+			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
 				<span class="label label-default">6 May 2016</span><br/>
 			<a href="https://github.com/noraesae/perfect-scrollbar">perfect-scrollbar.js</a>
@@ -62,13 +62,15 @@ print <<<E
 			<a href="https://github.com/silviomoreto/bootstrap-select">Bootstrap Select</a>
 				<span class="label label-default">1.12.1</span>
 			</div>
-			<div class="col-sm-3 libs-row">
+			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://github.com/defunkt/jquery-pjax">pjax</a>
 				<span class="label label-default">8 May 2017</span><br/>
 			<a href="https://github.com/customd/jquery-visible/">jQuery Visible</a>
 				<span class="label label-default">1.2.0</span><br/>
 			<a href="http://benalman.com/projects/jquery-throttle-debounce-plugin/">Debounce plugin</a>
-				<span class="label label-default">1.1</span>
+				<span class="label label-default">1.1</span><br/>
+			<a href="https://github.com/js-cookie/js-cookie">js-cookie</a>
+				<span class="label label-default">2.1.4</span>
 			</div>
 			</div>
 			
@@ -85,8 +87,16 @@ E;
 
 $changelog = array(
 	'0.7' => array(
+		'0.7.2' => array(
+			array('n',"Видео теперь можно минимизировать и при переходе в другой раздел оно не закроется."),
+			array('n',"Добавлен быстрый поиск для видео."),
+			array('n',"Настройки видео плеера теперь сохраняются в куки."),
+			array('n',"Добавлен плагин js-cookie."),
+			array('u',"jQuery обновлен до версии 1.12.4"),
+			array('u',"Fancybox обновлен до версии 3.1.20"),
+		),
 		'0.7.1' => array(
-			array('i',"При ошибках скачивания youtube-dl обновитесь до версии от 2017.05.29."),
+			array('i',"При ошибках скачивания видео, обновите youtube-dl до версии от 2017.05.29 или выше."),
 			array('u',"jScroll обновлен до версии 2.3.9"),
 			array('u',"Bootstrap обновлен до версии 3.3.7"),
 			array('i',"Запросы изменены на MySQLi."),
@@ -307,7 +317,7 @@ foreach($changelog as $k => $v){
 			if($m[0] == 'n'){   $l = 'primary">новое'; }
 			if($m[0] == 'fx'){  $l = 'success">функционал'; }
 			if($m[0] == 'i'){   $l = 'info">инфо'; }
-			print '<li><label><span class="label label-'.$l.'</span></label> '.$m[1].'</li>';
+			print '<li><label><span class="label label-'.$l.'</span></label><p>'.$m[1].'</p></li>';
 		}
 		print '</ul>';
 	}

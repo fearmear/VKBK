@@ -75,7 +75,7 @@ print <<<E
 E;
 		}
 print <<<E
-		<a class="various-local fancybox" href="{$row['local_path']}" data-title="{$row['title']}"></a>
+		<a class="various-local" href="{$row['local_path']}" data-caption="{$row['title']}" data-fancybox="images"></a>
 		<span class="label">{$row['ext']}</span>
 	</div>
 E;

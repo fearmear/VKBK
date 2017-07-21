@@ -41,6 +41,7 @@ $f_service = (isset($_GET['service'])) ? $db->real_escape($_GET['service']) : 'a
 $f_quality = (isset($_GET['quality'])) ? intval($_GET['quality']) : 0;
 $f_length = (isset($_GET['length'])) ? intval($_GET['length']) : 0;
 $f_date = (isset($_GET['date']) && $_GET['date'] == 'old') ? 'old' : 'new';
+$qsearch = (isset($_GET['qsearch'])) ? $db->real_escape($_GET['qsearch']) : '';
 
 if($f_type == "online"){ $options .= " AND `local_path` = ''"; }
 if($f_type == "local"){ $options .= " AND `local_path` != ''"; }
@@ -56,6 +57,10 @@ if($f_length > 0){
 	} else {
 		$options .= " AND `duration` >= ".$f_length*60;
 	}
+}
+
+if($qsearch != ''){
+	$options .= " AND `title` LIKE '%".$qsearch."%'";
 }
 
 if($f_date == "new"){ $options .= " ORDER BY `date_added` DESC"; }
@@ -89,11 +94,11 @@ print <<<E
 E;
 	if($row['local_path'] != '' && $play['local'] == 1){
 print <<<E
-		<a class="various-local fancybox.iframe" href="{$cfg['vkbk_url']}ajax/local-video.php?id={$row['id']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	} else {
 print <<<E
-		<a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('{$row['player_uri']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	}
 print <<<E
@@ -161,7 +166,7 @@ E;
 
 if($next > $cfg['perpage_video']){
 	$page++;
-	print '<div class="paginator-next"><span class="paginator-val">'.$page.'</span><a href="/ajax/videos-paginator.php?page='.$page.'&type='.$f_type.'&service='.$f_service.'&quality='.$f_quality.'&length='.$f_length.'&date='.$f_date.'">следующая страница</a></div>';
+	print '<div class="paginator-next"><span class="paginator-val">'.$page.'</span> <a href="/ajax/videos-paginator.php?page='.$page.'&type='.$f_type.'&service='.$f_service.'&quality='.$f_quality.'&length='.$f_length.'&date='.$f_date.'&qsearch='.$qsearch.'">следующая страница</a></div>';
 }
 
 $db->close($res);

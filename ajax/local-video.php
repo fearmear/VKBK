@@ -94,11 +94,11 @@ $format = '';
 $solution = "html";
 if($list['local_format'] == 'flv') {
 	$solution = "flash";
-	$format = 'flv: "'.$cfg['vkbk_url'].$list['local_path'].'",'; 	}
+	$format = 'flv: "/'.$list['local_path'].'",'; 	}
 if($list['local_format'] == 'webm'){
-	$format = 'webmv: "'.$cfg['vkbk_url'].$list['local_path'].'",'; }
+	$format = 'webmv: "/'.$list['local_path'].'",'; }
 if($list['local_format'] == 'mp4') {
-	$format = 'm4v: "'.$cfg['vkbk_url'].$list['local_path'].'",'; 	}
+	$format = 'm4v: "/'.$list['local_path'].'",'; 	}
 
 $auto_start = '';
 $opt = $db->query_row("SELECT val FROM vk_status WHERE `key` = 'start-local-video'");
@@ -109,15 +109,25 @@ if($opt['val'] == 1){
 print <<<E
           </div>
 </div>
-<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/js.cookie.min.js"></script>
 <script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	var pVolume = parseFloat(Cookies.get('gplayer_vol'));
+	if(pVolume == undefined || isNaN(pVolume)){ pVolume = 1; }
+	var pMuted = Cookies.get('gplayer_mute');
+	if(pMuted == undefined){ pMuted = false; }
+	if(pMuted == 1){ pMuted = true; } else { pMuted = ''; }
+	var pRepeat = Cookies.get('gplayer_repeat');
+	if(pRepeat == 1){ pRepeat = true; } else { pRepeat = ''; }
+	console.log('Vol: '+pVolume+' ~ Muted: '+pMuted+' ~ Loop: '+pRepeat);
+	
 	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
 			$(this).jPlayer("setMedia", {
 				{$format}
-				poster: "{$cfg['vkbk_url']}{$list['preview_path']}"
+				poster: "/{$list['preview_path']}"
 			}){$auto_start};
 		},
 		size: {
@@ -130,8 +140,9 @@ $(document).ready(function() {
 		solution: "{$solution}",
         supplied: "webmv, ogv, m4v, flv",
 		preload: "metadata",
-		volume: 1,
-		muted: false,
+		volume: pVolume, //1,
+		muted: pMuted, //false,
+		loop: pRepeat,
         useStateClassSkin: true,
         autoBlur: false,
         //smoothPlayBar: true,
@@ -167,28 +178,50 @@ $(document).ready(function() {
 				key: 77, // m
 				fn: function(f) {
 					f._muted(!f.options.muted);
+					var mute = 0;
+					if(f.options.muted == true){ mute = 1; }
+					Cookies.set('gplayer_mute',mute,{expires: 365});
 				}
 			},
 			volumeUp: {
 				key: 190, // .
 				fn: function(f) {
 					f.volume(f.options.volume + 0.1);
+					Cookies.set('gplayer_vol',parseFloat(f.options.volume).toFixed(2),{expires: 365});
 				}
 			},
 			volumeDown: {
 				key: 188, // ,
 				fn: function(f) {
 					f.volume(f.options.volume - 0.1);
+					Cookies.set('gplayer_vol',parseFloat(f.options.volume).toFixed(2),{expires: 365});
 				}
 			},
 			loop: {
 				key: 82, // r
 				fn: function(f) {
 					f._loop(!f.options.loop);
+					var loop = 0;
+					if(f.options.loop == true){ loop = 1; }
+					Cookies.set('gplayer_repeat',loop,{expires: 365});
 				}
 			}
 		}
     });
+	
+	// Bindings to mouse click
+	$("button.jp-repeat").click(function(){if(pRepeat == 1){ Cookies.set('gplayer_repeat',0,{expires: 365}); } else { Cookies.set('gplayer_repeat',1,{expires: 365}); }});
+	$("button.jp-mute").click(function(){if(pMuted == 1){ Cookies.set('gplayer_mute',0,{expires: 365}); } else { Cookies.set('gplayer_mute',1,{expires: 365}); }});
+	$("button.jp-volume-max").click(function(){Cookies.set('gplayer_vol',1,{expires: 365}); Cookies.set('gplayer_mute',0,{expires: 365});});
+	$(".jp-volume-bar").click(function(){
+		setTimeout(function(){
+			var vl = parseInt($('.jp-volume-bar-value').css('width'));
+			vl = parseFloat(vl/100).toFixed(2);
+			Cookies.set('gplayer_vol',vl,{expires: 365}); Cookies.set('gplayer_mute',0,{expires: 365});
+		}, 500);
+		clearTimeout();
+	});
+	
 });
 $(window).resize(function(){
 	$("#jquery_jplayer_1").jPlayer({

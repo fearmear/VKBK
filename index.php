@@ -32,9 +32,9 @@ if(!$cfg['pj']){
 print <<<E
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+	  <div class="col-sm-3 col-md-2 sidebar indexbar">
           <ul class="nav nav-sidebar">
-		  <li style="padding:10px 20px;">
+		  <li class="col-xs-6 col-sm-12" style="padding:10px 20px;">
 E;
 
 // Include VK.API
@@ -50,7 +50,8 @@ $counters_show = array(
 	'albums' => 0,
 	'photos' => 0,
 	'audios' => 0,
-	'videos' => 0
+	'videos' => 0,
+	'docs'   => 0
 );
 
 if($vk_session['vk_token']){
@@ -80,11 +81,11 @@ print <<<E
 E;
 			}
 print <<<E
-			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href=""><i class="fa fa-sign-out"></i></a></h4>
+			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href="ajax/auth.php?do=logout" data-pjauth><i class="fa fa-sign-out"></i></a></h4>
 			{$u['first_name']} {$u['last_name']}
 		    </center>
 		  </li>
-		  <li>
+		  <li class="col-xs-6 col-sm-12">
 		    <ul class="nav nav-pills">
 				<li style="width:100%;text-align:center;">Данные из ВК:</li>
 E;
@@ -141,7 +142,7 @@ E;
 				if($k == 'audios') { $k = '<i class="fa fa-music"></i> Музыка'; }
 				if($k == 'videos') { $k = '<i class="fa fa-film"></i> Видео'; }
 			if($k == 'docs') { $k = '<i class="fa fa-file"></i> Документы'; }
-				print '<li style="width:100%;"><a href="#">'.$k.': <span class="badge">'.$v.'</span></a></li>';
+			print '<li style="width:100%;"><a href="javascript:;">'.$k.': <span class="badge">'.$v.'</span></a></li>';
 			}
 			
 		print '</ul>';
@@ -190,7 +191,6 @@ $wall_attachments = $db->query_row("SELECT count(uid) as count FROM vk_attach");
 
 print <<<E
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><i class="fa fa-cogs"></i> Панель управления</h1>
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['album'])}</h1>
@@ -198,7 +198,16 @@ print <<<E
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['photo'])}</h1>
-              <span class="text-muted">Фотографии&nbsp;&nbsp;<a href="sync.php?do=photo"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="sync.php?do=photo&fast=true"><i class="fa fa-retweet"></i></a></span>
+              <span class="text-muted">Фотографии&nbsp;&nbsp;
+			  
+				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-refresh"></i></a>
+					<ul class="dropdown-menu">
+						<li><a href="sync.php?do=photo"><i class="fa fa-hourglass"></i> Полная</a></li>
+						<li><a href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
+					</ul>
+				</div>
+				
+			  </span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($music_albums['count'])}</h1>
@@ -214,7 +223,16 @@ print <<<E
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['wall'])}</h1>
-              <span class="text-muted">Стена&nbsp;&nbsp;<a href="sync-wall.php?offset=0"><i class="fa fa-refresh"></i></a>&nbsp;&nbsp;<a href="sync-wall.php?offset=0&fast=true"><i class="fa fa-retweet"></i></a></span>
+              <span class="text-muted">Стена&nbsp;&nbsp;
+			  
+				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-refresh"></i></a>
+					<ul class="dropdown-menu">
+						<li><a href="sync-wall.php?offset=0"><i class="fa fa-hourglass"></i> Полная</a></li>
+						<li><a href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
+					</ul>
+				</div>
+				
+			  </span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['docs'])}</h1>
@@ -229,7 +247,7 @@ print <<<E
 		  <div class="row white-box">
 			<div class="table-responsive">
 				<h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
-	            <table class="table table-striped">
+	            <table class="table table-striped" style="margin-bottom:0;">
 		          <tbody>
 E;
 
@@ -290,7 +308,7 @@ $queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v']+$queue_coun
 print <<<E
           <div class="table-responsive">
 		  <h4 class="vkhead"><i class="fa fa-cloud-download"></i> Очередь закачки - <b>{$queue_total}</b></h4>
-            <table class="table table-striped white-box">
+            <table class="table table-striped" style="margin-bottom:0;">
               <thead>
                 <tr>
                   <th>#</th>

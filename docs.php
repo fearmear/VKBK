@@ -89,7 +89,7 @@ print <<<E
 E;
 		}
 print <<<E
-		<a class="various-local fancybox" href="{$row['local_path']}" data-title="{$row['title']}"></a>
+		<a class="various-local" href="{$row['local_path']}" data-caption="{$row['title']}" data-fancybox="images"></a>
 		<span class="label">{$row['ext']}</span>
 	</div>
 E;
@@ -117,29 +117,18 @@ E;
 
 // Fancybox Options
 $fancybox_options = <<<E
-		closeClick	: false,
-		openEffect	: 'none',
-		closeEffect	: 'none',
-		
-		padding : 5,
-		arrows : false,
-		closeBtn : false,
-		nextClick : false,
-		loop : false,
-	    helpers : {
-	       overlay : {
-	           css : {
-	               'background' : 'rgba(0, 0, 0, 0.85)'
-	            }
-	       },
-		   title: {
-				type: 'float'
-	       },
-		   buttons : {}
+	loop		: true,
+	keyboard	: true,
+	arrows		: true,
+	infobar		: false,
+	toolbar		: true,
+	buttons		: [ 'fullScreen','close' ],
+	animationEffect		: false,
+	transitionEffect	: false,
+	touch		: {
+		vertical	: false
 	    },
-		beforeLoad: function() {
-            this.title = $(this.element).data('title');
-        }
+	hash		: false
 E;
 
 $ex_bot = <<<E
@@ -176,7 +165,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "{$cfg['vkbk_url']}ajax/docs-paginator.php?page="+i+"&type="+type+""
+					url : "ajax/docs-paginator.php?page="+i+"&type="+type+""
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -200,7 +189,7 @@ $(document).ready(function() {
 		jQuery.ajax({
 			async : false,
 			method : "GET",
-			url : "{$cfg['vkbk_url']}ajax/docs-paginator.php?page=0&type="+type+""
+			url : "ajax/docs-paginator.php?page=0&type="+type+""
 		}).done( function(data){
 			jQuery("#docs-list").html(data);
 			jscroller();
@@ -212,11 +201,7 @@ $(document).ready(function() {
 		jscroller();
 	}
 
-	$(".various-local").fancybox({
-		maxWidth	: 1340,
-		maxHeight	: 820,
-		width		: '95%',
-		height		: '95%',
+	$('.various-local').fancybox({
 		{$fancybox_options}
 	});
 	
@@ -225,35 +210,6 @@ $(document).ready(function() {
 	doc_gif();
 
 });
-
-$(document).mouseup(function (e){
-	var container = $(".docs-filter-box");
-	if (!container.is(e.target) // if the target of the click isn't the container...
-    && container.has(e.target).length === 0) // ... nor a descendant of the container
-	{
-		container.hide();
-		container.unbind( 'click' );
-	}
-});
-
-	function jscroller(){
-$('#docs-list').jscroll({
-	debug:false,
-	refresh:true,
-    nextSelector: 'div.paginator-next > a:last',
-	padding: 20,
-	callback: function(){
-		$(".tip").tooltip();
-		doc_gif();
-		var pval = jQuery("div.paginator-next:last .paginator-val").html();
-		if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
-	}
-});
-	}
-	
-	function doc_gif(){
-		$(".docs-gif").hover(function(){ $(this).attr("style","background-image:url('"+$(this).attr('data-src-local')+"')") }, function(){ $(this).attr("style","background-image:url('"+$(this).attr('data-pre-local')+"')") });
-	}
 </script>
 E;
 

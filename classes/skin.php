@@ -18,21 +18,9 @@ class skin {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
+    <base href="/"/>
     <link href="favicon.png" rel="shortcut icon">
-    <base href="{$cfg['vkbk_url']}"/>
-
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="css/custom.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/bootstrap2-toggle.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+    {$this->header_links()}
     {$s['extend']}
   </head>
   <body>
@@ -40,30 +28,75 @@ class skin {
 E;
 	}
 	
+	function header_ajax(){
+	    return <<<E
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>VKBK</title>
+    <base href="/"/>
+    <link href="favicon.png" rel="shortcut icon">
+    {$this->header_links()}
+  </head>
+  <body style="padding-top:0;">
+E;
+	}
+	
+	function header_links(){
+	    return <<<E
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/jquery.fancybox3.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/bootstrap2-toggle.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+    <!-- Custom styles for this template -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+E;
+	}
+	
 	function footer($s){
 	    global $cfg;
 		return <<<E
     </div> <!-- pj-content end -->
+    <a class="gvplayer" data-fancybox="iframe" data-type="iframe" href="javascript:;"></a>
     <footer class="footer">
       <div class="container">
-        <p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$cfg['version']} &copy; 2016 - 2017 Megumin</p>
+        <div class="col-xs-8"><p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$cfg['version']} &copy; 2016 - 2017 Megumin</p></div>
+	<div class="col-xs-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-fork"></i> История версий</a></div>
       </div>
     </footer>
-
+    {$this->footer_links()}
+    {$s['extend']}
+  </body>
+</html>
+E;
+	}
+	
+	function footer_ajax(){
+	    return <<<E
+    {$this->footer_links()}
+  </body>
+</html>
+E;
+	}
+	
+	function footer_links(){
+	    return <<<E
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/jquery.pjax.js"></script>
-    <script type="text/javascript">
-	$(".tip").tooltip();
-	$(document).pjax('a[data-pjax]', '#pj-content', {timeout:1000})
-    </script>
-    
     <script type="text/javascript" src="js/freewall.js"></script>
     <script type="text/javascript" src="js/jquery.jscroll.js"></script>
-    <script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-    <script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+    <script type="text/javascript" src="js/jquery.fancybox3.min.js"></script>
     <script type="text/javascript" src="js/perfect-scrollbar.jquery.min.js?v=0.6.11"></script>
     <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="js/bootstrap2-toggle.min.js"></script>
@@ -72,10 +105,8 @@ E;
     <script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
     <script type="text/javascript" src="jplayer/jplayer.playlist.js"></script>
     <script type="text/javascript" src="js/hashnav.js"></script>
-    
-    {$s['extend']}
-  </body>
-</html>
+    <script type="text/javascript" src="js/js.cookie.min.js"></script>
+    <script type="text/javascript" src="js/vkbk.js"></script>
 E;
 	}
 	
@@ -108,13 +139,8 @@ E;
 		<a href="docs.php" data-pjax><i class="fa fa-file-o"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
 	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
 		<a href="queue.php" data-pjax><i class="fa fa-cloud-download"></i><span class="xs-show">Очередь закачки</span></a></li>
-            <li class="dropdown tip" data-placement="left" data-toggle="tooltip" data-original-title="Панель управления"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i><span class="xs-show">Панель управления</span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="settings.php" data-pjax><i class="fa fa-sliders"></i> Настройки</a></li>
-		  <li role="separator" class="divider"></li>
-		  <li><a href="about.php" data-pjax><i class="fa fa-code-fork"></i> История версий</a></li>
-                </ul>
-	    </li>
+	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Настройки">
+		<a data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders"></i><span class="xs-show">Настройки</span></a></li>
           </ul>
         </div>
       </div>

@@ -86,7 +86,7 @@ print <<<E
 <div class="container">
           <h2 class="sub-header"><i class="fa fa-cloud-download"></i> Очередь закачки {$all_queue}</h2>
           <div class="table-responsive">
-			<div class="white-box" style="padding:20px 0;margin-bottom:10px;">
+			<div class="white-box" style="padding:20px 0;margin-bottom:10px;white-space:nowrap;">
 E;
 
 // Show last queue records

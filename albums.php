@@ -76,7 +76,7 @@ if($album_id){
 			$row['path'] = $f->windows_path_alias($row['path'],'photo');
 		}
 $photos .= <<<E
-    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
+    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}" data-fancybox="images"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
 	}
 	
@@ -104,7 +104,7 @@ E;
 			$row['path'] = $f->windows_path_alias($row['path'],'photo');
 		}
 $photos .= <<<E
-    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}"><img style="width:100%" src="{$row['path']}"></a></div>
+    <div class="brick" style='width:{$cfg['photo_layout_width']}px;'><a class="fancybox" rel="album" href="{$row['path']}" data-fancybox="images"><img style="width:100%" src="{$row['path']}"></a></div>
 E;
 	}
 	$npage = 1;
@@ -125,6 +125,22 @@ print <<<E
 			<div class="paginator-next" style="display:none;"><a href="ajax/albums-paginator.php?id={$album_id}&page={$npage}">следующая страница</a></div>
           </div>
     </div>
+E;
+
+// Fancybox Options
+$fancybox_options = <<<E
+	loop		: true,
+	keyboard	: true,
+	arrows		: true,
+	infobar		: false,
+	toolbar		: true,
+	buttons		: [ 'fullScreen','close' ],
+	animationEffect		: false,
+	transitionEffect	: false,
+	touch		: {
+		vertical	: false
+	},
+	hash		: false
 E;
 
 $ex_bot = <<<E
@@ -154,29 +170,13 @@ $('.free-wall').jscroll({
     nextSelector: 'div.paginator-next > a:last',
 	padding: 200,
 	callback: function(){
-		$(".jscroll-added").last().delay(250).trigger("resize");
+		$(".fancybox").fancybox({ {$fancybox_options} });
+		$(".jscroll-added").last().delay(500).trigger("resize");
 	}
 });
 
 	$(".fancybox").fancybox({
-		padding : 5,
-		arrows : false,
-		closeBtn : false,
-		nextClick : true,
-		loop : false,
-		keys : {
-			toggle : [32], // space - toggle fullscreen
-			play : [70]
-		},
-	    helpers : {
-	       overlay : {
-	           css : {
-	               'background' : 'rgba(0, 0, 0, 0.85)'
-	            }
-	       },
-		   buttons : {}
-	    }
-
+		{$fancybox_options}
 	});
 	
 	$(".full-name").tooltip();

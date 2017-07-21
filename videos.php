@@ -32,6 +32,8 @@ if(!$cfg['pj']){
 print <<<E
 <div class="container" style="position:relative;">
 
+<input type="text" value="" id="qsearch" class="btn" placeholder="Быстрый поиск..." />
+
 <button type="button" class="btn btn-default video-filter-btn"><i class="fa fa-filter"></i></button>
 <div class="col-sm-4 white-box video-filter-box">
 	<h4><i class="fa fa-filter"></i> Фильтр</h4>
@@ -118,12 +120,14 @@ print <<<E
 	<div class="video-preview" style="background-image:url('{$row['preview_path']}');">
 E;
 	if($row['local_path'] != '' && $play['local'] == 1){
+		// Local Player
 print <<<E
-		<a class="various-local fancybox.iframe" href="{$cfg['vkbk_url']}ajax/local-video.php?id={$row['id']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	} else {
+		// Remote Player
 print <<<E
-		<a class="various fancybox.iframe" href="{$row['player_uri']}" data-title-id="title-{$row['id']}"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('{$row['player_uri']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	}
 print <<<E
@@ -229,8 +233,6 @@ E;
 
 $ex_bot = <<<E
 <script type="text/javascript" src="js/jquery.jscroll.js"></script>
-<script type="text/javascript" src="js/jquery.fancybox.pack.js?v=2.1.5"></script>
-<script type="text/javascript" src="js/jquery.fancybox-buttons.js?v=1.0.5"></script>
 <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="js/hashnav.js"></script>
 <script type="text/javascript">
@@ -245,6 +247,7 @@ $(document).ready(function() {
 	var quality = 0;
 	var length = 0;
 	var date = 'new';
+	var qsearch = '';
 	
 	// Bootstrip select
 	$('.selectpicker').selectpicker({
@@ -260,9 +263,10 @@ $(document).ready(function() {
 	urlCommands.bind('quality', function(id) { quality = id; jQuery("#f-quality").selectpicker('val',id); });
 	urlCommands.bind('length', function(id) { length = id; jQuery("#f-length").selectpicker('val',id); });
 	urlCommands.bind('date', function(id) { date = id; jQuery("#f-date").selectpicker('val',id); });
+	urlCommands.bind('qsearch', function(id) { qsearch = id; jQuery("#qsearch").val(id); });
 	
 	// Not default options -> reload
-	if(type != 'all' || service != 'any' || quality != 0 || length != 0 || date != 'new'){
+	if(type != 'all' || service != 'any' || quality != 0 || length != 0 || date != 'new' || qsearch != ''){
 		urlCommands.urlPush({page:0});
 		video_reload();
 	}
@@ -274,7 +278,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+""
+					url : "ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+"&qsearch="+qsearch+""
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -325,13 +329,23 @@ $(document).ready(function() {
 			video_reload();
 		}
 	});
+	jQuery("#qsearch").on('change', function(){
+		urlCommands.urlPush({qsearch:this.value});
+		if(qsearch != this.value){
+			qsearch = this.value;
+			console.log(this.value);
+			urlCommands.urlPush({page:0});
+			video_reload();
+		}
+	});
 	
 	function video_reload(){
 		jQuery.ajax({
 			async : false,
 			method : "GET",
-			url : "{$cfg['vkbk_url']}ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+""
+			url : "ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+"&qsearch="+qsearch+""
 		}).done( function(data){
+			jQuery(".paginator-next").remove();
 			jQuery("#video-list").html(data);
 			jscroller();
 		});
@@ -340,25 +354,6 @@ $(document).ready(function() {
 	if(notload == false){
 		jscroller();
 	}
-
-	$(".various").fancybox({
-		maxWidth	: 1280,
-		maxHeight	: 720,
-		width		: '70%',
-		height		: '70%',
-		{$fancybox_options}
-	});
-	
-	$(".various-local").fancybox({
-		maxWidth	: 1340,
-		maxHeight	: 820,
-		width		: '95%',
-		height		: '95%',
-		{$fancybox_options}
-		,afterShow	: function(){
-			jQuery("iframe.fancybox-iframe").focus();
-		}
-	});
 	
 	$(".tip").tooltip();
 });
@@ -389,7 +384,7 @@ $(document).mouseup(function (e){
 		jQuery.ajax({
 			async : false,
 			method : "GET",
-			url : "{$cfg['vkbk_url']}ajax/video-details.php?id="+id+""
+			url : "ajax/video-details.php?id="+id+""
 		}).done( function(data){
 			jQuery("#pj-content").append(data);
 		});
