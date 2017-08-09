@@ -122,7 +122,7 @@ E;
 	if($row['local_path'] != '' && $play['local'] == 1){
 		// Local Player
 print <<<E
-		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	} else {
 		// Remote Player

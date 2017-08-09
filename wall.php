@@ -74,9 +74,8 @@ $(document).ready(function() {
 	urlCommands.bind('post', function(id) {
 		if($.isNumeric(id)){
 			$.fancybox.open({
+				src : 'ajax/wall-post.php?p='+id+'',
 				type : 'iframe',
-				href : '{$cfg['vkbk_url']}ajax/wall-post.php?p='+id+'',
-				title : '#'+id,
 				maxWidth	: 960,
 				//maxHeight	: 720,
 				fitToView	: false,

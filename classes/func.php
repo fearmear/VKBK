@@ -234,7 +234,7 @@ class func {
 	    $tmp_box = '';
 	    $tmp_class = 'col-sm-6 col-sm-offset-3 wall-box';
 $tmp_postid = <<<E
-    <a class="post-id wallious fancybox.iframe" href="ajax/wall-post.php?p={$row['id']}" onClick="javascript:urlCommands.urlPush({post:{$row['id']}});">#{$row['id']}</a>
+    <a class="post-id wallious fancybox" data-fancybox data-type="iframe" data-title-id="#{$row['id']}" href="ajax/wall-post.php?p={$row['id']}" onClick="javascript:urlCommands.urlPush({post:{$row['id']}});">#{$row['id']}</a>
 E;
 	    if($repost === true){
 		$tmp_box = 'repost';
@@ -251,7 +251,7 @@ $output .= <<<E
 	{$tmp_postid}
 	<img src="data/{$path}/{$pr['photo_path']}" class="wall-ava" />
 	<div class="wall-head">
-		<a href="#">{$who}</a><br/><span class="full-date" data-placement="right" data-toggle="tooltip" data-original-title="{$full_date}">{$row['date']}</span>
+		<a href="javascript:;">{$who}</a><br/><span class="full-date" data-placement="right" data-toggle="tooltip" data-original-title="{$full_date}">{$row['date']}</span>
 	</div>
 	<div style="clear:both;"></div>
 	{$row['text']}{$repost_body}
@@ -317,7 +317,7 @@ if($attach_query == true){
 				$lph_row['path'] = $this->windows_path_alias($lph_row['path'],'photo');
 			}
 $output .= <<<E
-    <div class="brick" style='width:{$cfg['wall_layout_width']}px;'><a class="fancybox" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a></div>
+    <div class="brick" style='width:{$cfg['wall_layout_width']}px;'><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a></div>
 E;
 		} // end of attach photo
 		
@@ -341,7 +341,7 @@ E;
 $output .= <<<E
 	<div class="wall-video-box">
 	    <span class="label label-default wall-video-duration">{$lph_row['duration']}</span>
-	    <a class="various fancybox.iframe" href="{$lph_row['player']}" data-title-id="title-{$lph_row['attach_id']}" style="background-image:url('{$lph_row['path']}');"></a>
+	    <a class="various fancybox" href="javascript:;" onclick="javascript:fbox_video_global('{$lph_row['player']}',1);" data-title-id="title-{$lph_row['attach_id']}" style="background-image:url('{$lph_row['path']}');"></a>
 	</div>
 	<h4 class="wall-video-header">{$lph_row['title']}</h4>
 	<div id="title-{$lph_row['attach_id']}" style="display:none;">
@@ -361,7 +361,7 @@ E;
 			if($lph_row['text'] != ''){ $lph_row['text'] = '<div style="margin-bottom:10px;">'.nl2br($lph_row['text']).'</div>'; }
 			if($lph_row['path'] != ''){
 $output .= <<<E
-    <div class="wall-link-img"><a class="fancybox" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-chain"></i>&nbsp;{$lph_row['caption']}</a></div>
+    <div class="wall-link-img"><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-chain"></i>&nbsp;{$lph_row['caption']}</a></div>
 E;
 $output .= <<<E
 <div class="col-sm-12" style="border:1px solid rgba(0,20,51,.12);">
@@ -420,7 +420,7 @@ E;
 						$animated = 'class="doc-gif" data-docsrc="'.$lph_row['player'].'" data-docpre="'.$lph_row['path'].'"';
 					}
 $output .= <<<E
-    <div class="brick" style='width:100%;'><a class="fancybox" rel="p{$row['id']}" href="{$lph_row['player']}"><img {$animated} style="width:100%" src="{$lph_row['path']}"></a></div>
+    <div class="brick" style='width:100%;'><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['player']}"><img {$animated} style="width:100%" src="{$lph_row['path']}"></a></div>
 E;
 				} else {
 					$lph_row['duration'] = $this->human_filesize($lph_row['duration']);
