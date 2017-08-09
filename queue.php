@@ -160,7 +160,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_photos WHERE album_id > -9000 AND `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=p&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=p&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
 						}
 					}
 					
@@ -232,7 +232,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_music WHERE `in_queue` = 1 ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=m&id=".$nrow['id']."&auto=1",$cfg['sync_music_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.","queue.php?t=m&id=".$nrow['id']."&auto=1",$cfg['sync_music_next_cd']);
 						}
 					}
 					
@@ -289,7 +289,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),$cfg['sync_video_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),$cfg['sync_video_next_cd']);
 						}
 					}
 					
@@ -313,7 +313,7 @@ E;
 						$skip_row = ($_GET['skip'] != '') ? $_GET['skip'].','.$queue_id : $queue_id;
 						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 && `id` < {$queue_id} ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_error_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",$cfg['sync_music_error_cd']);
+							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_error_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",$cfg['sync_music_error_cd']);
 						}
 				}
 			}
@@ -374,7 +374,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT id FROM vk_docs WHERE `in_queue` = 1 ORDER BY date DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=dc&id=".$nrow['id']."&auto=1",$cfg['sync_docs_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.","queue.php?t=dc&id=".$nrow['id']."&auto=1",$cfg['sync_docs_next_cd']);
 						}
 					}
 					
@@ -422,7 +422,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT id FROM vk_profiles WHERE `photo_path` = ''");
 					if($nrow['id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=pr&id=".$nrow['id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=pr&id=".$nrow['id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -449,7 +449,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT id FROM vk_profiles WHERE `photo_path` = ''");
 							if($nrow['id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=pr&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=pr&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -497,7 +497,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT id FROM vk_groups WHERE `photo_path` = ''");
 					if($nrow['id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=gr&id=".$nrow['id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=gr&id=".$nrow['id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -524,7 +524,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT id FROM vk_groups WHERE `photo_path` = ''");
 							if($nrow['id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=gr&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=gr&id=".$nrow['id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -573,7 +573,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -600,7 +600,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=atph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 					
@@ -649,7 +649,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -676,7 +676,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=atvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -725,7 +725,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -752,7 +752,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=atli&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
 							}
 						}
 						
@@ -819,7 +819,7 @@ E;
 				if($_GET['auto'] == '1'){
 					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'audio' AND `uri` != '' AND `is_local` = 0");
 					if($nrow['attach_id'] > 0){
-						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
 					}
 				}
 			} else {
@@ -842,7 +842,7 @@ E;
 						if($_GET['auto'] == '1'){
 							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `path` = '' AND `type` = 'audio' AND `uri` != '' AND `is_local` = 0");
 							if($nrow['attach_id'] > 0){
-								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_music_next_cd']);
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.","queue.php?t=atau&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_music_next_cd']);
 							}
 						}
 					
@@ -921,7 +921,7 @@ E;
 					if($_GET['auto'] == '1'){
 						$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_attach WHERE `player` = '' AND `type` = 'doc' AND `is_local` = 0");
 						if($nrow['attach_id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.",$cfg['vkbk_url']."queue.php?t=atdc&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_docs_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.","queue.php?t=atdc&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_docs_next_cd']);
 						}
 					}
 					

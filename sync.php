@@ -290,7 +290,7 @@ E;
 				$alb_c = $db->query_row("SELECT COUNT(*) as count FROM vk_albums WHERE id > -9000".$fsync_q2);
 				$album_total = $alb_c['count'];
 				// Reload page
-				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через  <span id=\"gcd\">".$cfg['sync_photo_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=photo&album=".$row['id']."&offset=0&at=".$album_total."&ap=1&fast=".$fast_sync,$cfg['sync_photo_start_cd']);
+				print $skin->reload('warning',"<b>Пристегнитесь!</b> Начинаю синхронизацию фотографий через  <span id=\"gcd\">".$cfg['sync_photo_start_cd']."</span> сек...","sync.php?do=photo&album=".$row['id']."&offset=0&at=".$album_total."&ap=1&fast=".$fast_sync,$cfg['sync_photo_start_cd']);
 			} // if album is not found
 
 			// Album ID found
@@ -358,7 +358,7 @@ E;
 			
 				// No photos in list? Probably a bad response. Refresh...
 				//if(sizeof($photos_vk_list) < 1){
-					//print $skin->reload('warning',"Страница будет обновлена через ".$cfg['sync_photo_error_cd']." сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset,$cfg['sync_photo_error_cd']);
+					//print $skin->reload('warning',"Страница будет обновлена через ".$cfg['sync_photo_error_cd']." сек.","sync.php?do=photo&album=".$album_id."&offset=".$offset,$cfg['sync_photo_error_cd']);
 				//}
 			
 				$photos_list = array();
@@ -452,7 +452,7 @@ E;
 						$album_next = $row['id'];
 						$album_process++;
 						// Got next album, let's reload page
-						print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_next."&offset=0&at=".$album_total."&ap=".$album_process."&fast=".$fast_sync,$cfg['sync_photo_next_cd']);
+						print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","sync.php?do=photo&album=".$album_next."&offset=0&at=".$album_total."&ap=".$album_process."&fast=".$fast_sync,$cfg['sync_photo_next_cd']);
 					} else {
 						// No unsynced photos left and all abums was synced too. This is the end...
 						// Let's make recount photos
@@ -475,7 +475,7 @@ E;
 						// Get Settings (Auto-Queue)
 						$aq = $db->query_row("SELECT val as auto FROM vk_status WHERE `key` = 'auto-queue-photo'");
 						if($aq['auto'] == 1){
-							print $skin->reload('info',"Переходим к очереди закачки через  <span id=\"gcd\">".$cfg['sync_photo_auto_cd']."</span> сек.",$cfg['vkbk_url']."queue.php",$cfg['sync_photo_auto_cd']);
+							print $skin->reload('info',"Переходим к очереди закачки через  <span id=\"gcd\">".$cfg['sync_photo_auto_cd']."</span> сек.","queue.php",$cfg['sync_photo_auto_cd']);
 						}
 						
 					}
@@ -490,7 +490,7 @@ E;
 				
 					// Calculate offset and reload page
 					$offset_new = $offset+$count;
-					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=photo&album=".$album_id."&offset=".$offset_new."&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","sync.php?do=photo&album=".$album_id."&offset=".$offset_new."&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
 				}
 			
 			
@@ -531,7 +531,7 @@ E;
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_music'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через  <span id=\"gcd\">".$cfg['sync_music_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=music&part=1",$cfg['sync_music_start_cd']);
+				print $skin->reload('warning',"<b>Увертюра!</b> Начинаю синхронизацию музыки через  <span id=\"gcd\">".$cfg['sync_music_start_cd']."</span> сек...","sync.php?do=music&part=1",$cfg['sync_music_start_cd']);
 				
 			} // if music part is not found
 			
@@ -564,7 +564,7 @@ E;
 					array_unshift($log,'<tr><td><div class="alert alert-danger" role="alert"><strong>API Вконтакте для аудиозаписей отключен.</strong><br/>Синхронизация остановлена.</div></td></tr>');
 					print $log[0];
 					$q0 = $db->query("UPDATE vk_music SET `deleted` = 0 WHERE `saved` = 1 AND `deleted` = 1");
-					print $skin->reload('warning',"Возвращаемся на главную страницу через <span id=\"gcd\">10</span> сек.",$cfg['vkbk_url']."index.php",10);
+					print $skin->reload('warning',"Возвращаемся на главную страницу через <span id=\"gcd\">10</span> сек.","index.php",10);
 					exit;
 				}
 				
@@ -693,7 +693,7 @@ E;
 						// Get Settings (Auto-Queue)
 						$aq = $db->query_row("SELECT val as auto FROM vk_status WHERE `key` = 'auto-queue-audio'");
 						if($aq['auto'] == 1){
-							print $skin->reload('info',"Переходим к очереди закачки через  <span id=\"gcd\">".$cfg['sync_music_auto_cd']."</span> сек.",$cfg['vkbk_url']."queue.php",$cfg['sync_music_auto_cd']);
+							print $skin->reload('info',"Переходим к очереди закачки через  <span id=\"gcd\">".$cfg['sync_music_auto_cd']."</span> сек.","queue.php",$cfg['sync_music_auto_cd']);
 						}
 
 				} else {
@@ -707,7 +707,7 @@ E;
 					// Calculate offset and reload page
 					$part_new = $part+1;
 					//print_r($part_new);
-					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=music&part=".$part_new."",$cfg['sync_music_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_music_next_cd']."</span> сек.","sync.php?do=music&part=".$part_new."",$cfg['sync_music_next_cd']);
 				}
 			
 				// Get log if any process rinning
@@ -747,7 +747,7 @@ E;
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_video'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через  <span id=\"gcd\">".$cfg['sync_video_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=video&part=1",$cfg['sync_video_start_cd']);
+				print $skin->reload('warning',"<b>Свет, камера, мотор!</b> Начинаю синхронизацию видеозаписей через  <span id=\"gcd\">".$cfg['sync_video_start_cd']."</span> сек...","sync.php?do=video&part=1",$cfg['sync_video_start_cd']);
 				
 			} // if video part is not found
 			
@@ -898,7 +898,7 @@ E;
 				
 					// Calculate offset and reload page
 					$part_new = $part+1;
-					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=video&part=".$part_new."",$cfg['sync_video_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.","sync.php?do=video&part=".$part_new."",$cfg['sync_video_next_cd']);
 				}
 			
 				// Get log if any process rinning
@@ -936,7 +936,7 @@ E;
 				$q = $db->query("UPDATE vk_status SET `val` = CONCAT('".implode("\r\n",$log)."',`val`) WHERE `key` = 'log_docs'");
 				
 				// Reload page
-				print $skin->reload('warning',"<b>Предъявите ваши документы!</b> Начинаю синхронизацию документов через  <span id=\"gcd\">".$cfg['sync_docs_start_cd']."</span> сек...",$cfg['vkbk_url']."sync.php?do=docs&part=1",$cfg['sync_docs_start_cd']);
+				print $skin->reload('warning',"<b>Предъявите ваши документы!</b> Начинаю синхронизацию документов через  <span id=\"gcd\">".$cfg['sync_docs_start_cd']."</span> сек...","sync.php?do=docs&part=1",$cfg['sync_docs_start_cd']);
 				
 			} // if docs part is not found
 			
@@ -1109,7 +1109,7 @@ E;
 				
 					// Calculate offset and reload page
 					$part_new = $part+1;
-					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.",$cfg['vkbk_url']."sync.php?do=docs&part=".$part_new."",$cfg['sync_docs_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.","sync.php?do=docs&part=".$part_new."",$cfg['sync_docs_next_cd']);
 				}
 			
 				// Get log if any process rinning

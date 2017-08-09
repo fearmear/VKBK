@@ -520,7 +520,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 		
 		// Calculate offset and reload page
 		$offset_new = $offset+$count;
-			print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_wall_next_cd']."</span> сек.",$cfg['vkbk_url']."sync-wall.php?offset=".$offset_new."&fast=".$fast_sync."",$cfg['sync_wall_next_cd']);
+			print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_wall_next_cd']."</span> сек.","sync-wall.php?offset=".$offset_new."&fast=".$fast_sync."",$cfg['sync_wall_next_cd']);
 	}
 	
 	} // Fast sync end
