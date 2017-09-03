@@ -23,6 +23,10 @@ $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
 
+// Get session
+$q = $db->query("SELECT * FROM vk_session WHERE `vk_id` = 1");
+$vk_session = $row = $db->return_row($q);
+
 // Get Functions
 require_once(ROOT.'classes/func.php');
 $f = new func();
@@ -40,18 +44,18 @@ while($row = $db->return_row($r)){
 		
 		// Post have a repost?
 		if($row['repost'] > 0){
-			$rp = $db->query_row("SELECT * FROM vk_wall WHERE id = {$row['repost']}");
+			$rp = $db->query_row("SELECT * FROM vk_wall WHERE id = {$row['repost']} AND owner_id = {$row['repost_owner']}");
 			// Post have a rerepost?
 			if($rp['repost'] > 0){
-				$rrp = $db->query_row("SELECT * FROM vk_wall WHERE id = {$rp['repost']}");
-				$rrp_body = $f->wall_show_post($rrp,true,'');
+				$rrp = $db->query_row("SELECT * FROM vk_wall WHERE id = {$rp['repost']} AND owner_id = {$rp['repost_owner']}");
+				$rrp_body = $f->wall_show_post($rrp,true,'',$vk_session);
 			}
-			$repost_body = $f->wall_show_post($rp,true,$rrp_body);
+			$repost_body = $f->wall_show_post($rp,true,$rrp_body,$vk_session);
 			
 		} // repost body end
 		
 		// Make post
-		print $f->wall_show_post($row,false,$repost_body);
+		print $f->wall_show_post($row,false,$repost_body,$vk_session);
 		
 	} // End of while perpage body
 	// Increase NEXT so if we load a full page we would have in the end NEXT = perpage+1

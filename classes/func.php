@@ -79,17 +79,18 @@ class func {
 	    v - postData,
 	    attach - post contains attachment
 	    repost - post contains another post
+	    repost_owner - owner of repost ID
 	    is_repost - post are inside
 	*/
-	function wall_post_insert($v,$attach,$repost,$is_repost){
+	function wall_post_insert($v,$attach,$repost,$repost_owner,$is_repost){
 	    global $db;
 	    
 	    $q = $db->query("INSERT INTO `vk_wall`
-	    (`id`,`from_id`,`owner_id`,`date`,`post_type`,`text`,`attach`,`repost`,`is_repost`)
+	    (`id`,`from_id`,`owner_id`,`date`,`post_type`,`text`,`attach`,`repost`,`repost_owner`,`is_repost`)
 	    VALUES
-	    ({$v['id']},{$v['from_id']},{$v['owner_id']},{$v['date']},'{$v['post_type']}','".$db->real_escape($this->removeEmoji($v['text']))."',{$attach},{$repost},{$is_repost})
+	    ({$v['id']},{$v['from_id']},{$v['owner_id']},{$v['date']},'{$v['post_type']}','".$db->real_escape($this->removeEmoji($v['text']))."',{$attach},{$repost},{$repost_owner},{$is_repost})
 	    ON DUPLICATE KEY UPDATE
-	    `from_id` = {$v['from_id']}, `owner_id` = {$v['owner_id']}, `date` = {$v['date']}, `post_type` = '{$v['post_type']}', `text` = '".$db->real_escape($this->removeEmoji($v['text']))."', `attach` = {$attach}, `repost` = {$repost}, `is_repost` = {$is_repost}
+	    `from_id` = {$v['from_id']}, `owner_id` = {$v['owner_id']}, `date` = {$v['date']}, `post_type` = '{$v['post_type']}', `text` = '".$db->real_escape($this->removeEmoji($v['text']))."', `attach` = {$attach}, `repost` = {$repost}, `repost_owner` = {$repost_owner}, `is_repost` = {$is_repost}
 	    ");
 	}
 	
@@ -166,7 +167,7 @@ class func {
 	    return $date;
 	}
 	
-	function wall_show_post($row,$repost,$repost_body){
+	function wall_show_post($row,$repost,$repost_body,$session){
 	    global $cfg, $db, $skin;
 	    
 	    $output = '';
@@ -262,46 +263,46 @@ foreach($attach as $qk => $qv){
 
 $attach_query = false;
 $qclass = '';
-if($qk == 'local_photo' && $qv != ''){
+if($qk == 'local_photo' && $qv != '' && $row['owner_id'] == $session['vk_user']){
 	$q = $db->query("SELECT * FROM vk_photos WHERE id IN(".$qv.")");
 	$attach_query = true;
 	$qclass = 'free-wall';
 }
 if($qk == 'attach_photo' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
 	$qclass = 'free-wall';
 }
 
-if($qk == 'local_video' && $qv != ''){
+if($qk == 'local_video' && $qv != '' && $row['owner_id'] == $session['vk_user']){
 	$q = $db->query("SELECT * FROM vk_videos WHERE id IN(".$qv.")");
 	$attach_query = true;
 }
 if($qk == 'attach_video' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
 }
 
 if($qk == 'attach_link' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
 	$qclass = 'free-wall';
 }
 
-if($qk == 'local_audio' && $qv != ''){
+if($qk == 'local_audio' && $qv != '' && $row['owner_id'] == $session['vk_user']){
 	$q = $db->query("SELECT * FROM vk_music WHERE id IN(".$qv.")");
 	$attach_query = true;
 }
 if($qk == 'attach_audio' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
 }
-if($qk == 'local_doc' && $qv != ''){
+if($qk == 'local_doc' && $qv != '' && $row['owner_id'] == $session['vk_user']){
 	$q = $db->query("SELECT * FROM vk_docs WHERE id IN(".$qv.")");
 	$attach_query = true;
 }
 if($qk == 'attach_doc' && $qv != ''){
-	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']);
+	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
 }
     

@@ -276,7 +276,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '2017031201'),
+('version', '2017090201'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0'),
 ('play-local-video', '0');
@@ -331,13 +331,15 @@ CREATE TABLE IF NOT EXISTS `vk_wall` (
   `text` text NOT NULL,
   `attach` tinyint(1) NOT NULL,
   `repost` int(11) NOT NULL,
+  `repost_owner` int(11) NOT NULL,
   `is_repost` tinyint(1) NOT NULL,
-  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `id` (`id`,`owner_id`),
   KEY `from` (`from_id`),
   KEY `owner` (`owner_id`),
   KEY `type` (`post_type`),
   KEY `attach` (`attach`),
-  KEY `repost` (`is_repost`)
+  KEY `repost` (`is_repost`),
+  KEY `repost_owner` (`repost_owner`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

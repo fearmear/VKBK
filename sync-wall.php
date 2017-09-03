@@ -353,9 +353,11 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			}
 			
 			$origin = 0;
+			$origin_owner = 0;
 			// Repost parser
 			if(!empty($v['copy_history'])){
 				$origin = $v['copy_history'][0]['id'];
+				$origin_owner = $v['copy_history'][0]['owner_id'];
 				foreach($v['copy_history'] as $chk => $chv){
 					$rp = $v['copy_history'][$chk];
 					$repost = $rp['id'];
@@ -465,15 +467,16 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						$ch_next = $chk+1;
 						if(isset($v['copy_history'][$ch_next]['id']) && $v['copy_history'][$ch_next]['id'] > 0){
 							$rerepost = $v['copy_history'][$ch_next]['id'];
-						} else {$rerepost = 0; }
-						$f->wall_post_insert($rp,$repost_attach,$rerepost,1);
+							$rerepost_owner = ($chk > 1) ? $v['copy_history'][$ch_next-1]['owner_id'] : $v['copy_history'][$ch_next]['owner_id'];
+						} else {$rerepost = 0; $rerepost_owner = 0; }
+						$f->wall_post_insert($rp,$repost_attach,$rerepost,$rerepost_owner,1);
 					}
 				
 				} // Foreach end
 			} // Reposts end
 			
 			// Insert OR update post
-			$f->wall_post_insert($v,$attach,$origin,0);
+			$f->wall_post_insert($v,$attach,$origin,$origin_owner,0);
 			
 			// Fast sync option
 			// Check the date of the last post to our posts. If found, stop sync.

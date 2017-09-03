@@ -29,6 +29,20 @@
     <div class="col-sm-12">
 
     <div class="panel panel-success">
+	<div class="panel-heading"><h3 class="panel-title">0.7.3 &rarr; 0.7.4</h3></div>
+        <div class="panel-body">
+<pre>
+ALTER TABLE `vk_wall` DROP INDEX `id` , ADD UNIQUE `id` ( `id` , `owner_id` );
+
+ALTER TABLE `vk_wall` ADD `repost_owner` INT( 11 ) NOT NULL AFTER `repost` , ADD INDEX ( `repost_owner` );
+
+UPDATE `vk_status` SET `val` = '2017090201' WHERE `key` = 'version';
+</pre>
+<p><strong>После выполнения запросов в БД необходимо запустить полную синхронизацию стены.</strong><br/>После завершения синхронизации запустите скрипт <a href="update_074.php" target="_blank">update_074.php</a> чтобы обновить записи.</p>
+        </div>
+    </div>
+
+    <div class="panel panel-success">
 	<div class="panel-heading"><h3 class="panel-title">0.6 &rarr; 0.7</h3></div>
         <div class="panel-body">
 <pre>
