@@ -39,12 +39,12 @@ print <<<E
 	<label for="type">Тип</label>
 	<select class="selectpicker show-tick" name="type" id="f-type">
 		<option data-icon="fa-globe" value="all">Любой</option>
-		<option data-icon="fa-file-text-o" value="1">Текстовые документы</option>
-		<option data-icon="fa-file-archive-o" value="2">Архивы</option>
+		<option data-icon="fa-file-alt" value="1">Текстовые документы</option>
+		<option data-icon="fa-file-archive" value="2">Архивы</option>
 		<option data-icon="fa-spinner" value="3">Gif</option>
-		<option data-icon="fa-file-image-o" value="4">Изображения</option>
-		<option data-icon="fa-file-audio-o" value="5">Аудио</option>
-		<option data-icon="fa-file-video-o" value="6">Видео</option>
+		<option data-icon="fa-file-image" value="4">Изображения</option>
+		<option data-icon="fa-file-audio" value="5">Аудио</option>
+		<option data-icon="fa-file-video" value="6">Видео</option>
 		<option data-icon="fa-book" value="7">Электронные книги</option>
 		<option data-icon="fa-file" value="8">Прочее</option>
 	</select>

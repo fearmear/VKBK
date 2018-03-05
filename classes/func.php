@@ -362,7 +362,7 @@ E;
 			if($lph_row['text'] != ''){ $lph_row['text'] = '<div style="margin-bottom:10px;">'.nl2br($lph_row['text']).'</div>'; }
 			if($lph_row['path'] != ''){
 $output .= <<<E
-    <div class="wall-link-img"><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-chain"></i>&nbsp;{$lph_row['caption']}</a></div>
+    <div class="wall-link-img"><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-link"></i>&nbsp;{$lph_row['caption']}</a></div>
 E;
 $output .= <<<E
 <div class="col-sm-12" style="border:1px solid rgba(0,20,51,.12);">
@@ -373,7 +373,7 @@ E;
 			} else {
 $output .= <<<E
 <div class="col-sm-12">
-	<h5><a href="{$lph_row['link_url']}" rel="nofollow noreferrer" target="_blank"><i class="fa fa-share"></i> {$lph_row['title']}</a></h5>
+	<h5><a href="{$lph_row['link_url']}" rel="nofollow noreferrer" target="_blank"><i class="fas fa-share"></i> {$lph_row['title']}</a></h5>
 	<p class="wall-description">{$lph_row['text']}</p>
 </div>
 E;
@@ -428,7 +428,7 @@ E;
 					$lph_row['caption'] = strtoupper($lph_row['caption']);
 $output .= <<<E
 <div class="col-sm-12">
-	<h5><a href="{$lph_row['player']}" rel="nofollow noreferrer" target="_blank"><i class="fa fa-share"></i> {$lph_row['title']}</a></h5>
+	<h5><a href="{$lph_row['player']}" rel="nofollow noreferrer" target="_blank"><i class="fas fa-share"></i> {$lph_row['title']}</a></h5>
 	<p class="wall-description"><span class="label label-default">{$lph_row['caption']}</span> {$lph_row['duration']}</p>
 </div>
 E;
@@ -458,7 +458,7 @@ E;
 		);
 		$rpl = array(
 		    '<a href="https://new.vk.com/feed?section=search&q=%23\1" rel="norefferer" target="_blank"><i class="fa fa-tag"></i> \1</a>',
-		    '<a href="https://new.vk.com/\1" rel="norefferer" target="_blank"><i class="fa fa-chain"></i> \2</a>'
+		    '<a href="https://new.vk.com/\1" rel="norefferer" target="_blank"><i class="fa fa-link"></i> \2</a>'
 		);
 		$text = preg_replace($fnd,$rpl,$text);
 		

@@ -27,7 +27,7 @@ if(!$cfg['pj']){
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-code-fork"></i> История версий</h2>
+          <h2 class="sub-header"><i class="fa fa-code-branch"></i> История версий</h2>
 		  <div class="well">
 			<p><strong>VKBK</strong> - это инструмент для создания и синхронизации локального бэкапа вашего лампового профиля ВК.</p>
 			<p>Сторонние библиотеки:</p>
@@ -44,9 +44,9 @@ print <<<E
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
-				<span class="label label-default">2.1.5</span><br/>
+				<span class="label label-default">3.1.20</span><br/>
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
-				<span class="label label-default">4.5.0</span><br/>
+				<span class="label label-default">5.0.8</span><br/>
 			<s><a href="https://github.com/kolber/audiojs">audio.js</a></s>
 				<span class="label label-danger">Deprecated in 0.5</span><br/>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
@@ -60,7 +60,7 @@ print <<<E
 			<a href="https://github.com/happyworm/jPlayer">jPlayer.js</a>
 				<span class="label label-default">2.9.2</span><br/>
 			<a href="https://github.com/silviomoreto/bootstrap-select">Bootstrap Select</a>
-				<span class="label label-default">1.12.1</span>
+				<span class="label label-default">1.12.4</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://github.com/defunkt/jquery-pjax">pjax</a>
@@ -87,6 +87,11 @@ E;
 
 $changelog = array(
 	'0.7' => array(
+		'0.7.5' => array(
+			array('u','Bootstrap-select обновлен до версии 1.12.4'),
+			array('u','FontAwesome обновлен до версии 5.0.8'),
+			array('i','Очередное обновление API Вконтакта.'),
+		),
 		'0.7.4' => array(
 			array('bf','Исправлена ошибка в разделе Сообщения. Если в базе уже имеются данные, следуйте <a href="update/index.html" target="_blank">инструкции</a> на странице обновления.'),
 		),
@@ -183,7 +188,7 @@ $changelog = array(
 		),
 		'2016-05-28' => array(
 			array('u',"Раздел видео обновлен."),
-			array('n','Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-chain"></i> youtube-dl</a> (необходимо установить отдально!)'),
+			array('n','Добавлена поддержка создания локальной копии видеофайлов с сервисов YouTube и VK.com при помощи <a href="https://github.com/rg3/youtube-dl" target="_blank"><i class="fa fa-link"></i> youtube-dl</a> (необходимо установить отдально!)'),
 		),
 		'2016-05-24' => array(
 			array('u',"Улучшена сортировка плейлиста по исполнителю и названию трека."),

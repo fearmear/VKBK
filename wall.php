@@ -35,7 +35,7 @@ if(!$cfg['pj']){
 
 print <<<E
 <div class="container wall-body">
-          <h2 class="sub-header"><i class="fa fa-comments-o"></i> Сообщения</h2>
+          <h2 class="sub-header"><i class="far fa-comments"></i> Сообщения</h2>
           <div class="container" id="wall-list">
 E;
 

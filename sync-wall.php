@@ -50,12 +50,14 @@ $token_valid = false;
 
 if($vk_session['vk_token']){
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret'], $vk_session['vk_token']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 	$token_valid = $vk->checkAccessToken($vk_session['vk_token']);
 } else {
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 }
-// Set API version
-$vk->setApiVersion(5.45);
 
 if($vk_session['vk_token'] != '' && $token_valid == true){
 	try {

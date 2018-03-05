@@ -115,7 +115,7 @@ E;
 	// Youtube
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
 		$service = true;
-		print '<i class="fa fa-youtube" style="color:red;"></i>';
+		print '<i class="fab fa-youtube" style="color:red;"></i>';
 		if($row['local_path'] != ''){
 			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
@@ -127,7 +127,7 @@ E;
 	// Vkontakte
 	if(strstr($row['player_uri'],'vk.com')) {
 		$service = true;
-		print '<i class="fa fa-vk" style="color:#517397;"></i>';
+		print '<i class="fab fa-vk" style="color:#517397;"></i>';
 		if($row['local_path'] != ''){
 			print ' | Копия: <i class="fa fa-check-square" style="color:#4caf50;"></i> ';
 		} else {
@@ -138,7 +138,7 @@ E;
 	}
 	
 	if($service == false){
-		print '<i class="fa fa-film"></i>';
+		print '<i class="fas fa-film"></i>';
 	}
 
 print <<<E

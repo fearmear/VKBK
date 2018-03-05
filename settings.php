@@ -43,7 +43,7 @@ while($row = $db->return_row($q)){
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-sliders"></i> Настройки</h2>
+          <h2 class="sub-header"><i class="fa fa-sliders-h"></i> Настройки</h2>
           <div class="container">
 			<div class="row">
 				<div class="col-sm-4">

@@ -26,7 +26,7 @@ $do = (isset($_GET['do'])) ? $_GET['do'] : '';
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-refresh"></i> Синхронизация</h2>
+          <h2 class="sub-header"><i class="fa fa-sync"></i> Синхронизация</h2>
           <div class="table-responsive white-box">
             <table class="table table-striped">
 E;
@@ -45,12 +45,14 @@ $token_valid = false;
 
 if($vk_session['vk_token']){
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret'], $vk_session['vk_token']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 	$token_valid = $vk->checkAccessToken($vk_session['vk_token']);
 } else {
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 }
-// Set API version
-$vk->setApiVersion(5.45);
 
 if($vk_session['vk_token'] != '' && $token_valid == true){
 	try {

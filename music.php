@@ -60,25 +60,25 @@ print <<<E
 				<div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
 			</div>
 			<div class="jp-toggles">
-				<button class="jp-repeat tip" data-placement="top" data-toggle="tooltip" data-original-title="повторять" role="button" tabindex="0"><i class="fa fa-repeat"></i></button>
+				<button class="jp-repeat tip" data-placement="top" data-toggle="tooltip" data-original-title="повторять" role="button" tabindex="0"><i class="fa fa-retweet"></i></button>
 				<button class="jp-shuffle tip" data-placement="top" data-toggle="tooltip" data-original-title="перемешать" role="button" tabindex="0"><i class="fa fa-random"></i></button>
 			</div>
 			<div class="jp-filters">
 				<label for="listsort">Сортировать по: </label>
 				<select class="jp-sorter selectpicker show-tick" name="listsort">
-					<option data-icon="fa-sort-amount-desc" value="deflist"><i class="fa fa-reorder"></i> по умолчанию</option>
-					<option data-icon="fa-sort-amount-asc" value="reverse"><i class="fa fa-retweet"></i> в обратном порядке</option>
+					<option data-icon="fa-sort-amount-down" value="deflist"><i class="fa fa-reorder"></i> по умолчанию</option>
+					<option data-icon="fa-sort-amount-up" value="reverse"><i class="fa fa-retweet"></i> в обратном порядке</option>
 					<optgroup label="Длительность">
-						<option data-icon="fa-sort-numeric-asc" value="durasc"><i class="fa fa-retweet"></i> сначала короткие</option>
-						<option data-icon="fa-sort-numeric-desc" value="durdesc"><i class="fa fa-retweet"></i> сначала длинные</option>
+						<option data-icon="fa-sort-numeric-up" value="durasc"><i class="fa fa-retweet"></i> сначала короткие</option>
+						<option data-icon="fa-sort-numeric-down" value="durdesc"><i class="fa fa-retweet"></i> сначала длинные</option>
 					</optgroup>
 					<optgroup label="Исполнитель">
-						<option data-icon="fa-sort-alpha-asc" value="arasc"><i class="fa fa-retweet"></i> Исполнитель A-Z</option>
-						<option data-icon="fa-sort-alpha-desc" value="ardesc"><i class="fa fa-retweet"></i> Исполнитель Z-A</option>
+						<option data-icon="fa-sort-alpha-up" value="arasc"><i class="fa fa-retweet"></i> Исполнитель A-Z</option>
+						<option data-icon="fa-sort-alpha-down" value="ardesc"><i class="fa fa-retweet"></i> Исполнитель Z-A</option>
 					</optgroup>
 					<optgroup label="Трек">
-						<option data-icon="fa-sort-alpha-asc" value="ttlasc"><i class="fa fa-retweet"></i> Название A-Z</option>
-						<option data-icon="fa-sort-alpha-desc" value="ttldesc"><i class="fa fa-retweet"></i> Название Z-A</option>
+						<option data-icon="fa-sort-alpha-up" value="ttlasc"><i class="fa fa-retweet"></i> Название A-Z</option>
+						<option data-icon="fa-sort-alpha-down" value="ttldesc"><i class="fa fa-retweet"></i> Название Z-A</option>
 					</optgroup>
 				</select>
 E;

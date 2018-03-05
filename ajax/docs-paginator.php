@@ -82,7 +82,7 @@ E;
 	} else {
 print <<<E
 	<div class="docs-preview">
-		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fa fa-file"></i></span></a>
+		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fas fa-file"></i></span></a>
 		<span class="label">{$row['ext']}</span>
 	</div>
 E;

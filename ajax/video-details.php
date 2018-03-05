@@ -30,7 +30,7 @@ $f = new func();
 print <<<E
 <div class="container video-details-bg" id="video-details-bg" onclick="javascript:hide_details();"></div>
 <div class="col-xs-12 col-md-4 col-md-offset-8 video-details" id="video-details">
-<i class="fa fa-close details-close" onclick="javascript:hide_details();"></i>
+<i class="fas fa-times details-close" onclick="javascript:hide_details();"></i>
 E;
 
 $play = $db->query_row("SELECT val as local FROM vk_status WHERE `key` = 'play-local-video'");
@@ -62,7 +62,7 @@ E;
 	// Youtube
 	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
 		$service = true;
-		print $skin->details_row('Источник:','<i class="fa fa-youtube" style="color:red;"></i>');
+		print $skin->details_row('Источник:','<i class="fab fa-youtube" style="color:red;"></i>');
 		if($row['local_path'] != ''){
 			print $skin->details_row('Локальная копия:','<b style="color:#4caf50">есть</b>');
 			print $skin->details_row('Формат:',strtoupper($row['local_format']));
@@ -78,7 +78,7 @@ E;
 	// Vkontakte
 	if(strstr($row['player_uri'],'vk.com')) {
 		$service = true;
-		print $skin->details_row('Источник:','<i class="fa fa-vk" style="color:#517397;"></i>');
+		print $skin->details_row('Источник:','<i class="fab fa-vk" style="color:#517397;"></i>');
 		if($row['local_path'] != ''){
 			print $skin->details_row('Локальная копия:','<b style="color:#4caf50">есть</b>');
 			print $skin->details_row('Формат:',strtoupper($row['local_format']));
@@ -93,7 +93,7 @@ E;
 	}
 	
 	if($service == false){
-		print $skin->details_row('Источник:','<i class="fa fa-film"></i>');
+		print $skin->details_row('Источник:','<i class="fas fa-film"></i>');
 	}
 
 print <<<E

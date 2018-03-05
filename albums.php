@@ -64,7 +64,7 @@ $pic_albums = '';
 
 if($album_id){
 	$album = $db->query_row("SELECT * FROM vk_albums WHERE `id` = {$album_id}");
-	$header = '<i class="fa fa-folder-open-o"></i> '.$album['name'].($album['img_total'] > $album['img_done'] ? ' <a href="sync.php?do=album&id='.$album_id.'" class="btn btn-primary btn-lg" role="button">Синхр.</a>' : '');
+	$header = '<i class="far fa-folder-open"></i> '.$album['name'].($album['img_total'] > $album['img_done'] ? ' <a href="sync.php?do=album&id='.$album_id.'" class="btn btn-primary btn-lg" role="button">Синхр.</a>' : '');
 		
 	$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 0;
 	$npage = $page+1;

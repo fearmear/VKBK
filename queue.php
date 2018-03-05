@@ -84,7 +84,7 @@ if($all_queue > 0 && isset($_GET['t'])){ $all_queue--; }
 
 print <<<E
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-cloud-download"></i> Очередь закачки {$all_queue}</h2>
+          <h2 class="sub-header"><i class="fa fa-cloud-download-alt"></i> Очередь закачки {$all_queue}</h2>
           <div class="table-responsive">
 			<div class="white-box" style="padding:20px 0;margin-bottom:10px;white-space:nowrap;">
 E;
@@ -153,7 +153,7 @@ if(isset($_GET['id']) && isset($_GET['t'])){
 				$saved = $c->file_save(array('path'=>$cfg['photo_path'].$f.'/','name'=>$n[0]),$out['content']);
 				if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 					$q = $db->query("UPDATE vk_photos SET `in_queue` = 0, `date_done` = ".time().", `path` = '".$cfg['photo_path'].$f."/".$n[0]."', `saved` = 1, `hash` = '".md5_file($cfg['photo_path'].$f."/".$n[0])."' WHERE `id` = ".$queue_id."");
 					
@@ -166,7 +166,7 @@ E;
 					
 				} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 				}
 			} else {
@@ -177,13 +177,13 @@ E;
 				}
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 			}
 			
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = P
@@ -224,7 +224,7 @@ E;
 				$saved = $c->file_save(array('path'=>$cfg['music_path'],'name'=>$fnam),$out['content']);
 				if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл <b>{$nam}</b> сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл <b>{$nam}</b> сохранен</div>
 E;
 				
 					$q = $db->query("UPDATE vk_music SET `in_queue` = 0, `date_done` = ".time().", `path` = '".$cfg['music_path'].$db->real_escape($cnam)."', `saved` = 1, `hash` = '".md5_file($cfg['music_path'].$fnam)."' WHERE `id` = ".$queue_id."");
@@ -238,7 +238,7 @@ E;
 					
 				} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла {$nam}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла {$nam}</div>
 E;
 				}
 			} else {
@@ -249,13 +249,13 @@ E;
 				}
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста для {$nam}{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста для {$nam}{$error_code}</div>
 E;
 			}
 			
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = M
@@ -282,7 +282,7 @@ E;
 				$saved = $c->file_save(array('path'=>$cfg['video_path'],'name'=>$n[0]),$out['content']);
 				if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл превью сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл превью сохранен</div>
 E;
 					$q = $db->query("UPDATE vk_videos SET `in_queue` = 0, `date_done` = ".time().", `preview_path` = '".$cfg['video_path'].$n[0]."' WHERE `id` = ".$queue_id."");
 					
@@ -295,7 +295,7 @@ E;
 					
 				} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении превью файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении превью файла</div>
 E;
 				}
 			} else {
@@ -306,7 +306,7 @@ E;
 				}
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить превью #{$queue_id} с удаленного хоста для {$n[0]}{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить превью #{$queue_id} с удаленного хоста для {$n[0]}{$error_code}</div>
 E;
 				// Move ID to skip list & continue if server response is contain html
 				if($_GET['auto'] == '1' && substr($out['content'],0,5) == '<html'){
@@ -320,7 +320,7 @@ E;
 			
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = V
@@ -347,7 +347,7 @@ E;
 				$saved = $c->file_save(array('path'=>$cfg['docs_path'].$f.'/','name'=>$q['id'].'.'.$q['ext']),$out['content']);
 				if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 
 					$prev_q = '';
@@ -362,7 +362,7 @@ E;
 							$saved_pre = $c->file_save(array('path'=>$cfg['docs_path'].'preview/','name'=>$q['id'].'.'.$np['0']),$out_pre['content']);
 							if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Превью сохранено</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Превью сохранено</div>
 E;
 								$prev_q = ", `preview_path` = '".$cfg['docs_path']."preview/".$q['id'].".".$np[0]."'";
 							}
@@ -380,7 +380,7 @@ E;
 					
 				} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 				}
 			} else {
@@ -391,13 +391,13 @@ E;
 				}
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 			}
 			
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = DC
@@ -415,7 +415,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file(ROOT.'data/profiles/'.$queue_id.'.'.$n[0])){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
 E;
 				$q = $db->query("UPDATE vk_profiles SET `photo_path` = '".$queue_id.".".$n[0]."' WHERE `id` = ".$queue_id."");
 				
@@ -442,7 +442,7 @@ E;
 					$saved = $c->file_save(array('path'=>ROOT.'data/profiles/','name'=>$queue_id.'.'.$n[0]),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 						$q = $db->query("UPDATE vk_profiles SET `photo_path` = '".$queue_id.".".$n[0]."' WHERE `id` = ".$queue_id."");
 					
@@ -455,7 +455,7 @@ E;
 						
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 					}
 				} else {
@@ -466,13 +466,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = PR
@@ -490,7 +490,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file(ROOT.'data/groups/'.$queue_id.'.'.$n[0])){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
 E;
 				$q = $db->query("UPDATE vk_groups SET `photo_path` = '".$queue_id.".".$n[0]."' WHERE `id` = ".$queue_id."");
 				
@@ -517,7 +517,7 @@ E;
 					$saved = $c->file_save(array('path'=>ROOT.'data/groups/','name'=>$queue_id.'.'.$n[0]),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 						$q = $db->query("UPDATE vk_groups SET `photo_path` = '".$queue_id.".".$n[0]."' WHERE `id` = ".$queue_id."");
 						
@@ -530,7 +530,7 @@ E;
 						
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 					}
 				} else {
@@ -541,13 +541,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = GR
@@ -566,7 +566,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file($cfg['photo_path'].'attach/'.$f.'/'.$n[0])){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
 E;
 				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
@@ -593,7 +593,7 @@ E;
 					$saved = $c->file_save(array('path'=>$cfg['photo_path'].'attach/'.$f.'/','name'=>$n[0]),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 						
@@ -606,7 +606,7 @@ E;
 					
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 					}
 				} else {
@@ -617,13 +617,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = ATPH
@@ -642,7 +642,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file($cfg['video_path'].'attach/'.$f.'/'.$n[0])){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
 E;
 				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
@@ -669,7 +669,7 @@ E;
 					$saved = $c->file_save(array('path'=>$cfg['video_path'].'attach/'.$f.'/','name'=>$n[0]),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['video_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 					
@@ -682,7 +682,7 @@ E;
 						
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 					}
 				} else {
@@ -693,13 +693,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = ATVI
@@ -718,7 +718,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file($cfg['photo_path'].'attach/'.$f.'/'.$n[0])){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
 E;
 				$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 				
@@ -745,7 +745,7 @@ E;
 					$saved = $c->file_save(array('path'=>$cfg['photo_path'].'attach/'.$f.'/','name'=>$n[0]),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 						$q = $db->query("UPDATE vk_attach SET `path` = '".$cfg['photo_path']."attach/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
 						
@@ -758,7 +758,7 @@ E;
 						
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 					}
 				} else {
@@ -769,13 +769,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = ATLI
@@ -811,7 +811,7 @@ E;
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file($cfg['music_path'].'attach/'.$fnam)){
 print <<<E
-<div class="alert alert-info" role="alert"><i class="fa fa-file"></i> Файл <b>{$nam}</b> найден локально</div>
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл <b>{$nam}</b> найден локально</div>
 E;
 				
 				$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.$db->real_escape($cnam)."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
@@ -834,7 +834,7 @@ E;
 					$saved = $c->file_save(array('path'=>$cfg['music_path'].'attach/','name'=>$fnam),$out['content']);
 					if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл <b>{$nam}</b> сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл <b>{$nam}</b> сохранен</div>
 E;
 				
 						$q1 = $db->query("UPDATE vk_attach SET `path` = '".$cfg['music_path'].'attach/'.$db->real_escape($cnam)."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
@@ -848,7 +848,7 @@ E;
 					
 					} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла {$nam}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла {$nam}</div>
 E;
 					}
 				} else {
@@ -859,13 +859,13 @@ E;
 					}
 					// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста для {$nam}{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста для {$nam}{$error_code}</div>
 E;
 				}
 			} // end of local file check fail
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = ATAU
@@ -894,7 +894,7 @@ E;
 				$saved = $c->file_save(array('path'=>$cfg['docs_path'].'attach/'.$f.'/','name'=>$q['attach_id'].'.'.$q['caption']),$out['content']);
 				if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Файл сохранен</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
 E;
 
 					$prev_q = '';
@@ -909,7 +909,7 @@ E;
 							$saved_pre = $c->file_save(array('path'=>$cfg['docs_path'].'attach/preview/','name'=>$q['attach_id'].'.'.$np['0']),$out_pre['content']);
 							if($saved){
 print <<<E
-<div class="alert alert-success" role="alert"><i class="fa fa-file"></i> Превью сохранено</div>
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Превью сохранено</div>
 E;
 								$prev_q = ", `path` = '".$cfg['docs_path']."attach/preview/".$q['attach_id'].".".$np[0]."'";
 							}
@@ -927,7 +927,7 @@ E;
 					
 				} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Ошибка при сохранении файла</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
 E;
 				}
 			} else {
@@ -938,20 +938,20 @@ E;
 				}
 				// Something wrong with response or connection
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
 E;
 			}
 			
 		} else {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
 E;
 		}
 	} // End of T = ATDC
 	
 	if($don == false) {
 print <<<E
-<div class="alert alert-danger" role="alert"><i class="fa fa-warning"></i> Неправильный тип или ID</div>
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Неправильный тип или ID</div>
 E;
 	}
 	
@@ -978,7 +978,7 @@ if($bar_queue['p'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['p'] == true){
 			$first['p'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-success\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-success\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
@@ -1006,7 +1006,7 @@ if($bar_queue['m'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['m'] == true){
 			$first['m'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-warning\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-warning\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
@@ -1027,7 +1027,7 @@ if($bar_queue['v'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['v'] == true){
 			$first['v'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
@@ -1047,7 +1047,7 @@ if($bar_queue['dc'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['dc'] == true){
 			$first['dc'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>

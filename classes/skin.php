@@ -8,7 +8,7 @@ class skin {
 	
 	function header($s){
 	    global $cfg;
-	    $db_check = $this->check_db_ver() ? '' : '<div class="label label-danger db-expired"><i class="fa fa-warning"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению.</div>';
+	    $db_check = $this->check_db_ver() ? '' : '<div class="label label-danger db-expired"><i class="fab fa-exclamation-triangle"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению.</div>';
 		return <<<E
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +57,7 @@ E;
     <link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
     <!-- Custom styles for this template -->
     <link href="css/custom.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/fontawesome-all.min.css" rel="stylesheet">
 E;
 	}
 	
@@ -68,8 +68,8 @@ E;
     <a class="gvplayer" data-fancybox="iframe" data-type="iframe" href="javascript:;"></a>
     <footer class="footer">
       <div class="container">
-        <div class="col-xs-8"><p class="text-muted"><i class="fa fa-vk" style="font-size:18px;"></i>BK {$cfg['version']} &copy; 2016 - 2017 Megumin</p></div>
-	<div class="col-xs-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-fork"></i> История версий</a></div>
+        <div class="col-xs-8"><p class="text-muted"><i class="fab fa-vk"></i>BK {$cfg['version']} &copy; 2016 - 2018 Megumin</p></div>
+	<div class="col-xs-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-branch"></i> История версий</a></div>
       </div>
     </footer>
     {$this->footer_links()}
@@ -121,7 +121,7 @@ E;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php"><i class="fa fa-vk" style="font-size:22px;"></i>BK</a>
+          <a class="navbar-brand" href="index.php"><i class="fab fa-vk"></i>BK</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -134,13 +134,14 @@ E;
             <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Видео">
 		<a href="videos.php" data-pjax><i class="fa fa-film"></i><span class="xs-show">Видео</span> <span class="badge badge-sup">{$s['video']}</span></a></li>
 	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Сообщения">
-		<a href="wall.php" data-pjax><i class="fa fa-comments-o"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
+		<a href="wall.php" data-pjax><i class="far fa-comments"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
 	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Документы">
-		<a href="docs.php" data-pjax><i class="fa fa-file-o"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
+		<a href="docs.php" data-pjax><i class="far fa-file"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
 	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
-		<a href="queue.php" data-pjax><i class="fa fa-cloud-download"></i><span class="xs-show">Очередь закачки</span></a></li>
+		<a href="queue.php" data-pjax><i class="fa fa-cloud-download-alt"></i><span class="xs-show">Очередь закачки</span></a></li>
+
 	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Настройки">
-		<a data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders"></i><span class="xs-show">Настройки</span></a></li>
+		<a data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders-h"></i><span class="xs-show">Настройки</span></a></li>
           </ul>
         </div>
       </div>
@@ -196,7 +197,7 @@ E;
 	    
 	    // Add a autodownload for the first element in list
 	    if($first == true){
-		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}".(isset($row['owner_id']) ? '&oid='.$row['owner_id'] : '' )."&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-repeat\"></b></a>";
+		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}".(isset($row['owner_id']) ? '&oid='.$row['owner_id'] : '' )."&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-sync\"></b></a>";
 	    } else { $auto = ''; }
 	    $oid = isset($row['owner_id']) ? "&oid=".$row['owner_id'] : '';
 return <<<E
@@ -216,7 +217,7 @@ E;
 return <<<E
 <tr>
   <td>
-    <div {$c}><i class="fa fa-refresh fa-spin"></i> {$msg}</div>
+    <div {$c}><i class="fa fa-sync fa-spin"></i> {$msg}</div>
 	<script type="text/javascript">
 	var count = {$timeout}/1000;
 	var counter = setInterval(timer, 1000);

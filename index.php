@@ -56,12 +56,14 @@ $counters_show = array(
 
 if($vk_session['vk_token']){
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret'], $vk_session['vk_token']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 	$token_valid = $vk->checkAccessToken($vk_session['vk_token']);
 } else {
 	$vk = new VK($cfg['vk_id'], $cfg['vk_secret']);
+	// Set API version
+	$vk->setApiVersion($cfg['vk_api_version']);
 }
-// Set API version
-$vk->setApiVersion(5.45);
 
 if($vk_session['vk_token'] != '' && $token_valid == true){
 	
@@ -81,7 +83,7 @@ print <<<E
 E;
 			}
 print <<<E
-			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href="ajax/auth.php?do=logout" data-pjauth><i class="fa fa-sign-out"></i></a></h4>
+			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href="ajax/auth.php?do=logout" data-pjauth><i class="fa fa-sign-out-alt"></i></a></h4>
 			{$u['first_name']} {$u['last_name']}
 		    </center>
 		  </li>
@@ -171,10 +173,10 @@ E;
 			$q = $db->query("REPLACE INTO vk_session (`vk_id`,`vk_token`, `vk_expire`, `vk_user`) VALUES (1,'{$access_token['access_token']}','{$access_token['expires_in']}','{$access_token['user_id']}')");
 		}
 		
-		print '<h4><span class="label label-success">Авторизация пройдена</span></h4>';
+		print '<h3><span class="label label-success" style="white-space:inherit;display:block;">Авторизация пройдена</span></h3>';
     }
 	} catch (Exception $error) {
-    echo $error->getMessage();
+		echo '<h3><span class="label label-danger" style="white-space:inherit;display:block;">Ошибка: '.$error->getMessage().'</span></h3>';
 	}
 } // end if token else
 
@@ -194,13 +196,13 @@ print <<<E
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['album'])}</h1>
-              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-sync"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['photo'])}</h1>
               <span class="text-muted">Фотографии&nbsp;&nbsp;
 			  
-				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-refresh"></i></a>
+				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
 					<ul class="dropdown-menu">
 						<li><a href="sync.php?do=photo"><i class="fa fa-hourglass"></i> Полная</a></li>
 						<li><a href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
@@ -211,21 +213,21 @@ print <<<E
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($music_albums['count'])}</h1>
-              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="sync.php?do=musicalbums"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="sync.php?do=musicalbums"><i class="fa fa-sync"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['music'])}</h1>
-              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="sync.php?do=music"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="sync.php?do=music"><i class="fa fa-sync"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['video'])}</h1>
-              <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-sync"></i></a></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['wall'])}</h1>
               <span class="text-muted">Стена&nbsp;&nbsp;
 			  
-				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-refresh"></i></a>
+				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
 					<ul class="dropdown-menu">
 						<li><a href="sync-wall.php?offset=0"><i class="fa fa-hourglass"></i> Полная</a></li>
 						<li><a href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
@@ -236,7 +238,7 @@ print <<<E
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($counters['docs'])}</h1>
-              <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-refresh"></i></a></span>
+              <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-sync"></i></a></span>
             </div>
 			<div class="col-xs-6 col-sm-3 placeholder">
               <h1>{$f->human_thousand($wall_attachments['count'])}</h1>
@@ -307,7 +309,7 @@ $queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v']+$queue_coun
 
 print <<<E
           <div class="table-responsive">
-		  <h4 class="vkhead"><i class="fa fa-cloud-download"></i> Очередь закачки - <b>{$queue_total}</b></h4>
+		  <h4 class="vkhead"><i class="fa fa-cloud-download-alt"></i> Очередь закачки - <b>{$queue_total}</b></h4>
             <table class="table table-striped" style="margin-bottom:0;">
               <thead>
                 <tr>
@@ -326,7 +328,7 @@ if($queue_count['p'] > 0){
 print <<<E
 <tr>
   <td>{$row['id']}</td>
-  <td><i class="fa fa-file-image-o"></i> <a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
+  <td><i class="far fa-file-image"></i> <a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
 </tr>
 E;
@@ -341,7 +343,7 @@ if($queue_count['m'] > 0) {
 print <<<E
 <tr>
   <td>{$row['id']}</td>
-  <td><i class="fa fa-file-audio-o"></i> <a href="{$row['uri']}" target="_blank">{$row['uri_a']}</a></td>
+  <td><i class="far fa-file-audio"></i> <a href="{$row['uri']}" target="_blank">{$row['uri_a']}</a></td>
   <td>{$row['date_added']}</td>
 </tr>
 E;
@@ -355,7 +357,7 @@ if($queue_count['v'] > 0) {
 print <<<E
 <tr>
   <td>{$row['id']}</td>
-  <td><i class="fa fa-file-video-o"></i> <a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
+  <td><i class="far fa-file-video"></i> <a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
 </tr>
 E;
@@ -369,7 +371,7 @@ if($queue_count['dc'] > 0) {
 print <<<E
 <tr>
   <td>{$row['id']}</td>
-  <td><i class="fa fa-file-o"></i> <a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
+  <td><i class="far fa-file"></i> <a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
   <td>{$row['date']}</td>
 </tr>
 E;

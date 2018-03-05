@@ -20,10 +20,10 @@ $output = '';
 if(isset($_GET['do']) && in_array($_GET['do'],$opions)){
 	if($_GET['do'] == 'logout'){
 		$q = $db->query("UPDATE vk_session SET `vk_token` = '' WHERE `vk_id` = 1");
-		$output = '<p>Вы вышли</p><i class="fa fa-power-off" style="font-size:3em;color:#eee;"></i>';
+		$output = '<p>Вы вышли</p><i class="fas fa-power-off" style="font-size:3em;color:#eee;"></i>';
 	}
 } else {
-	$output = '<p>Неопознанный параметр</p><i class="fa fa-times" style="font-size:3em;color:#d9534f;"></i>';
+	$output = '<p>Неопознанный параметр</p><i class="fas fa-times" style="font-size:3em;color:#d9534f;"></i>';
 }
 
 print <<<E
