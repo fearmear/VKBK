@@ -31,7 +31,7 @@ print $skin->header(array('extend'=>$ex_top));
 
 print <<<E
 <div class="wall-body">
-    <div class="container" id="wall-list">
+    <div class="container">
 E;
 
 $found = $db->query_row("SELECT COUNT(*) as total FROM `vk_wall` WHERE `repost` != 0 AND repost_owner = 0 AND is_repost = 0");
@@ -44,22 +44,22 @@ print <<<E
     <div class="col-sm-12 wall-box">
 		<ul class="list-group list-unstyled">
 			<div>Скрипт обновления удаленных репостов для версии <b>0.7.4</b></div>
-			<li><label><span class="label label-info">информация</span></label><p>Ваша версия VKBK: <b>{$cfg['version']}</b></p></li>
+			<li><label><span class="badge badge-info">информация</span></label><p>Ваша версия VKBK: <b>{$cfg['version']}</b></p></li>
 		</ul>
 	
 		<ul class="list-group list-unstyled">
 			<div>База данных</div>
 E;
 if($current_db === true){
-	print '<li><label><span class="label label-success">порядок</span></label><p>Правильная версия базы данных: <b>'.$cfg['version_db'].'</b></p></li>';
+	print '<li><label><span class="badge badge-success">порядок</span></label><p>Правильная версия базы данных: <b>'.$cfg['version_db'].'</b></p></li>';
 } else {
-	print '<li><label><span class="label label-danger">ошибка</span></label><p>Версия базы данных отличается от необходимой!</br>Ваша версия: <b>'.$cfg['version_db'].'</b></br>Требуемая версия: <b>'.$need_db.'</b></p></li>';
+	print '<li><label><span class="badge badge-danger">ошибка</span></label><p>Версия базы данных отличается от необходимой!</br>Ваша версия: <b>'.$cfg['version_db'].'</b></br>Требуемая версия: <b>'.$need_db.'</b></p></li>';
 }
 print <<<E
 		</ul>
 		<ul class="list-group list-unstyled">
 			<div>Данные</div>
-			<li><label><span class="label label-info">информация</span></label><p>Найдено <b>{$found['total']}</b> записей требующих обновновления.</br>Если найдено 0 записей, обновление не требуется.</p></li>
+			<li><label><span class="badge badge-info">информация</span></label><p>Найдено <b>{$found['total']}</b> записей требующих обновновления.</br>Если найдено 0 записей, обновление не требуется.</p></li>
 		</ul>
 E;
 

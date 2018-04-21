@@ -34,8 +34,13 @@ if(!$cfg['pj']){
 }
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="far fa-comments"></i> Сообщения</span>
+    </nav>
+</div>
+
 <div class="container wall-body">
-          <h2 class="sub-header"><i class="far fa-comments"></i> Сообщения</h2>
           <div class="container" id="wall-list">
 E;
 
@@ -66,7 +71,7 @@ while($row = $db->return_row($r)){
 } // End of while
 
 print <<<E
-			<div class="paginator-next" style="display:none;"><a href="ajax/wall-paginator.php?page={$npage}">следующая страница</a></div>
+			<div class="paginator-next" style="display:none;"><span class="paginator-val">{$npage}</span><a href="ajax/wall-paginator.php?page={$npage}">следующая страница</a></div>
           </div>
 </div>
 E;
@@ -74,6 +79,13 @@ E;
 $ex_bot = <<<E
 <script type="text/javascript">
 $(document).ready(function() {
+	var notload = false;
+	var list = jQuery("#wall-list");
+
+	// Default options
+	var page = 1;
+	var freewall_width = {$cfg['wall_layout_width']};
+
 	// Hash URL commands
 	urlCommands.bind('post', function(id) {
 		if($.isNumeric(id)){
@@ -110,142 +122,11 @@ $(document).ready(function() {
 		}
 	});
 	
-	$(".free-wall").each(function(){
-		var wall = new Freewall(this);
+	if(notload == false){
+		console.log("Fresh page call");
 		
-		wall.reset({
-			selector: '.brick',
-			animate: false,
-			cellW: {$cfg['wall_layout_width']},
-			cellH: 'auto',
-			onResize: function() {
-				wall.fitWidth();
-			}
-		});
-		
-		var images = wall.container.find('.brick');
-		images.find('img').load(function() {
-			wall.fitWidth();
-		});
-	});
-	
-	$('#wall-list').jscroll({
-		debug:false,
-		nextSelector: 'div.paginator-next > a:last',
-		//autoTriggerUntil: 100,
-		padding: 200,
-		callback: function(){
-			
-			$(".jscroll-added").filter(":last").find(".free-wall").each(function(){
-				var wall = new Freewall(this);
-				wall.reset({
-					selector: '.brick',
-					animate: false,
-					cellW: {$cfg['wall_layout_width']},
-					cellH: 'auto',
-					onResize: function() {
-						wall.fitWidth();
-					}
-				});
-				
-				var images = wall.container.find('.brick');
-				images.find('img').load(function() {
-					wall.fitWidth();
-				});
-			
-			});
-			
-			$(".full-date").tooltip();
-		} // callback end
-	});
-
-	$(".fancybox").fancybox({
-		padding : 5,
-		arrows : false,
-		closeBtn : false,
-		nextClick : true,
-		loop : false,
-		keys : {
-			toggle : [32], // space - toggle fullscreen
-			play : [70]
-		},
-	    helpers : {
-			overlay : {
-				css : {
-					'background' : 'rgba(0, 0, 0, 0.85)'
-				}
-	        },
-		    buttons : {}
-	    }
-	});
-	
-	$(".wallious").fancybox({
-		maxWidth	: 960,
-		//maxHeight	: 720,
-		fitToView	: false,
-		width		: '70%',
-		height		: '70%',
-		autoSize	: true,
-		closeClick	: false,
-		openEffect	: 'none',
-		closeEffect	: 'none',
-		
-		padding : 5,
-		arrows : false,
-		closeBtn : false,
-		nextClick : false,
-		loop : false,
-	    helpers : {
-			overlay : {
-				showEarly : false,
-				css : {
-					'background' : 'rgba(0, 0, 0, 0.85)'
-	            }
-			},
-			title: {
-				type: 'inside'
-			}
-	    }
-	});
-	
-	$(".various").fancybox({
-		maxWidth	: 1280,
-		maxHeight	: 720,
-		fitToView	: false,
-		width		: '70%',
-		height		: '70%',
-		autoSize	: false,
-		closeClick	: false,
-		openEffect	: 'none',
-		closeEffect	: 'none',
-		
-		padding : 5,
-		arrows : false,
-		closeBtn : false,
-		nextClick : false,
-		loop : false,
-	    helpers : {
-			overlay : {
-				css : {
-					'background' : 'rgba(0, 0, 0, 0.85)'
-	            }
-			},
-			title: {
-				type: 'inside'
-			}
-	    },
-		beforeLoad: function() {
-            var el, id = $(this.element).data('title-id');
-	
-            if (id) {
-                el = $('#' + id);
-            
-                if (el.length) {
-                    this.title = el.html();
-                }
-            }
-        }
-	});
+	}
+	apr_jscroller('wall',list);	
 	
 	$(".full-date").tooltip();
 	

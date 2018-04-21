@@ -5,7 +5,7 @@
  * @copyright 2011-2017, Philip Klauzinski
  * @license Dual licensed under the MIT and GPL Version 2 licenses.
  * @author Philip Klauzinski (http://webtopian.com)
- * @version 2.3.9
+ * @version 2.3.9a
  * @requires jQuery v1.4.3+
  * @preserve
  */
@@ -25,7 +25,8 @@
             nextSelector: 'a:last',
             contentSelector: '',
             pagingSelector: '',
-            callback: false
+            callback: false,
+	    refresh: false
         }
     };
 
@@ -198,10 +199,20 @@
             };
 
         // Initialization
-        $e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref}));
-        _wrapInnerContent();
-        _preloadImage();
-        _setBindings();
+        //$e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref}));
+        //_wrapInnerContent();
+        //_preloadImage();
+        //_setBindings();
+        if (_nextHref !== 'undefined') {
+            $e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref, refresh: _options.refresh}));
+            _wrapInnerContent();
+            _preloadImage();
+            _setBindings();
+        } else {
+            _debug('warn', 'jScroll: nextSelector not found - destroying');
+            _destroy();
+            return false;
+        }
 
         // Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
         $.extend($e.jscroll, {
@@ -217,7 +228,7 @@
                 data = $this.data('jscroll');
 
             // Instantiate jScroll on this element if it hasn't been already
-            if (data && data.initialized) {
+            if (data && data.initialized && data.refresh === false) {
                 return;
             }
             jScroll($this, m);

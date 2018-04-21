@@ -8,14 +8,14 @@ class skin {
 	
 	function header($s){
 	    global $cfg;
-	    $db_check = $this->check_db_ver() ? '' : '<div class="label label-danger db-expired"><i class="fab fa-exclamation-triangle"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению.</div>';
+	    $db_check = $this->check_db_ver() ? '' : '<div class="m-2 badge badge-danger db-expired"><i class="fas fa-exclamation-triangle"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению перед синхронизацией. <i class="fas fa-exclamation-triangle"></i></div>';
 		return <<<E
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
     <base href="/"/>
@@ -35,7 +35,7 @@ E;
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
     <base href="/"/>
@@ -55,6 +55,7 @@ E;
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/bootstrap2-toggle.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/justifiedGallery.min.css" type="text/css" media="screen" />
     <!-- Custom styles for this template -->
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/fontawesome-all.min.css" rel="stylesheet">
@@ -68,8 +69,10 @@ E;
     <a class="gvplayer" data-fancybox="iframe" data-type="iframe" href="javascript:;"></a>
     <footer class="footer">
       <div class="container">
-        <div class="col-xs-8"><p class="text-muted"><i class="fab fa-vk"></i>BK {$cfg['version']} &copy; 2016 - 2018 Megumin</p></div>
-	<div class="col-xs-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-branch"></i> История версий</a></div>
+	<div class="row">
+        <div class="col-sm-8"><p class="text-muted"><i class="fab fa-vk"></i>BK {$cfg['version']} &copy; 2016 - 2018 Megumin</p></div>
+	<div class="col-sm-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-branch"></i> История версий</a></div>
+	</div>
       </div>
     </footer>
     {$this->footer_links()}
@@ -90,8 +93,9 @@ E;
 	function footer_links(){
 	    return <<<E
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/jquery.pjax.js"></script>
     <script type="text/javascript" src="js/freewall.js"></script>
@@ -106,59 +110,73 @@ E;
     <script type="text/javascript" src="jplayer/jplayer.playlist.js"></script>
     <script type="text/javascript" src="js/hashnav.js"></script>
     <script type="text/javascript" src="js/js.cookie.min.js"></script>
+	<script type="text/javascript" src="js/jquery.justifiedGallery.min.js"></script>
     <script type="text/javascript" src="js/vkbk.js"></script>
 E;
 	}
 	
 	function navigation($s){
 		return <<<E
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="index.php"><i class="fab fa-vk"></i>BK</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Главная">
-		<a href="index.php" data-pjax><i class="fa fa-home"></i><span class="xs-show">Главная</span></a></li>
-            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Альбомы">
-		<a href="albums.php" data-pjax><i class="fa fa-camera"></i><span class="xs-show">Альбомы</span> <span class="badge badge-sup">{$s['album']}</span></a></li>
-            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Музыка">
-		<a href="music.php" data-pjax><i class="fa fa-music"></i><span class="xs-show">Музыка</span> <span class="badge badge-sup">{$s['music']}</span></a></li>
-            <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Видео">
-		<a href="videos.php" data-pjax><i class="fa fa-film"></i><span class="xs-show">Видео</span> <span class="badge badge-sup">{$s['video']}</span></a></li>
-	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Сообщения">
-		<a href="wall.php" data-pjax><i class="far fa-comments"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
-	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Документы">
-		<a href="docs.php" data-pjax><i class="far fa-file"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
-	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
-		<a href="queue.php" data-pjax><i class="fa fa-cloud-download-alt"></i><span class="xs-show">Очередь закачки</span></a></li>
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top">
 
-	    <li class="tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Настройки">
-		<a data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders-h"></i><span class="xs-show">Настройки</span></a></li>
-          </ul>
-        </div>
+          <a class="navbar-brand" href="index.php"><i class="fab fa-vk"></i>BK</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Главная">
+		<a class="nav-link" href="index.php" data-pjax><i class="fa fa-home"></i><span class="xs-show">Главная</span></a></li>
+            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Альбомы">
+		<a class="nav-link" href="albums.php" data-pjax><i class="fa fa-camera-retro"></i><span class="xs-show">Альбомы</span> <span class="badge badge-sup">{$s['album']}</span></a></li>
+            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Музыка">
+		<a class="nav-link" href="music.php" data-pjax><i class="fa fa-music"></i><span class="xs-show">Музыка</span> <span class="badge badge-sup">{$s['music']}</span></a></li>
+            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Видео">
+		<a class="nav-link" href="videos.php" data-pjax><i class="fa fa-film"></i><span class="xs-show">Видео</span> <span class="badge badge-sup">{$s['video']}</span></a></li>
+	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Сообщения">
+		<a class="nav-link" href="wall.php" data-pjax><i class="far fa-comments"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
+	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Документы">
+		<a class="nav-link" href="docs.php" data-pjax><i class="far fa-file"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
+	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
+		<a class="nav-link" href="queue.php" data-pjax><i class="fa fa-cloud-download-alt"></i><span class="xs-show">Очередь закачки</span></a></li>
+
+	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Настройки">
+		<a class="nav-link" data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders-h"></i><span class="xs-show">Настройки</span></a></li>
+        </ul>
       </div>
     </nav>
     <div id="pj-content">
 E;
 	}
 	
+	/*
+	    Function: albums_header
+	    Returns album name if specified or default
+	    In:
+	    header - album name
+	*/
+	function albums_header($header){
+	    return '<span class="nav-link ">'.(!empty($header) ? '<i class="far fa-folder-open"></i> '.$header : '<i class="fa fa-image"></i> Последние фотографии').'</span>';
+	}
+	
+	/*
+	    Function: queue_progress_bar
+	    Returns a progress bar for specific type of data
+	    In:
+	    bar - progress bar data (array)
+	*/
 	function queue_progress_bar($bar){
 	    if(isset($bar['per'])  && $bar['per']  < 0){ $bar['per']  = 0; }
 	    if(isset($bar['perx']) && $bar['perx'] < 0){ $bar['perx'] = 0; }
 return <<<E
-<div class="row col-sm-6">
-<div class="col-sm-6 col-md-5 col-lg-4"><i class="fa fa-{$bar['fa']}"></i> {$bar['name']} <span class="label label-default">{$bar['perx']}%</span></div>
-<div class="col-sm-6 col-md-7 col-lg-8">
-<div class="progress">
-	<div class="progress-bar progress-bar-{$bar['bar']}" role="progressbar" aria-valuenow="{$bar['per']}" aria-valuemin="0" aria-valuemax="100" style="width:{$bar['per']}%"><span class="sr-only">{$bar['per']}% Complete</span></div>
+<div class="col-sm-4">
+<div class="row">
+<div class="col-sm-6 col-md-2"><i class="fa fa-{$bar['fa']}"></i></div>
+<div class="col-sm-6 col-md-10">
+<div class="progress" style="height: 20px;">
+	<div class="progress-bar bg-{$bar['bar']}" role="progressbar" aria-valuenow="{$bar['per']}" aria-valuemin="0" aria-valuemax="100" style="width:{$bar['per']}%">{$bar['name']} &mdash; {$bar['perx']}%</div>
+</div>
 </div>
 </div>
 </div>
@@ -205,13 +223,22 @@ return <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
   <td>{$row['date']}</td>
-  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}{$oid}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}{$oid}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
 </tr>
 E;
 	}
 	
+	/*
+	    Function: Reload
+	    Add's an element with countdown. After countdown redirect to specified url.
+	    In:
+	    class   - name of bootstrap class (string)
+	    msg     - message to display      (string)
+	    uri     - URL to redirect         (string)
+	    timeout - time in ms              (int)
+	*/
 	function reload($class,$msg,$uri,$timeout){
-	    if($timeout <= 0){ $timeout = 10000; } else { $timeout = $timeout * 1000; }
+	    if($timeout <= 0){ $timeout = 10000; } else { $timeout = $timeout * 1000; } // Default 10 sec
 	    if($class=='info'){ $c = 'class="alert alert-info" role="alert"'; }
 	    if($class=='warning'){ $c = 'class="alert alert-warning" role="alert"'; }
 return <<<E
@@ -238,7 +265,7 @@ E;
 	
 	/*
 	    Function: details_row
-	    Returns a row for details
+	    Returns a row for video details
 	    In:
 	    left - data
 	    right - data
@@ -246,8 +273,8 @@ E;
 	function details_row($left,$right){
 return <<<E
 <div class="row">
-    <div class="col-xs-8">{$left}</div>
-    <div class="col-xs-4">{$right}</div>
+    <div class="col-sm-8">{$left}</div>
+    <div class="col-sm-4">{$right}</div>
 </div>
 E;
 	}

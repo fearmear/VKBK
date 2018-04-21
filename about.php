@@ -26,45 +26,47 @@ if(!$cfg['pj']){
 }
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-code-branch"></i> История версий</span>
+    </nav>
+</div>
+
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-code-branch"></i> История версий</h2>
-		  <div class="well">
+		  <div class="my-3 p-3 bg-white rounded box-shadow">
 			<p><strong>VKBK</strong> - это инструмент для создания и синхронизации локального бэкапа вашего лампового профиля ВК.</p>
-			<p>Сторонние библиотеки:</p>
+			<h6 class="border-bottom border-gray pb-2">Сторонние библиотеки:</h6>
 			<div class="row">
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="http://getbootstrap.com/">Bootstrap</a>
-				<span class="label label-default">3.3.7</span><br/>
+				<span class="label label-default">4.0.0</span><br/>
 			<a href="https://github.com/vladkens/VK">PHP класс для VK.API</a>
 				<span class="label label-default">0.1.7</span><br/>
 			<a href="https://github.com/kombai/freewall">Freewall.js</a>
 				<span class="label label-default">1.05</span><br/>
 			<a href="https://github.com/pklauzinski/jscroll">jScroll.js</a>
-				<span class="label label-default">2.3.4</span>
+				<span class="label label-default">2.3.9a</span><br/>
+			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
+				<span class="label label-default">3.1.20</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
-			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
-				<span class="label label-default">3.1.20</span><br/>
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
 				<span class="label label-default">5.0.8</span><br/>
-			<s><a href="https://github.com/kolber/audiojs">audio.js</a></s>
-				<span class="label label-danger">Deprecated in 0.5</span><br/>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
-				<span class="label label-default">2.2.2</span>
-			</div>
-			<div class="col-xs-6 col-sm-3 libs-row">
+				<span class="label label-default">2.2.2</span><br/>
 			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
 				<span class="label label-default">6 May 2016</span><br/>
 			<a href="https://github.com/noraesae/perfect-scrollbar">perfect-scrollbar.js</a>
 				<span class="label label-default">0.6.11</span><br/>
 			<a href="https://github.com/happyworm/jPlayer">jPlayer.js</a>
-				<span class="label label-default">2.9.2</span><br/>
-			<a href="https://github.com/silviomoreto/bootstrap-select">Bootstrap Select</a>
-				<span class="label label-default">1.12.4</span>
+				<span class="label label-default">2.9.2</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
+			
+			<a href="https://github.com/snapappointments/bootstrap-select">Bootstrap Select</a>
+				<span class="label label-default">1.13.0</span><br/>
 			<a href="https://github.com/defunkt/jquery-pjax">pjax</a>
-				<span class="label label-default">8 May 2017</span><br/>
+				<span class="label label-default">2.0.1</span><br/>
 			<a href="https://github.com/customd/jquery-visible/">jQuery Visible</a>
 				<span class="label label-default">1.2.0</span><br/>
 			<a href="http://benalman.com/projects/jquery-throttle-debounce-plugin/">Debounce plugin</a>
@@ -72,21 +74,30 @@ print <<<E
 			<a href="https://github.com/js-cookie/js-cookie">js-cookie</a>
 				<span class="label label-default">2.1.4</span>
 			</div>
+			<div class="col-xs-6 col-sm-3 libs-row">
+			<a href="https://github.com/FezVrasta/popper.js">popper.js</a>
+				<span class="label label-default">1.14.1</span><br/>
+			<a href="https://github.com/miromannino/Justified-Gallery">Justified Gallery</a>
+				<span class="label label-default">3.7.0</span><br/>
+			</div>
 			</div>
 			
 		  </div>
           <div class="col-sm-12">
-
-<h4>ToDo</h4>
-<div class="wall-box">
-<ul class="list-group list-unstyled">
-<li><label><span class="label label-default">сделать</span></label> синхронизация > стена (альбомы, документы)</li>
-</ul>
-</div>
 E;
 
 $changelog = array(
-	'0.7' => array(
+	'0.7.x' => array(
+		'0.7.6' => array(
+			array('i',"Для работы потребуется MySQL версии 5.5+ (с поддержкой utf8mb4)"),
+			array('n',"Добавлен Justified Gallery"),
+			array('n',"Добавлен popper.js"),
+			array('u','jQuery обновлен до версии 3.3.1'),
+			array('u','Bootstrap обновлен до версии 4.0.0'),
+			array('u','pjax обновлен до версии 2.0.1'),
+			array('u','jScroll обновлен до версии 2.3.9'),
+			array('u','Bootstrap Select обновлен до версии 1.13.0-beta'),
+		),
 		'0.7.5' => array(
 			array('u','Bootstrap-select обновлен до версии 1.12.4'),
 			array('u','FontAwesome обновлен до версии 5.0.8'),
@@ -316,9 +327,10 @@ $changelog = array(
 	),
 );
 
+$r = 0;
 foreach($changelog as $k => $v){
-	print '<h4>версия '.$k.'</h4>';
-	print '<div class="wall-box">';
+	print '<h4 '.($r > 0 ? 'data-toggle="collapse" data-target="#collapse'.$r.'" aria-expanded="false" aria-controls="collapse'.$r.'" style="cursor:pointer;">' : '>').'версия '.$k.'</h4>';
+	print '<div class="wall-box collapse'.($r==0 ? "show" : "").'" id="collapse'.$r.'">';
 	foreach($v as $d => $c){
 		print '<ul class="list-group list-unstyled"><div>'.$d.'</div>';
 		foreach($c as $t => $m){
@@ -329,10 +341,11 @@ foreach($changelog as $k => $v){
 			if($m[0] == 'n'){   $l = 'primary">новое'; }
 			if($m[0] == 'fx'){  $l = 'success">функционал'; }
 			if($m[0] == 'i'){   $l = 'info">инфо'; }
-			print '<li><label><span class="label label-'.$l.'</span></label><p>'.$m[1].'</p></li>';
+			print '<li><label><span class="badge badge-'.$l.'</span></label><p>'.$m[1].'</p></li>';
 		}
 		print '</ul>';
 	}
+	$r++;
 	print '</div>';
 }
 

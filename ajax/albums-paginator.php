@@ -53,7 +53,7 @@ E;
 
 if($next > $cfg['perpage_photo']){
 	$page++;
-	print '<div class="paginator-next" style="display:none;"><a href="ajax/albums-paginator.php?id='.$album_id.'&page='.$page.'">следующая страница</a></div>';
+	print '<div class="paginator-next"><span class="paginator-val">'.$page.'</span><a href="ajax/albums-paginator.php?id='.$album_id.'&page='.$page.'">следующая страница</a></div>';
 }
 
 $db->close($res);

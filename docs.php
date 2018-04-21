@@ -30,11 +30,14 @@ if(!$cfg['pj']){
 }
 
 print <<<E
-<div class="container" style="position:relative;">
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-file"></i> Документы</span>
+		<button type="button" class="btn btn-link docs-filter-btn"><i class="fa fa-filter"></i></button>
+    </nav>
 
-<button type="button" class="btn btn-default docs-filter-btn"><i class="fa fa-filter"></i></button>
 <div class="col-sm-4 white-box docs-filter-box">
-	<h4><i class="fa fa-filter"></i> Фильтр</h4>
+	<h6><i class="fa fa-filter"></i> Фильтр</h6>
 	<div class="row">
 	<label for="type">Тип</label>
 	<select class="selectpicker show-tick" name="type" id="f-type">
@@ -49,10 +52,11 @@ print <<<E
 		<option data-icon="fa-file" value="8">Прочее</option>
 	</select>
 	</div>
+</div>
 	
 </div>
 
-          <h2 class="sub-header"><i class="fa fa-file"></i> Документы</h2>
+<div class="container">
           <div class="container" id="docs-list">
 E;
 
@@ -90,14 +94,14 @@ E;
 		}
 print <<<E
 		<a class="various-local" href="{$row['local_path']}" data-caption="{$row['title']}" data-fancybox="images"></a>
-		<span class="label">{$row['ext']}</span>
+		<span class="badge badge-dark">{$row['ext']}</span>
 	</div>
 E;
 	} else {
 print <<<E
 	<div class="docs-preview">
 		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fa fa-file"></i></span></a>
-		<span class="label">{$row['ext']}</span>
+		<span class="badge badge-dark">{$row['ext']}</span>
 	</div>
 E;
 	}
@@ -147,7 +151,7 @@ $(document).ready(function() {
 		tickIcon: 'fa-check'
 	});
 	
-	jQuery('.docs-filter-btn').click(function(){ jQuery('.docs-filter-box').show(); });
+	$('.docs-filter-btn').click(function(){ jQuery('.docs-filter-box').show(); });
 	
 	// Hash URL commands
 	urlCommands.bind('type', function(id) { type = id; jQuery("#f-type").selectpicker('val',id); });
@@ -155,19 +159,19 @@ $(document).ready(function() {
 	// Not default options -> reload
 	if(type != 'all'){
 		urlCommands.urlPush({page:0});
-		docs_reload();
+		ajax_page_reload('docs',"?page=0&type="+type);
 	}
 	
 	urlCommands.bind('page', function(id) {
 		if($.isNumeric(id) && id >= 2){
 			notload = true;
 			for(i=2;i<=id;i++){
-				jQuery.ajax({
+				$.ajax({
 					async : false,
 					method : "GET",
-					url : "ajax/docs-paginator.php?page="+i+"&type="+type+""
+					url : paginator_docs+"?page="+i+"&type="+type
 				}).done( function(data){
-					jQuery(".paginator-next").remove();
+					$(".paginator-next").remove();
 					list.append(data);
 				});
 			}
@@ -181,24 +185,13 @@ $(document).ready(function() {
 		if(type != this.value){
 			type = this.value;
 			urlCommands.urlPush({page:0});
-			docs_reload();
+			ajax_page_reload('docs',"?page=0&type="+type);
 		}
 	});
 	
-	function docs_reload(){
-		jQuery.ajax({
-			async : false,
-			method : "GET",
-			url : "ajax/docs-paginator.php?page=0&type="+type+""
-		}).done( function(data){
-			jQuery("#docs-list").html(data);
-			jscroller();
-		});
-		doc_gif();
-	}
-	
 	if(notload == false){
-		jscroller();
+		apr_jscroller('docs',jQuery('#docs-list'));
+		doc_gif();
 	}
 
 	$('.various-local').fancybox({
@@ -207,9 +200,8 @@ $(document).ready(function() {
 	
 	$(".tip").tooltip();
 	
-	doc_gif();
-
 });
+
 </script>
 E;
 

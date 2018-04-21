@@ -18,7 +18,7 @@ class db {
 			die("Ошибка выбора БД: ".mysqli_error());
 		}
 		mysqli_set_charset($db,'utf8');
-		mysqli_query($db,"SET NAMES 'utf8'");
+		mysqli_query($db,"SET NAMES 'utf8mb4'");
 		$this->conn = $db;
 		return $db;
 	}
@@ -30,7 +30,7 @@ class db {
 	function query($query){
 		$responce = mysqli_query($this->conn,$query);
 		if(!$responce){
-			die("<font style=\"color:red;font-weight:bold;\">Плохой запрос: {$query}\r\n".mysqli_error()."</font>\r\n");
+			die("<font style=\"color:red;font-weight:bold;\">Плохой запрос: {$query}\r\n".mysqli_error($this->conn)."</font>\r\n");
 		} else {
 			return $responce;
 		}

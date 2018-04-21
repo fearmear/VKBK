@@ -231,9 +231,9 @@ class func {
 
 	    $full_date = date("d M Y H:i",$row['date']);
 	    $row['date'] = $this->wall_date_format($row['date']);
-	    if($row['text'] != ''){ $row['text'] = '<div style="margin-bottom:10px;">'.nl2br($this->wall_post_parse($row['text'])).'</div>'; }
+	    if($row['text'] != ''){ $row['text'] = '<div class="mb-2">'.nl2br($this->wall_post_parse($row['text'])).'</div>'; }
 	    $tmp_box = '';
-	    $tmp_class = 'col-sm-6 col-sm-offset-3 wall-box';
+	    $tmp_class = 'col-sm-12 col-md-6 m-auto wall-box';
 $tmp_postid = <<<E
     <a class="post-id wallious fancybox" data-fancybox data-type="iframe" data-title-id="#{$row['id']}" href="ajax/wall-post.php?p={$row['id']}" onClick="javascript:urlCommands.urlPush({post:{$row['id']}});">#{$row['id']}</a>
 E;
@@ -247,7 +247,7 @@ E;
 	    }
 
 $output .= <<<E
-<div class="row {$tmp_box}">
+<div class="row mb-2 {$tmp_box}">
     <div class="{$tmp_class}">
 	{$tmp_postid}
 	<img src="data/{$path}/{$pr['photo_path']}" class="wall-ava" />
@@ -286,7 +286,6 @@ if($qk == 'attach_video' && $qv != ''){
 if($qk == 'attach_link' && $qv != ''){
 	$q = $db->query("SELECT * FROM vk_attach WHERE attach_id IN(".$qv.") AND wall_id = ".$row['id']." AND owner_id = ".$row['owner_id']);
 	$attach_query = true;
-	$qclass = 'free-wall';
 }
 
 if($qk == 'local_audio' && $qv != '' && $row['owner_id'] == $session['vk_user']){
@@ -344,7 +343,7 @@ $output .= <<<E
 	    <span class="label label-default wall-video-duration">{$lph_row['duration']}</span>
 	    <a class="various fancybox" href="javascript:;" onclick="javascript:fbox_video_global('{$lph_row['player']}',1);" data-title-id="title-{$lph_row['attach_id']}" style="background-image:url('{$lph_row['path']}');"></a>
 	</div>
-	<h4 class="wall-video-header">{$lph_row['title']}</h4>
+	<h6 class="wall-video-header">{$lph_row['title']}</h6>
 	<div id="title-{$lph_row['attach_id']}" style="display:none;">
 	    {$lph_row['text']}
 	    <div class="expander" onClick="expand_desc();">показать</div>
@@ -359,14 +358,14 @@ E;
 				$lph_row['path'] = $this->windows_path_alias($lph_row['path'],'photo');
 			}
 
-			if($lph_row['text'] != ''){ $lph_row['text'] = '<div style="margin-bottom:10px;">'.nl2br($lph_row['text']).'</div>'; }
+			if($lph_row['text'] != ''){ $lph_row['text'] = nl2br($lph_row['text']); }
 			if($lph_row['path'] != ''){
 $output .= <<<E
     <div class="wall-link-img"><a class="fancybox" data-fancybox="images" rel="p{$row['id']}" href="{$lph_row['path']}"><img style="width:100%" src="{$lph_row['path']}"></a><a href="{$lph_row['link_url']}" class="wall-link-caption" rel="nofollow noreferrer" target="_blank"><i class="fa fa-link"></i>&nbsp;{$lph_row['caption']}</a></div>
 E;
 $output .= <<<E
 <div class="col-sm-12" style="border:1px solid rgba(0,20,51,.12);">
-	<h4>{$lph_row['title']}</h4>
+	<h6>{$lph_row['title']}</h6>
 	<p class="wall-description">{$lph_row['text']}</p>
 </div>
 E;
@@ -438,7 +437,7 @@ E;
 		} // end of attach document
 		
 	}
-	$output .= '</div>';
+	$output .= '</div><div style="clear:both;"></div>';
 }
 
 } // Foreach $attach end
@@ -474,6 +473,14 @@ E;
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 	}
 	
+	/*
+		Human Thousand
+		Returns a short value for thousands
+		In:
+		num - value (int)
+		Out:
+		false\null or string
+	*/
 	function human_thousand($num) {
 		if(!is_numeric($num)){
 			return false;

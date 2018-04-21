@@ -102,7 +102,7 @@ print <<<E
 E;
 	}
 print <<<E
-		<span class="label">{$row['duration']}</span>
+		<span class="badge bg-light">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
 		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']}</div>

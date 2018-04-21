@@ -30,13 +30,20 @@ if(!$cfg['pj']){
 }
 
 print <<<E
-<div class="container" style="position:relative;">
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-film"></i> Видео</span>
+<div class="input-group input-group-sm w-25 nav-item mt-2 ml-auto video-qsearch">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="qsearch-addon1"><i class="fas fa-search"></i></span>
+  </div>
+  <input type="text" value="" id="qsearch" class="form-control form-control-sm" placeholder="Быстрый поиск..." aria-label="Быстрый поиск..." aria-describedby="qsearch-addon1" />
+</div>
+		<button type="button" class="btn btn-link ml-auto mr-4 video-filter-btn"><i class="fa fa-filter"></i></button>
+    </nav>
 
-<input type="text" value="" id="qsearch" class="btn" placeholder="Быстрый поиск..." />
-
-<button type="button" class="btn btn-default video-filter-btn"><i class="fa fa-filter"></i></button>
 <div class="col-sm-4 white-box video-filter-box">
-	<h4><i class="fa fa-filter"></i> Фильтр</h4>
+	<h6><i class="fa fa-filter"></i> Фильтр</h6>
 	<div class="row">
 	<label for="type">Тип</label>
 	<select class="selectpicker show-tick" name="type" id="f-type">
@@ -81,10 +88,11 @@ print <<<E
 		<option value="old">Сначала старые</option>
 	</select>
 	</div>
+</div>
 	
 </div>
 
-          <h2 class="sub-header"><i class="fa fa-film"></i> Видео</h2>
+<div class="container">
           <div class="container" id="video-list">
 E;
 
@@ -131,7 +139,7 @@ print <<<E
 E;
 	}
 print <<<E
-		<span class="label">{$row['duration']}</span>
+		<span class="badge bg-light">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
 		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']} </div>
@@ -268,7 +276,7 @@ $(document).ready(function() {
 	// Not default options -> reload
 	if(type != 'all' || service != 'any' || quality != 0 || length != 0 || date != 'new' || qsearch != ''){
 		urlCommands.urlPush({page:0});
-		video_reload();
+		ajax_page_reload('video',video_vars(0));
 	}
 	
 	urlCommands.bind('page', function(id) {
@@ -278,7 +286,7 @@ $(document).ready(function() {
 				jQuery.ajax({
 					async : false,
 					method : "GET",
-					url : "ajax/videos-paginator.php?page="+i+"&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+"&qsearch="+qsearch+""
+					url : paginator_video+ajax_page_reload('video',video_vars(i))
 				}).done( function(data){
 					jQuery(".paginator-next").remove();
 					list.append(data);
@@ -294,7 +302,7 @@ $(document).ready(function() {
 		if(type != this.value){
 			type = this.value;
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	jQuery("#f-service").on('change', function(){
@@ -302,7 +310,7 @@ $(document).ready(function() {
 		if(service != this.value){
 			service = this.value;
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	jQuery("#f-quality").on('change', function(){
@@ -310,7 +318,7 @@ $(document).ready(function() {
 		if(quality != this.value){
 			quality = this.value;
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	jQuery("#f-length").on('change', function(){
@@ -318,7 +326,7 @@ $(document).ready(function() {
 		if(length != this.value){
 			length = this.value;
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	jQuery("#f-date").on('change', function(){
@@ -326,7 +334,7 @@ $(document).ready(function() {
 		if(date != this.value){
 			date = this.value;
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	jQuery("#qsearch").on('change', function(){
@@ -335,24 +343,16 @@ $(document).ready(function() {
 			qsearch = this.value;
 			console.log(this.value);
 			urlCommands.urlPush({page:0});
-			video_reload();
+			ajax_page_reload('video',video_vars(0));
 		}
 	});
 	
-	function video_reload(){
-		jQuery.ajax({
-			async : false,
-			method : "GET",
-			url : "ajax/videos-paginator.php?page=0&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+"&qsearch="+qsearch+""
-		}).done( function(data){
-			jQuery(".paginator-next").remove();
-			jQuery("#video-list").html(data);
-			jscroller();
-		});
+	function video_vars(page){
+		return "?page="+page+"&type="+type+"&service="+service+"&quality="+quality+"&length="+length+"&date="+date+"&qsearch="+qsearch;
 	}
 	
 	if(notload == false){
-		jscroller();
+		apr_jscroller('video',list);
 	}
 	
 	$(".tip").tooltip();
@@ -394,20 +394,7 @@ $(document).mouseup(function (e){
 		jQuery("#video-details").remove();
 		jQuery("#video-details-bg").remove();
 	}
-	
-	function jscroller(){
-$('#video-list').jscroll({
-	debug:false,
-	refresh:true,
-    nextSelector: 'div.paginator-next > a:last',
-	padding: 20,
-	callback: function(){
-		$(".tip").tooltip();
-		var pval = jQuery("div.paginator-next:last .paginator-val").html();
-		if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
-	}
-});
-	}
+
 </script>
 E;
 

@@ -30,11 +30,11 @@ if(!$cfg['pj']){
 }
 
 print <<<E
-    <div class="container-fluid">
+  <div class="container">
       <div class="row">
-	  <div class="col-sm-3 col-md-2 sidebar indexbar">
-          <ul class="nav nav-sidebar">
-		  <li class="col-xs-6 col-sm-12" style="padding:10px 20px;">
+	  <div class="col-sm-2 col-md-3 mt-4">
+	    <ul class="nav">
+		  <li class="col-sm-6 col-md-12">
 E;
 
 // Include VK.API
@@ -83,12 +83,12 @@ print <<<E
 E;
 			}
 print <<<E
-			<h4><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href="ajax/auth.php?do=logout" data-pjauth><i class="fa fa-sign-out-alt"></i></a></h4>
+			<h6><a href="https://vk.com/id{$u['id']}" target="_blank">{$u['nickname']}</a> <a href="ajax/auth.php?do=logout" data-pjauth><i class="fa fa-sign-out-alt"></i></a></h6>
 			{$u['first_name']} {$u['last_name']}
 		    </center>
 		  </li>
-		  <li class="col-xs-6 col-sm-12">
-		    <ul class="nav nav-pills">
+		  <li class="col-sm-12">
+		    <ul class="nav my-3 p-3 bg-white rounded box-shadow">
 				<li style="width:100%;text-align:center;">Данные из ВК:</li>
 E;
 			
@@ -144,7 +144,7 @@ E;
 				if($k == 'audios') { $k = '<i class="fa fa-music"></i> Музыка'; }
 				if($k == 'videos') { $k = '<i class="fa fa-film"></i> Видео'; }
 			if($k == 'docs') { $k = '<i class="fa fa-file"></i> Документы'; }
-			print '<li style="width:100%;"><a href="javascript:;">'.$k.': <span class="badge">'.$v.'</span></a></li>';
+			print '<li class="w-100 btn btn-light text-left mb-1">'.$k.': <span class="badge badge-secondary">'.$v.'</span></li>';
 			}
 			
 		print '</ul>';
@@ -192,64 +192,63 @@ $music_albums = $db->query_row("SELECT count(id) as count FROM vk_music_albums")
 $wall_attachments = $db->query_row("SELECT count(uid) as count FROM vk_attach");
 
 print <<<E
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['album'])}</h1>
+        <div class="col-sm-10 col-md-9 mt-4">
+          <div class="row placeholders pt-4 pb-4">
+            <div class="col-sm-3 placeholder">
+              <h2 class="display-4">{$f->human_thousand($counters['album'])}</h2>
               <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-sync"></i></a></span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['photo'])}</h1>
+            <div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($counters['photo'])}</h2>
               <span class="text-muted">Фотографии&nbsp;&nbsp;
-			  
-				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
-					<ul class="dropdown-menu">
-						<li><a href="sync.php?do=photo"><i class="fa fa-hourglass"></i> Полная</a></li>
-						<li><a href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
-					</ul>
+				<div class="dropdown show" style="display:inline-block;">
+					<a class="dropdown-toggle" href="#" role="button" id="photosync" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
+					<div class="dropdown-menu" aria-labelledby="photosync">
+						<a class="dropdown-item" href="sync.php?do=photo"><i class="fa fa-hourglass"></i> Полная</a>
+						<a class="dropdown-item" href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a>
+					</div>
 				</div>
-				
 			  </span>
             </div>
-			<div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($music_albums['count'])}</h1>
+			<div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($music_albums['count'])}</h2>
               <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="sync.php?do=musicalbums"><i class="fa fa-sync"></i></a></span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['music'])}</h1>
+            <div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($counters['music'])}</h2>
               <span class="text-muted">Музыка&nbsp;&nbsp;<a href="sync.php?do=music"><i class="fa fa-sync"></i></a></span>
             </div>
-			<div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['video'])}</h1>
+            <div class="col-sm-3">
+              <h2 class="display-4">{$f->human_thousand($counters['video'])}</h2>
               <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-sync"></i></a></span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['wall'])}</h1>
+			<div class="col-sm-3">
+              <h2 class="display-4">{$f->human_thousand($counters['wall'])}</h2>
               <span class="text-muted">Стена&nbsp;&nbsp;
 			  
-				<div class="dropdown" style="display:inline-block;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
-					<ul class="dropdown-menu">
-						<li><a href="sync-wall.php?offset=0"><i class="fa fa-hourglass"></i> Полная</a></li>
-						<li><a href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a></li>
+				<div class="dropdown show" style="display:inline-block;"><a class="dropdown-toggle" href="#" role="button" id="wallsync" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
+					<ul class="dropdown-menu" aria-labelledby="wallsync">
+						<a class="dropdown-item" href="sync-wall.php?offset=0"><i class="fa fa-hourglass"></i> Полная</a>
+						<a class="dropdown-item" href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a>
 					</ul>
 				</div>
 				
 			  </span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($counters['docs'])}</h1>
+			<div class="col-sm-3">
+              <h2 class="display-4">{$f->human_thousand($counters['docs'])}</h2>
               <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-sync"></i></a></span>
             </div>
-			<div class="col-xs-6 col-sm-3 placeholder">
-              <h1>{$f->human_thousand($wall_attachments['count'])}</h1>
+			<div class="col-sm-3">
+              <h2 class="display-4">{$f->human_thousand($wall_attachments['count'])}</h2>
               <span class="text-muted">Вложения</span>
             </div>
           </div>
           
 		  <div class="row white-box">
-			<div class="table-responsive">
-				<h4 class="vkhead"><i class="fa fa-info-circle"></i> Уведомления</h4>
-	            <table class="table table-striped" style="margin-bottom:0;">
+			<div class="table-responsive pl-2 pr-2">
+				<h5 class="p-2 mb-0 vkhead"><i class="fa fa-info-circle"></i> Уведомления</h5>
+	            <table class="table table-striped table-sm table-hover">
 		          <tbody>
 E;
 
@@ -308,9 +307,9 @@ $queue_count['dc'] = $queue_docs['count'];
 $queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v']+$queue_count['dc'];
 
 print <<<E
-          <div class="table-responsive">
-		  <h4 class="vkhead"><i class="fa fa-cloud-download-alt"></i> Очередь закачки - <b>{$queue_total}</b></h4>
-            <table class="table table-striped" style="margin-bottom:0;">
+          <div class="table-responsive pl-2 pr-2">
+		  <h5 class="p-2 mb-0 vkhead"><i class="fa fa-cloud-download-alt"></i> Очередь закачки - <b>{$queue_total}</b></h5>
+            <table class="table table-striped table-sm table-hover">
               <thead>
                 <tr>
                   <th>#</th>

@@ -14,6 +14,13 @@ $(".tip").tooltip();	// tooltips
 $(document).pjax('a[data-pjax]', '#pj-content', {timeout:1000});	// pJax navigaion
 $(document).pjax('a[data-pjauth]', '.nav-sidebar', {timeout:1000});
 
+var paginator_docs   = 'ajax/docs-paginator.php';
+var paginator_albums = 'ajax/albums-paginator.php';
+var paginator_video  = 'ajax/videos-paginator.php';
+var paginator_wall   = 'ajax/wall-paginator.php';
+
+var freewall_width = 300; // Default width, it replaced in albums with config value
+
 // Fancybox v3
 // =====================================
 
@@ -57,7 +64,7 @@ function fbox_minimize(){
 // global - video container
 // ===========================
 function fbox_video_global( url, local ){
-    var fbox_controls = '<div class="fbox-controls"><div class="fbox-close" onclick="javascript:fbox_close();"><i class="fa fa-times"></i></div><div class="fbox-minimize" onclick="javascript:fbox_minimize();"><i class="fa fa-window-minimize"></i></div><div class="fbox-maximize" onclick="javascript:fbox_maximize();"><i class="fa fa-window-maximize"></i></div></div>';
+    var fbox_controls = '<div class="fbox-controls"><div class="fbox-close" onclick="javascript:fbox_close();"><i class="far fa-window-close fa-fw"></i></div><div class="fbox-minimize" onclick="javascript:fbox_minimize();"><i class="fa fa-compress fa-fw"></i></div><div class="fbox-maximize" onclick="javascript:fbox_maximize();"><i class="fa fa-expand fa-fw"></i></div></div>';
     var minimized = Cookies.get('gplayer_minimized'); // Restore state from cookies
     
     if(url != '' && local === 1){
@@ -290,17 +297,161 @@ $(document).mouseup(function (e){
 });
 
 
-function jscroller(){
-    $('#docs-list').jscroll({
-	debug:false,
-	refresh:true,
+// AJAX PAGE RELOAD
+// ===============================================
+// Universal reload function for pages with jscroll and freewall
+// In:
+// apr_type - (string) type of page for callback functions [album|docs|video]
+// apr_url - (string) page url and parameters
+function ajax_page_reload(apr_type,apr_url){
+    if(apr_type == 'album'){ var qurl = paginator_albums+apr_url; }
+    if(apr_type == 'docs'){  var qurl = paginator_docs+apr_url; }
+    if(apr_type == 'video'){ var qurl = paginator_video+apr_url; }
+    if(apr_type == 'wall'){  var qurl = paginator_wall+apr_url; }
+    
+    if(apr_url.length > 0){
+    jQuery.ajax({
+	async : false,
+	method : "GET",
+	url : qurl
+    }).done( function(data){
+	if(apr_type == 'album'){
+	    window.history.pushState({}, "VKBK", "/albums.php?page=0&id="+album); // Push URL
+	    apr_album_callback(data,apr_type);
+	}
+	if(apr_type == 'docs' ){ apr_docs_callback(data,apr_type); }
+	if(apr_type == 'video' ){ apr_video_callback(data,apr_type); }
+	if(apr_type == 'wall' ){ apr_wall_callback(data,apr_type); }
+    });
+    } else {
+	console.log("APR: Skipped "+apr_type);
+    }
+}
+
+// Callback function for album
+// In:
+// data - (object) Response data
+// type - (string) [album]
+function apr_album_callback(data,type){
+    var list = jQuery("#freewall");
+    list.html(data);
+    freewill(new Freewall("#freewall"),true,'chalb');
+    apr_jscroller(type,list);
+}
+
+// Callback function for documents
+// In:
+// data - (object) Response data
+// type - (string) [docs]
+function apr_docs_callback(data,type){
+    var list = jQuery("#docs-list");
+    list.html(data);
+    apr_jscroller(type,list);
+    doc_gif();
+}
+
+// Callback function for video
+// In:
+// data - (object) Response data
+// type - (string) [video]
+function apr_video_callback(data,type){
+    var list = jQuery("#video-list");
+    list.html(data);
+    apr_jscroller(type,list);
+}
+
+// Callback function for wall
+// In:
+// data - (object) Response data
+// type - (string) [wall]
+function apr_wall_callback(data,type){
+    var list = jQuery("#wall-list");
+    list.html(data);
+    apr_jscroller(type,list);
+}
+
+// jScroller init function
+// In:
+// type - (string) [album|docs|video|wall]
+// selector - (object) jscroll block selector
+function apr_jscroller(type,selector){
+    selector.jscroll({
+	debug: true,
+	refresh: true,
 	nextSelector: 'div.paginator-next > a:last',
-	padding: 20,
+	padding: 50,
 	callback: function(){
-	    $(".tip").tooltip();
-	    doc_gif();
-	    var pval = jQuery("div.paginator-next:last .paginator-val").html();
-	    if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+	    if(type == 'album'){ apr_jscroller_album(); }
+	    if(type == 'docs'){  apr_jscroller_docs(); }
+	    if(type == 'video'){ apr_jscroller_video(); }
+	    if(type == 'wall'){  apr_jscroller_wall(); }
 	}
     });
+    if(type == 'wall'){  apr_jscroller_wall(); }
+}
+
+// jScroller callback - album
+function apr_jscroller_album(){
+    var pval = jQuery("div.paginator-next:last .paginator-val").html();
+    // (Re)Init freewall for the last page
+    freewill(new Freewall("#freewall > .scroll-inner > .jscroll-added:last"),true,'page '+pval);
+}
+
+// jScroller callback - documents
+function apr_jscroller_docs(){
+    var pval = jQuery("div.paginator-next:last .paginator-val").html();
+    if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+    doc_gif();
+}
+
+// jScroller callback - video
+function apr_jscroller_video(){
+    var pval = jQuery("div.paginator-next:last .paginator-val").html();
+    if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+}
+
+// jScroller callback - wall
+function apr_jscroller_wall(){
+    var pval = jQuery("div.paginator-next:last .paginator-val").html();
+    
+    // Set wall_block selector for page 1 and page N+
+    if($(".jscroll-added").length){
+	var wall_block = $(".jscroll-added").filter(":last");
+    } else {
+	var wall_block = $(".jscroll-inner");
+    }
+    console.log('JSC pval '+jQuery("div.paginator-next:last > a:last").attr("href"));
+    if($.isNumeric(pval)){ urlCommands.urlPush({page:pval}); }
+    wall_block.find(".free-wall").each(function(){	// For each image container
+	var images = $(this).find('.brick');		// Get images
+	if(images.length == 1){				// if solo image - call Freewall and set min-width
+	    var fwl = new Freewall(this);
+	    images.css("width","350px");
+	    freewill(fwl,false,'fw '+images.length);
+	}
+	if(images.length >= 2){				// if 2 or more images - call JfG
+	    $(this).justifiedGallery({
+		rowHeight: 200, maxRowHeight: 200, captions: false, margins: 5
+	    });
+	    $(this).justifiedGallery('norewind');	// Process only new items
+	}
+    });
+}
+
+// (Re)Initialize Freewall
+function freewill(container,re,debug){
+    container.reset({
+	selector: '.brick',
+	animate: false,
+	cellW: freewall_width,
+	cellH: 'auto',
+	keepOrder: true,
+	onResize: function() {
+	    container.fitWidth();
+	}
+    });
+    
+    if(re === true){
+	$(window).trigger("resize");
+    }
 }

@@ -76,18 +76,19 @@ E;
 		}
 print <<<E
 		<a class="various-local" href="{$row['local_path']}" data-caption="{$row['title']}" data-fancybox="images"></a>
-		<span class="label">{$row['ext']}</span>
+		<span class="badge badge-dark">{$row['ext']}</span>
 	</div>
 E;
 	} else {
 print <<<E
 	<div class="docs-preview">
 		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fas fa-file"></i></span></a>
-		<span class="label">{$row['ext']}</span>
+		<span class="badge badge-dark">{$row['ext']}</span>
 	</div>
 E;
 	}
 print <<<E
+
 	<div class="docs-info">
 		<div class="docs-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
 	</div>

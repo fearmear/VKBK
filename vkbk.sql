@@ -276,7 +276,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '2017090201'),
+('version', '2018042101'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0'),
 ('play-local-video', '0');
@@ -328,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `vk_wall` (
   `owner_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `post_type` varchar(255) NOT NULL,
-  `text` text NOT NULL,
+  `text` text CHARACTER SET utf8mb4 NOT NULL,
   `attach` tinyint(1) NOT NULL,
   `repost` int(11) NOT NULL,
   `repost_owner` int(11) NOT NULL,

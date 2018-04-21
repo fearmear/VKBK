@@ -15,47 +15,78 @@
     
     <style type="text/css">
 	pre { max-height: 200px; }
+	.text-white-50 { color: rgba(255, 255, 255, .5); }
+	.bg-header { background-color: #597da3; }
+	.border-bottom { border-bottom: 1px solid #e5e5e5; }
+	.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+	.lh-100 { line-height: 1; }
+	.lh-125 { line-height: 1.25; }
+	.lh-150 { line-height: 1.5; }
     </style>
   </head>
   <body>
 
 <div class="container">
-    <h2 class="sub-header">VKBK Обновления</h2>
-    <div class="well">
-	На этой странице вы найдете обновления структуры базы данных VKBK. Обновления необходимо добавлять последовательно начиная с вашей версии и до актуальной.<br/>
-	<b>Версии ниже 0.5.6 (от 28 Дек.) необходимо обновлять вручную, сравнивая структуру. Версии начиная с 0.6 можно будет обновлять по инструкции.</b>
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-header rounded box-shadow">
+	<div class="lh-100">
+          <h6 class="mb-0 text-white lh-100">VKBK Обновления</h6>
+          <small>На этой странице вы найдете запросы для обновления структуры базы данных VKBK.<br/>Обновления необходимо добавлять последовательно начиная с вашей версии и до актуальной.<br/>
+	  <b>Версии ниже 0.5.6 (от 28 Дек.) необходимо обновлять вручную, сравнивая структуру. Версии начиная с 0.6 можно обновлять по инструкции.</b></small>
     </div>
     
-    <div class="col-sm-12">
+    </div>
 
-    <div class="panel panel-success">
-	<div class="panel-heading"><h3 class="panel-title">0.7.3 &rarr; 0.7.4</h3></div>
-        <div class="panel-body">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.7.5 &rarr; 0.7.6</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
+<pre>
+ALTER TABLE `vk_wall` CHANGE `text` `text` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+</pre>
+	    </span>
+          </div>
+        </div>
+    </div>
+    
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.7.3 &rarr; 0.7.4</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
 <pre>
 ALTER TABLE `vk_wall` DROP INDEX `id` , ADD UNIQUE `id` ( `id` , `owner_id` );
 
 ALTER TABLE `vk_wall` ADD `repost_owner` INT( 11 ) NOT NULL AFTER `repost` , ADD INDEX ( `repost_owner` );
 
 UPDATE `vk_status` SET `val` = '2017090201' WHERE `key` = 'version';
-</pre>
+</pre><hr/>
 <p><strong>После выполнения запросов в БД необходимо запустить полную синхронизацию стены.</strong><br/>После завершения синхронизации запустите скрипт <a href="update_074.php" target="_blank">update_074.php</a> чтобы обновить записи.</p>
+	    </span>
+          </div>
         </div>
     </div>
 
-    <div class="panel panel-success">
-	<div class="panel-heading"><h3 class="panel-title">0.6 &rarr; 0.7</h3></div>
-        <div class="panel-body">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.6 &rarr; 0.7</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
 <pre>
 ALTER TABLE `vk_attach` CHANGE `duration` `duration` INT( 11 ) NOT NULL;
 
 UPDATE `vk_status` SET `val` = '2017031201' WHERE `key` = 'version';
 </pre>
+	    </span>
+          </div>
         </div>
     </div>    
     
-    <div class="panel panel-success">
-	<div class="panel-heading"><h3 class="panel-title">0.5.6 (от 28 Дек.) &rarr; 0.6</h3></div>
-        <div class="panel-body">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.5.6 (от 28 Дек.) &rarr; 0.6</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
 <pre>
 ALTER TABLE `vk_counters` ADD `docs` MEDIUMINT UNSIGNED NOT NULL AFTER `wall`;
 
@@ -93,11 +124,13 @@ INSERT INTO `vk_status` ( `key` , `val` ) VALUES ( 'log_docs', '' );
 
 UPDATE `vk_status` SET `val` = '2016123001' WHERE `key` = 'version';
 </pre>
+	    </span>
+          </div>
         </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script type="text/javascript" src="../js/bootstrap.min.js"></script>
     

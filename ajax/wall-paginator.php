@@ -65,7 +65,7 @@ while($row = $db->return_row($r)){
 
 if($next > $cfg['perpage_wall']){
 	$page++;
-	print '<div class="paginator-next" style="display:none;"><a href="ajax/wall-paginator.php?page='.$page.'">следующая страница</a></div>';
+	print '<div class="paginator-next" style="display:none;"><span class="paginator-val">'.$page.'</span><a href="ajax/wall-paginator.php?page='.$page.'">следующая страница</a></div>';
 }
 
 $db->close($res);

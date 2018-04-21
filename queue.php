@@ -83,10 +83,14 @@ $all_queue += $gr['c'];
 if($all_queue > 0 && isset($_GET['t'])){ $all_queue--; }
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-cloud-download-alt"></i> Очередь закачки {$all_queue}</span>
+    </nav>
+</div>
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-cloud-download-alt"></i> Очередь закачки {$all_queue}</h2>
           <div class="table-responsive">
-			<div class="white-box" style="padding:20px 0;margin-bottom:10px;white-space:nowrap;">
+			<div class="row white-box p-2 pt-4 pb-4 mb-4" style="white-space:nowrap;">
 E;
 
 // Show last queue records
@@ -107,7 +111,7 @@ $bar[2] = array('fa' => 'film','name' => 'Видеозаписи','perx' => $don
 $bar[3] = array('fa' => 'paperclip','name' => 'Вложения','perx' => $done['att'],'per' => $done['at'],'bar' => 'primary');
 
 // Documents
-$bar[4] = array('fa' => 'file-o','name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
+$bar[4] = array('fa' => 'file','name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
 
 foreach($bar as $bark => $barv){
 	print $skin->queue_progress_bar($barv);
@@ -958,7 +962,7 @@ E;
 }
 
 print <<<E
-            <table class="table table-striped white-box">
+            <table class="table table-striped table-sm table-hover white-box">
               <thead>
                 <tr>
                   <th>#</th>
@@ -985,7 +989,7 @@ print <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1013,7 +1017,7 @@ print <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">[{$duration}] {$row['artist']} - {$row['title']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=m&id={$row['id']}" style="font-size:130%;" class="label label-warning" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=m&id={$row['id']}" style="font-size:130%;" class="label label-warning" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1034,7 +1038,7 @@ print <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=v&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=v&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1054,7 +1058,7 @@ print <<<E
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
   <td>{$row['date']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=dc&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fa fa-arrow-circle-up"></b></a>{$auto}</td>
+  <td style="text-align:center;"><a href="queue.php?t=dc&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
 </tr>
 E;
 	}

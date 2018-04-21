@@ -25,10 +25,14 @@ print $skin->navigation($lc);
 $do = (isset($_GET['do'])) ? $_GET['do'] : '';
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-sync"></i> Синхронизация</span>
+    </nav>
+</div>
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-sync"></i> Синхронизация</h2>
           <div class="table-responsive white-box">
-            <table class="table table-striped">
+            <table class="table table-striped table-sm">
 E;
 
 if($do != ''){
@@ -500,7 +504,7 @@ E;
 				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_photo'");
 				//print_r($old_log);
 				if($old_log['p'] != ''){
-					print '<tr><td><h4>Лог</h4></td></tr>'.$old_log['p'];
+					print '<tr><th class="text-center">Лог</th></tr>'.$old_log['p'];
 				}
 
 			} // end if album
@@ -716,7 +720,7 @@ E;
 				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_music'");
 				//print_r($old_log);
 				if($old_log['p'] != ''){
-					print '<tr><td><h4>Лог</h4></td></tr>'.$old_log['p'];
+					print '<tr><th class="text-center">Лог</th></tr>'.$old_log['p'];
 				}
 				
 			} // end if part
@@ -906,7 +910,7 @@ E;
 				// Get log if any process rinning
 				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_video'");
 				if($old_log['p'] != ''){
-					print '<tr><td><h4>Лог</h4></td></tr>'.$old_log['p'];
+					print '<tr><th class="text-center">Лог</th></tr>'.$old_log['p'];
 				}
 				
 			} // end if part
@@ -1117,7 +1121,7 @@ E;
 				// Get log if any process rinning
 				$old_log = $db->query_row("SELECT val as p FROM vk_status WHERE `key` = 'log_docs'");
 				if($old_log['p'] != ''){
-					print '<tr><td><h4>Лог</h4></td></tr>'.$old_log['p'];
+					print '<tr><th class="text-center">Лог</th></tr>'.$old_log['p'];
 				}
 				
 			} // end if part

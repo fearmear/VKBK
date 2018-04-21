@@ -321,7 +321,7 @@
 
             if (setting.cellH == 'auto') {
                 $item.width(block.width * cellW - gutterX);
-                $item[0].style.height = "";
+                //$item[0].style.height = ""; // BUG: Cannot read property 'style' of undefined
                 block.height = Math.round(($item.height() + gutterY) / cellH);
             }
         },

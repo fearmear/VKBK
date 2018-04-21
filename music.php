@@ -30,8 +30,13 @@ if(!$cfg['pj']){
 }
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-music"></i> Музыка</span>
+    </nav>
+</div>
+
 <div class="container">
-          <h2 class="sub-header"><i class="fa fa-music"></i> Музыка</h2>
 
 <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
