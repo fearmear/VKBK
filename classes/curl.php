@@ -73,7 +73,11 @@ class cu{
 
 	function file_save($opts,$data){
 		if(!is_dir($opts['path'])){
-			mkdir($opts['path']);
+			if($this->winlin === false){
+				mkdir($opts['path'],null,true);
+			} else {
+				mkdir($opts['path'],0755,true);
+			}
 		}
 		if(!is_writable($opts['path'])){
 			return false;
@@ -123,7 +127,7 @@ class cu{
 		// ref http://stackoverflow.com/questions/9659600/glob-cant-find-file-names-with-multibyte-characters-on-windows
 		// ref https://github.com/jbroadway/urlify
 		$converted = false;
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		if ($this->winlin === false) {
 			if(mb_detect_encoding($name, 'UTF-8', true)){
 				$name = iconv("UTF-8","CP1251//IGNORE",$name);
 				$converted = true;
@@ -133,6 +137,20 @@ class cu{
 		return array($converted,$name);
 	}
 	
+	/*
+	   WinLin
+	   Returns OS type
+	   IN:
+	   OUT: false - windows, true - linux
+	*/
+	function winlin(){
+		$osu = strtoupper(substr(php_uname('s'), 0, 3));
+		if($osu === 'WIN'){
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 }
 

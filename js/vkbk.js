@@ -12,7 +12,7 @@
 $(".tip").tooltip();	// tooltips
 
 $(document).pjax('a[data-pjax]', '#pj-content', {timeout:1000});	// pJax navigaion
-$(document).pjax('a[data-pjauth]', '.nav-sidebar', {timeout:1000});
+$(document).pjax('a[data-pjauth]', '#auth-col', {timeout:1000});
 
 var paginator_docs   = 'ajax/docs-paginator.php';
 var paginator_albums = 'ajax/albums-paginator.php';
@@ -348,6 +348,7 @@ function apr_docs_callback(data,type){
     list.html(data);
     apr_jscroller(type,list);
     doc_gif();
+    $(".tip").tooltip();
 }
 
 // Callback function for video

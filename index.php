@@ -32,7 +32,7 @@ if(!$cfg['pj']){
 print <<<E
   <div class="container">
       <div class="row">
-	  <div class="col-sm-2 col-md-3 mt-4">
+	  <div class="col-sm-2 col-md-3 mt-4" id="auth-col">
 	    <ul class="nav">
 		  <li class="col-sm-6 col-md-12">
 E;
@@ -173,7 +173,7 @@ E;
 			$q = $db->query("REPLACE INTO vk_session (`vk_id`,`vk_token`, `vk_expire`, `vk_user`) VALUES (1,'{$access_token['access_token']}','{$access_token['expires_in']}','{$access_token['user_id']}')");
 		}
 		
-		print '<h3><span class="label label-success" style="white-space:inherit;display:block;">Авторизация пройдена</span></h3>';
+		print '<h3><span class="badge badge-success" style="white-space:inherit;display:block;">Авторизация пройдена</span></h3>';
     }
 	} catch (Exception $error) {
 		echo '<h3><span class="label label-danger" style="white-space:inherit;display:block;">Ошибка: '.$error->getMessage().'</span></h3>';

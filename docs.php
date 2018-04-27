@@ -33,7 +33,7 @@ print <<<E
 <div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
     <nav class="nav nav-underline">
 		<span class="nav-link active"><i class="fa fa-file"></i> Документы</span>
-		<button type="button" class="btn btn-link docs-filter-btn"><i class="fa fa-filter"></i></button>
+		<button type="button" class="btn btn-link docs-filter-btn ml-auto mr-4"><i class="fa fa-filter"></i></button>
     </nav>
 
 <div class="col-sm-4 white-box docs-filter-box">
@@ -75,8 +75,6 @@ while($row = $db->return_row($r)){
 		$row['preview_path'] = $f->windows_path_alias($row['preview_path'],'docs');
 	}
 	
-	$row['stitle'] = $row['title'];
-	if(mb_strlen($row['title']) > 40){ $row['stitle'] = mb_substr($row['title'],0,40).'...'; }
 print <<<E
 <div class="col-sm-4">
 <div class="white-box">
@@ -107,7 +105,7 @@ E;
 	}
 print <<<E
 	<div class="docs-info">
-		<div class="docs-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
+		<div class="docs-title text-truncate tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['title']}</div>
 	</div>
 </div></div>
 E;

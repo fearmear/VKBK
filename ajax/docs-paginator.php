@@ -57,8 +57,6 @@ while($row = $db->return_row($q)){
 		$row['preview_path'] = $f->windows_path_alias($row['preview_path'],'docs');
 	}
 	
-	$row['stitle'] = $row['title'];
-	if(mb_strlen($row['title']) > 40){ $row['stitle'] = mb_substr($row['title'],0,40).'...'; }
 print <<<E
 <div class="col-sm-4">
 <div class="white-box">
@@ -82,7 +80,7 @@ E;
 	} else {
 print <<<E
 	<div class="docs-preview">
-		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fas fa-file"></i></span></a>
+		<a href="{$row['local_path']}" target="_blank"><span class="docs-icon"><i class="fa fa-file"></i></span></a>
 		<span class="badge badge-dark">{$row['ext']}</span>
 	</div>
 E;
@@ -90,7 +88,7 @@ E;
 print <<<E
 
 	<div class="docs-info">
-		<div class="docs-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['stitle']}</div>
+		<div class="docs-title text-truncate tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}">{$row['title']}</div>
 	</div>
 </div></div>
 E;
