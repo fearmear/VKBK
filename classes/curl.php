@@ -73,7 +73,7 @@ class cu{
 
 	function file_save($opts,$data){
 		if(!is_dir($opts['path'])){
-			if($this->winlin === false){
+			if($this->winlin() === false){
 				mkdir($opts['path'],null,true);
 			} else {
 				mkdir($opts['path'],0755,true);
@@ -127,7 +127,7 @@ class cu{
 		// ref http://stackoverflow.com/questions/9659600/glob-cant-find-file-names-with-multibyte-characters-on-windows
 		// ref https://github.com/jbroadway/urlify
 		$converted = false;
-		if ($this->winlin === false) {
+		if ($this->winlin() === false) {
 			if(mb_detect_encoding($name, 'UTF-8', true)){
 				$name = iconv("UTF-8","CP1251//IGNORE",$name);
 				$converted = true;
