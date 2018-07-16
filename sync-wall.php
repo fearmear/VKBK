@@ -30,8 +30,12 @@ $offset = isset($_GET['offset']) ? intval($_GET['offset']) : -1;
 $count = 100;
 
 print <<<E
+<div class="nav-scroller bg-white box-shadow mb-4" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fa fa-sync"></i> Синхронизация - стена</span>
+    </nav>
+</div>
 <div class="container">
-          <h2 class="sub-header">Синхронизация</h2>
           <div class="table-responsive">
             <table class="table table-striped">
 E;
@@ -75,7 +79,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	$api_profiles = array();
 	$api_groups = array();
 	$vk_post_total = 0;
-	$fast_sync = (isset($_GET['fast'])) ? (bool)$_GET['fast'] : false;
+	$fast_sync = (isset($_GET['fast'])) ? true : false;
 	$fast_sync_date = 0;
 	$fast_sync_stop = false;
 	
