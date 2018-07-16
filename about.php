@@ -39,54 +39,63 @@ print <<<E
 			<div class="row">
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="http://getbootstrap.com/">Bootstrap</a>
-				<span class="label label-default">4.0.0</span><br/>
+				<span class="badge badge-light">4.0.0</span><br/>
 			<a href="https://github.com/vladkens/VK">PHP класс для VK.API</a>
-				<span class="label label-default">0.1.7</span><br/>
+				<span class="badge badge-light">0.1.7</span><br/>
 			<a href="https://github.com/kombai/freewall">Freewall.js</a>
-				<span class="label label-default">1.05</span><br/>
+				<span class="badge badge-light">1.05</span><br/>
 			<a href="https://github.com/pklauzinski/jscroll">jScroll.js</a>
-				<span class="label label-default">2.3.9a</span><br/>
+				<span class="badge badge-light">2.3.9a</span><br/>
 			<a href="https://github.com/fancyapps/fancyBox">fancybox.js</a>
-				<span class="label label-default">3.1.20</span>
+				<span class="badge badge-light">3.1.20</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://fortawesome.github.io/Font-Awesome/">Font Awesome</a>
-				<span class="label label-default">5.0.8</span><br/>
+				<span class="badge badge-light">5.0.8</span><br/>
 			<a href="https://github.com/minhur/bootstrap-toggle">Bootstrap Toggle</a>
-				<span class="label label-default">2.2.2</span><br/>
+				<span class="badge badge-light">2.2.2</span><br/>
 			<a href="https://habrahabr.ru/sandbox/57659/">hashnav.js</a>
-				<span class="label label-default">6 May 2016</span><br/>
+				<span class="badge badge-light">6 May 2016</span><br/>
 			<a href="https://github.com/noraesae/perfect-scrollbar">perfect-scrollbar.js</a>
-				<span class="label label-default">0.6.11</span><br/>
+				<span class="badge badge-light">1.3.0</span><br/>
 			<a href="https://github.com/happyworm/jPlayer">jPlayer.js</a>
-				<span class="label label-default">2.9.2</span>
+				<span class="badge badge-light">2.9.2</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
 			
 			<a href="https://github.com/snapappointments/bootstrap-select">Bootstrap Select</a>
-				<span class="label label-default">1.13.0</span><br/>
+				<span class="badge badge-light">1.13.0</span><br/>
 			<a href="https://github.com/defunkt/jquery-pjax">pjax</a>
-				<span class="label label-default">2.0.1</span><br/>
+				<span class="badge badge-light">2.0.1</span><br/>
 			<a href="https://github.com/customd/jquery-visible/">jQuery Visible</a>
-				<span class="label label-default">1.2.0</span><br/>
+				<span class="badge badge-light">1.2.0</span><br/>
 			<a href="http://benalman.com/projects/jquery-throttle-debounce-plugin/">Debounce plugin</a>
-				<span class="label label-default">1.1</span><br/>
+				<span class="badge badge-light">1.1</span><br/>
 			<a href="https://github.com/js-cookie/js-cookie">js-cookie</a>
-				<span class="label label-default">2.1.4</span>
+				<span class="badge badge-light">2.1.4</span>
 			</div>
 			<div class="col-xs-6 col-sm-3 libs-row">
 			<a href="https://github.com/FezVrasta/popper.js">popper.js</a>
-				<span class="label label-default">1.14.1</span><br/>
+				<span class="badge badge-light">1.14.1</span><br/>
 			<a href="https://github.com/miromannino/Justified-Gallery">Justified Gallery</a>
-				<span class="label label-default">3.7.0</span><br/>
+				<span class="badge badge-light">3.7.0</span><br/>
 			</div>
 			</div>
 			
 		  </div>
-          <div class="col-sm-12">
+          <div class="col-sm-12 px-0 mb-5 pb-2">
 E;
 
 $changelog = array(
+	'0.8.x' => array(
+		'0.8.0' => array(
+			array('n','Синхронизация личных сообщений (диалогов)'),
+			array('u','perfect-scrollbar обновлен до версии 1.3.0'),
+			array('u',"Исправлены мелкие недоработки в дизайне"),
+			array('bf',"Исправлен баг с включением быстрой синхронизации для фотографий."),
+			array('bf',"Исправлены мелкие баги"),
+		),
+	),
 	'0.7.x' => array(
 		'0.7.7' => array(
 			array('u',"Исправлены мелкие недоработки в дизайне"),
