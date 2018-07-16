@@ -34,53 +34,47 @@ while($row = $db->return_row($q)){
 }
 
 print <<<E
+<div class="nav-scroller mb-2" style="position:relative;">
+    <nav class="nav nav-underline">
+		<span class="nav-link active"><i class="fas fa-sliders-h"></i> Настройки</span>
+    </nav>
+</div>
 <div class="container">
-          <h2 class="sub-header"><i class="fas fa-sliders-h"></i> Настройки</h2>
           <div class="container">
 			<div class="row">
-				<div class="col-sm-4">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Редиректы</h3>
-						</div>
-						<div class="panel-body">
-							<div class="clearfix">
-							<div style="float:left;margin:0 10px 10px 0">
-								<input id="auto-queue-photo" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['auto-queue-photo']}>
-							</div>
-							<div>Автоматически переходить к очереди закачек после синхронизации фотографий.</div>
-							</div>
-							<hr/>
-							<div class="clearfix">
-							<div style="float:left;margin:0 10px 10px 0">
-								<input id="auto-queue-audio" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['auto-queue-audio']}>
-							</div>
-							<div>Автоматически переходить к очереди закачек после синхронизации аудиофайлов.</div>
-							</div>
-						</div>
+				<div class="col-sm-5 small">
+<div class="card bg-light mb-3" style="max-width: 20rem;">
+  <div class="card-header">Редиректы</div>
+  <div class="card-body border-bottom">
+    <p class="card-text">Автоматически переходить к очереди закачек после синхронизации фотографий.</p>
+	<div class="text-center">
+		<input id="auto-queue-photo" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="success" data-offstyle="secondary" {$settings['auto-queue-photo']}>
 					</div>
 				</div>
-				<div class="col-sm-4">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Видео</h3>
+  <div class="card-body">
+    <p class="card-text">Автоматически переходить к очереди закачек после синхронизации аудиофайлов.</p>
+	<div class="text-center">
+		<input id="auto-queue-audio" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="success" data-offstyle="secondary" {$settings['auto-queue-audio']}>
 						</div>
-						<div class="panel-body">
-							<div class="clearfix">
-							<div style="float:left;margin:0 10px 10px 0">
-								<input id="play-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['play-local-video']}>
 							</div>
-							<div>Воспроизводить локальное видео вместо онлайн-плеера.</div>
+</div>
 							</div>
-							<hr/>
-							<div class="clearfix">
-							<div style="float:left;margin:0 10px 10px 0">
-								<input id="start-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="info" {$settings['start-local-video']}>
+				<div class="col-sm-5 small">
+<div class="card bg-light mb-3" style="max-width: 20rem;">
+  <div class="card-header">Видео</div>
+  <div class="card-body border-bottom">
+    <p class="card-text">Воспроизводить локальное видео вместо онлайн-плеера.</p>
+	<div class="text-center">
+		<input id="play-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="success" data-offstyle="secondary" {$settings['play-local-video']}>
 							</div>
-							<div>Автоматически воспроизводить локальное видео.</div>
 							</div>
+  <div class="card-body">
+    <p class="card-text">Автоматически воспроизводить локальное видео.</p>
+	<div class="text-center">
+		<input id="start-local-video" type="checkbox" data-toggle="toggle" data-size="small" data-onstyle="success" data-offstyle="secondary" {$settings['start-local-video']}>
 						</div>
 					</div>
+</div>
 				</div>
 			</div>
           </div>

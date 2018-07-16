@@ -62,7 +62,7 @@ E;
 
 $pic_albums .= <<<E
 <div class="col-sm-3">
-<a href="albums.php?id={$arow['id']}" data-pjax style="background-image:url('{$arow['path']}');"><span class="text-truncate">{$arow['name']}</span></a>
+<a href="albums.php?id={$arow['id']}" data-pjax style="background-image:url('{$arow['path']}');"><div class="d-flex justify-content-between align-items-center"><span class="text-truncate">{$arow['name']}</span><span>{$arow['img_total']}</span></div></a>
 </div>
 E;
 	}
