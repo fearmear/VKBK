@@ -73,6 +73,66 @@ class func {
 	}
 	
 	/*
+	    Function: msg_attach_insert
+	    Inserts information about message attach to DB if attach is NOT found in local
+	    In:
+	    id - attachID,
+	    atk - attachData,
+	    photo_uri - uri of image (photo & video) if it not stored in user albums
+	    debug - if `true` returns array and not saving data in DB (default: false)
+	*/
+	function msg_attach_insert($id,$atk,$photo_uri,$debug){
+	    global $db;
+	    
+	    $type = $atk['type'];
+	    $text = '';
+	    if($type == 'photo'){ $text = $atk['photo']['text']; }
+	    if($type == 'video'){ $text = $atk['video']['description']; }
+	    if($type == 'link'){  $text = $atk['link']['description']; }
+	    
+	    // Prepare empty data if another type of attach
+	    $atk[$type]['width']       = !isset($atk[$type]['width'])      ? 0  : $atk[$type]['width'];
+	    $atk[$type]['height']      = !isset($atk[$type]['height'])     ? 0  : $atk[$type]['height'];
+	    $atk[$type]['duration']    = !isset($atk[$type]['duration'])   ? 0  : $atk[$type]['duration'];
+	    $atk[$type]['title']       = !isset($atk[$type]['title'])      ? '' : $atk[$type]['title'];
+	    $atk[$type]['player']      = !isset($atk[$type]['player'])     ? '' : $atk[$type]['player'];
+	    $atk[$type]['url']         = !isset($atk[$type]['url'])        ? '' : $atk[$type]['url'];;
+	    $atk[$type]['caption']     = !isset($atk[$type]['caption'])    ? '' : $atk[$type]['caption'];
+	    $atk[$type]['access_key']  = !isset($atk[$type]['access_key']) ? '' : $atk[$type]['access_key'];
+	    
+	    // Save information about attach
+	    $q = $db->query("INSERT INTO `vk_messages_attach`
+	    (`uid`,`wall_id`,`type`,`is_local`,`attach_id`,`owner_id`,`uri`,`path`,`width`,`height`,`text`,`date`,`access_key`,`title`,`duration`,`player`,`link_url`,`caption`)
+	    VALUES
+	    (NULL,{$id},'{$type}',0,{$atk[$type]['id']},{$atk[$type]['owner_id']},'{$photo_uri}','',{$atk[$type]['width']},{$atk[$type]['height']},'".$db->real_escape($text)."',{$atk[$type]['date']},'{$atk[$type]['access_key']}','".$db->real_escape($atk[$type]['title'])."',{$atk[$type]['duration']},'{$atk[$type]['player']}','{$atk[$type]['url']}','".$db->real_escape($atk[$type]['caption'])."')
+	    ON DUPLICATE KEY UPDATE
+	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 0, `attach_id` = {$atk[$type]['id']}, `owner_id` = {$atk[$type]['owner_id']}, `uri` = '{$photo_uri}', `width` = {$atk[$type]['width']}, `height` = {$atk[$type]['height']}, `text` = '".$db->real_escape($text)."', `date` = {$atk[$type]['date']}, `access_key` = '{$atk[$type]['access_key']}', `title` = '".$db->real_escape($atk[$type]['title'])."', `duration` = {$atk[$type]['duration']}, `player` = '{$atk[$type]['player']}', `link_url` = '{$atk[$type]['url']}', `caption` = '".$db->real_escape($atk[$type]['caption'])."'
+	    ");
+	}
+	
+	/*
+	    Function: msg_attach_update
+	    Inserts information about message attach to DB if attach is found in local
+	    In:
+	    id - attachID,
+	    atk - attachData
+	*/
+	function msg_attach_update($id,$atk){
+	    global $db;
+	    
+	    $type = $atk['type'];
+	    
+	    // Insert OR update
+	    $q = $db->query("INSERT INTO `vk_messages_attach`
+	    (`uid`,`wall_id`,`type`,`is_local`,`attach_id`,`owner_id`,`uri`,`path`,`width`,`height`,`text`,`date`,`access_key`,`title`,`duration`,`player`,`link_url`,`caption`)
+	    VALUES
+	    (NULL,{$id},'{$type}',1,{$atk[$type]['id']},0,'','',0,0,'',0,'','',0,'','','')
+	    ON DUPLICATE KEY UPDATE
+	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 1, `attach_id` = {$atk[$type]['id']}
+	    ");
+	}
+	
+	/*
 	    Function: wall_post_insert
 	    Saves wall post and repost body to DB
 	    In:
@@ -95,6 +155,30 @@ class func {
 	}
 	
 	/*
+	    Function: dialog_message_insert
+	    Saves message body to DB
+	    In:
+	    v - messageData,
+	    attach - message contains attachment
+	    forward - message contains additional data
+	*/
+	function dialog_message_insert($v,$attach,$forward){
+	    global $db;
+	    
+		$dialog_id = $v['user_id'];
+		if(!isset($v['chat_id'])){ $v['chat_id'] = 0; }
+		if($v['chat_id'] > 0){ $dialog_id = 2000000000 + $v['chat_id']; }
+		
+	    $q = $db->query("INSERT INTO `vk_messages`
+	    (`uid`,`msg_id`,`msg_chat`,`msg_dialog`,`msg_user`,`msg_date`,`msg_body`,`msg_attach`,`msg_forwarded`)
+	    VALUES
+	    (null,{$v['id']},{$v['chat_id']},{$dialog_id},{$v['from_id']},'{$v['date']}','".$db->real_escape($this->removeEmoji($v['body']))."',{$attach},{$forward})
+	    ON DUPLICATE KEY UPDATE
+	    `msg_id` = {$v['id']}, `msg_chat` = {$v['chat_id']}, `msg_dialog` = {$dialog_id}, `msg_user` = {$v['from_id']}, `msg_date` = '{$v['date']}', `msg_body` = '".$db->real_escape($this->removeEmoji($v['body']))."', `msg_attach` = {$attach}, `msg_forwarded` = {$forward}
+	    ");
+	}
+	
+	/*
 	    Function: get_largest_photo
 	    Returns a largest photo url
 	    In: data array
@@ -112,6 +196,34 @@ class func {
 	    elseif(isset($data['photo_130'])){  $photo_uri = $data['photo_130'];}
 	    elseif(isset($data['photo_75'])){   $photo_uri = $data['photo_75'];}
 	    return $photo_uri;
+	}
+	
+	/*
+	    Function: get_sticker_image
+	    Returns sticker image
+	    In: data - array, hq - return HQ image
+	    Out: url
+	*/
+	function get_sticker_image($data,$hq){
+	    $image = array('pre'=>"",'prew'=>0,'preh'=>0);
+		
+		if(isset($data['images'])){
+			foreach($data as $pk => $pv){
+				if($pv['width'] == '64'){
+					$image['pre'] = $pv['url']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+				if($pv['width'] == '128'){
+					$image['pre'] = $pv['url']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+				if($pv['width'] == '512' && $hq == true){
+					$image['pre'] = $pv['url']; $image['prew'] = $pv['width']; $image['preh'] = $pv['height']; }
+			}
+		} else {
+			if(isset($data['photo_512']) && $hq == true){ $image['pre'] = $data['photo_512'];  $image['prew'] = 512; $image['preh'] = 512; }
+	    elseif(isset($data['photo_256'])){ $image['pre'] = $data['photo_256']; $image['prew'] = 256; $image['preh'] = 256;}
+	    elseif(isset($data['photo_128'])){ $image['pre'] = $data['photo_128'];  $image['prew'] = 128; $image['preh'] = 128;}
+	    elseif(isset($data['photo_64'])){  $image['pre'] = $data['photo_64']; $image['prew'] = 64; $image['preh'] = 64;}
+		}
+		
+		return $image;
 	}
 	
 	/*
@@ -158,6 +270,25 @@ class func {
 		if($d-date("z",$time) == 2){ $date = date("позавчера в H:i",$time); }
 		if($d-date("z",$time) == 1){ $date = date("вчера в H:i",$time); }
 		if($d == date("z",$time)){   $date = date("сегодня в H:i",$time);
+		    $h = date("H");
+		    if($h-date("H",$time) == 1){
+			                     $date = "час назад";
+		    }
+		}
+	    }
+	    return $date;
+	}
+	
+	function dialog_date_format($time){
+	    $date = '';
+	    $y = date("YYYY");
+	    if($y != date("YYYY",$time)){    $date = date("d M Y",$time); }
+	    if($y == date("YYYY",$time)){    $date = date("d M",$time);
+		$w = date("W");
+		$d = date("z");
+		if($d-date("z",$time) == 2){ $date = date("позавчера",$time); }
+		if($d-date("z",$time) == 1){ $date = date("вчера",$time); }
+		if($d == date("z",$time)){   $date = date("H:i",$time);
 		    $h = date("H");
 		    if($h-date("H",$time) == 1){
 			                     $date = "час назад";
@@ -467,6 +598,59 @@ E;
 	    }
 	}
 	
+	/*
+	    Function: dialog_insert
+	    Saves dialog to DB
+	    In:
+	    v - dialogData,
+	    multi - multichat array:
+	    on - bool, chat_id - int, users - int;
+	    ex - existing dialogs ID's array:
+	    dialog_id => in_read
+	*/
+	function dialog_insert($v,$multi,$ex){
+	    global $db;
+		
+		$is_new = 0;
+		$is_upd = 0;
+		$cid = 0;
+		// Set chat_id if exist
+		if($v['conversation']['peer']['type'] == 'chat'){
+			$cid = $v['conversation']['peer']['local_id'];
+		}
+		
+		// Override `new` and `upd` if they already set
+		if(isset($ex[$v['conversation']['peer']['id']][$cid]['new']) && $ex[$v['conversation']['peer']['id']][$cid]['new'] == 1){ $is_new = 1; }
+		if(isset($ex[$v['conversation']['peer']['id']][$cid]['upd']) && $ex[$v['conversation']['peer']['id']][$cid]['upd'] == 1){ $is_upd = 1; }
+		
+		// Check existance of dialog
+		if(isset($ex[$v['conversation']['peer']['id']][$cid])){
+			// Compare inRead and chatId values to see do we have a new messages
+			if($ex[$v['conversation']['peer']['id']][$cid]['read'] < $v['conversation']['in_read'] && $ex[$v['conversation']['peer']['id']][$cid]['chat'] == $cid){
+				$is_upd = 1;
+			}
+		} else {
+			$is_new = 1;
+		}
+		
+		$title = '';
+		if(isset($v['conversation']['chat_settings']['title'])){
+			$title = $db->real_escape($this->removeEmoji($v['conversation']['chat_settings']['title']));
+		}
+		
+	    $db->query("INSERT INTO `vk_dialogs`
+	    (`id`,`date`,`title`,`in_read`,`multichat`,`chat_id`,`admin_id`,`users`,`is_new`,`is_upd`)
+	    VALUES
+	    ({$v['conversation']['peer']['id']},{$v['last_message']['date']},'{$title}',{$v['conversation']['in_read']},{$multi['on']},{$multi['chat_id']},0,{$multi['users']},{$is_new},{$is_upd})
+	    ON DUPLICATE KEY UPDATE
+	    `id` = {$v['conversation']['peer']['id']}, `date` = {$v['last_message']['date']}, `title` = '{$title}', `in_read` = {$v['conversation']['in_read']}, `multichat` = {$multi['on']},  `chat_id` = {$multi['chat_id']}, `admin_id` = 0, `users` = {$multi['users']}, `is_new` = {$is_new}, `is_upd` = {$is_upd}
+	    ");
+	}
+	
+	/*
+		Human File Size
+		Converts bytes to more understandable values
+	*/
 	function human_filesize($bytes, $decimals = 2) {
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
 		$factor = floor((strlen($bytes) - 1) / 3);

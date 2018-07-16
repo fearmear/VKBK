@@ -6,6 +6,12 @@ class skin {
 		return true;
 	}
 	
+	/*
+		Function: header
+		Return header for page
+		IN:
+		s - extended HTML
+	*/
 	function header($s){
 	    global $cfg;
 	    $db_check = $this->check_db_ver() ? '' : '<div class="m-2 badge badge-danger db-expired"><i class="fas fa-exclamation-triangle"></i> Структура базы данных устарела. Обратитесь к <a href="update/index.html" target="_blank">инструкции</a> по обновлению перед синхронизацией. <i class="fas fa-exclamation-triangle"></i></div>';
@@ -18,7 +24,7 @@ class skin {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
-    <base href="/"/>
+    <base href="/" />
     <link href="favicon.png" rel="shortcut icon">
     {$this->header_links()}
     {$s['extend']}
@@ -28,6 +34,10 @@ class skin {
 E;
 	}
 	
+	/*
+		Function: header_ajax
+		Return header for AJAX page version
+	*/
 	function header_ajax(){
 	    return <<<E
 <!DOCTYPE html>
@@ -38,7 +48,7 @@ E;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>VKBK</title>
-    <base href="/"/>
+    <base href="/" />
     <link href="favicon.png" rel="shortcut icon">
     {$this->header_links()}
   </head>
@@ -46,12 +56,16 @@ E;
 E;
 	}
 	
+	/*
+		Function: header_links
+		Return CSS includes list
+	*/
 	function header_links(){
 	    return <<<E
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/jquery.fancybox3.min.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/perfect-scrollbar.min.css?v=0.6.11" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/perfect-scrollbar.css?v=1.3.0" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/bootstrap2-toggle.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="jplayer/skin/vkbk/css/jplayer.vkbk.css" type="text/css" media="screen" />
@@ -62,16 +76,22 @@ E;
 E;
 	}
 	
+	/*
+		Function: footer
+		Footer for page
+		IN:
+		s - extended HTML
+	*/
 	function footer($s){
 	    global $cfg;
 		return <<<E
     </div> <!-- pj-content end -->
     <a class="gvplayer" data-fancybox="iframe" data-type="iframe" href="javascript:;"></a>
     <footer class="footer">
-      <div class="container">
+      <div class="container pt-2">
 	<div class="row">
-        <div class="col-sm-8"><p class="text-muted"><i class="fab fa-vk"></i>BK {$cfg['version']} &copy; 2016 - 2018 Megumin</p></div>
-	<div class="col-sm-4" style="text-align:right;"><a href="about.php" data-pjax><i class="fa fa-code-branch"></i> История версий</a></div>
+        <div class="col-sm-8"><p class="text-muted mb-2"><a href="https://github.com/Chiaki/VKBK" target="_blank"><i class="fab fa-vk"></i>BK {$cfg['version']}</a> <small>&copy; 2016 - 2018 Megumin</small></p></div>
+		<div class="col-sm-4" style="text-align:right;"><a href="about.php" data-pjax><small><i class="fa fa-code-branch fa-fw"></i> История версий</a></small></div>
 	</div>
       </div>
     </footer>
@@ -82,6 +102,10 @@ E;
 E;
 	}
 	
+	/*
+		Function: footer_ajax
+		Footer for AJAX page version
+	*/
 	function footer_ajax(){
 	    return <<<E
     {$this->footer_links()}
@@ -90,6 +114,10 @@ E;
 E;
 	}
 	
+	/*
+		Function: footer_links
+		Return JS includes list
+	*/
 	function footer_links(){
 	    return <<<E
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -101,7 +129,7 @@ E;
     <script type="text/javascript" src="js/freewall.js"></script>
     <script type="text/javascript" src="js/jquery.jscroll.js"></script>
     <script type="text/javascript" src="js/jquery.fancybox3.min.js"></script>
-    <script type="text/javascript" src="js/perfect-scrollbar.jquery.min.js?v=0.6.11"></script>
+    <script type="text/javascript" src="js/perfect-scrollbar.min.js?v=1.3.0"></script>
     <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="js/bootstrap2-toggle.min.js"></script>
     <script type="text/javascript" src="js/jquery.visible.min.js"></script>
@@ -115,6 +143,12 @@ E;
 E;
 	}
 	
+	/*
+		Function: navigation
+		Builds a nav menu for header
+		IN:
+		s - array of counters
+	*/
 	function navigation($s){
 		return <<<E
     <nav class="navbar navbar-expand-md navbar-inverse fixed-top">
@@ -126,20 +160,14 @@ E;
 
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Главная">
-		<a class="nav-link" href="index.php" data-pjax><i class="fa fa-home"></i><span class="xs-show">Главная</span></a></li>
-            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Альбомы">
-		<a class="nav-link" href="albums.php" data-pjax><i class="fa fa-camera-retro"></i><span class="xs-show">Альбомы</span> <span class="badge badge-sup">{$s['album']}</span></a></li>
-            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Музыка">
-		<a class="nav-link" href="music.php" data-pjax><i class="fa fa-music"></i><span class="xs-show">Музыка</span> <span class="badge badge-sup">{$s['music']}</span></a></li>
-            <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Видео">
-		<a class="nav-link" href="videos.php" data-pjax><i class="fa fa-film"></i><span class="xs-show">Видео</span> <span class="badge badge-sup">{$s['video']}</span></a></li>
-	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Сообщения">
-		<a class="nav-link" href="wall.php" data-pjax><i class="far fa-comments"></i><span class="xs-show">Сообщения</span> <span class="badge badge-sup">{$s['wall']}</span></a></li>
-	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Документы">
-		<a class="nav-link" href="docs.php" data-pjax><i class="far fa-file"></i><span class="xs-show">Документы</span> <span class="badge badge-sup">{$s['docs']}</span></a></li>
-	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Очередь закачки">
-		<a class="nav-link" href="queue.php" data-pjax><i class="fa fa-cloud-download-alt"></i><span class="xs-show">Очередь закачки</span></a></li>
+			{$this->navigation_item('index.php'	 ,'Главная'			,'fa fa-home'				,'')}
+			{$this->navigation_item('albums.php' ,'Альбомы'			,'fa fa-camera-retro'		,$s['album'])}
+			{$this->navigation_item('music.php'	 ,'Музыка'			,'fa fa-music'				,$s['music'])}
+			{$this->navigation_item('videos.php' ,'Видео'			,'fa fa-film'				,$s['video'])}
+			{$this->navigation_item('wall.php'	 ,'Сообщения'		,'far fa-comments'			,$s['wall'])}
+			{$this->navigation_item('docs.php'	 ,'Документы'		,'far fa-file'				,$s['docs'])}
+			{$this->navigation_item('dialogs.php','Диалоги'			,'far fa-comment-alt'		,$s['dialogs'])}
+			{$this->navigation_item('queue.php'	 ,'Очередь закачки'	,'fa fa-cloud-download-alt'	,'')}
 
 	    <li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="Настройки">
 		<a class="nav-link" data-morphing id="morphing" data-src="ajax/settings.php" href="javascript:;"><i class="fa fa-sliders-h"></i><span class="xs-show">Настройки</span></a></li>
@@ -147,6 +175,18 @@ E;
       </div>
     </nav>
     <div id="pj-content">
+E;
+	}
+	
+	/*
+		Function navigation_item
+		Returns LI element for navigation
+	*/
+	function navigation_item($link,$title,$icon,$counter){
+		if($counter != ''){ $counter = ' - '.$counter; }
+		return <<<E
+	<li class="nav-item tip" data-placement="bottom" data-toggle="tooltip" data-original-title="{$title}{$counter}">
+		<a class="nav-link" href="{$link}" data-pjax><i class="{$icon}"></i><span class="xs-show">{$title}</span></a></li>
 E;
 	}
 	
@@ -170,15 +210,9 @@ E;
 	    if(isset($bar['per'])  && $bar['per']  < 0){ $bar['per']  = 0; }
 	    if(isset($bar['perx']) && $bar['perx'] < 0){ $bar['perx'] = 0; }
 return <<<E
-<div class="col-sm-4">
-<div class="row">
-<div class="col-sm-6 col-md-2"><i class="fa fa-{$bar['fa']}"></i></div>
-<div class="col-sm-6 col-md-10">
-<div class="progress" style="height: 20px;">
-	<div class="progress-bar bg-{$bar['bar']}" role="progressbar" aria-valuenow="{$bar['per']}" aria-valuemin="0" aria-valuemax="100" style="width:{$bar['per']}%">{$bar['name']} &mdash; {$bar['perx']}%</div>
-</div>
-</div>
-</div>
+<div class="col-sm-2 text-center">
+<i class="fa fa-{$bar['fa']} text-{$bar['bar']}" style="font-size:2em;"></i><br/>
+<small>{$bar['name']}</small><br/>{$bar['perx']}%
 </div>
 E;
 	}
@@ -193,7 +227,7 @@ E;
 	function queue_list_attach($row,$first){
 	    global $skin;
 	    
-	    if(isset($row['date'])){ $row['date'] = date("Y-m-d H:i:s",$row['date']); } else { $row['date'] = ' -//- '; }
+	    if(isset($row['date'])){ $row['fdate'] = date("Y-m-d H:i:s",$row['date']); } else { $row['fdate'] = ' -//- '; }
 	    $uri_name = $row['uri'];
 	    
 	    $t = '';
@@ -212,18 +246,23 @@ E;
 	    if($row['type'] == 'profiles'){ $t = 'pr'; $row['uri']  = $row['photo_uri']; }
 	    if($row['type'] == 'doc'){      $t = 'atdc';$row['id']  = $row['attach_id']; }
 	    
+		if($row['type'] == 'm-photo'){    $t = 'matph';$row['id'] = $row['attach_id']; }
+		if($row['type'] == 'm-video'){    $t = 'matvi';$row['id'] = $row['attach_id']; }
+	    if($row['type'] == 'm-link'){     $t = 'matli';$row['id'] = $row['attach_id'];$row['owner_id'] = $row['date']; }
+		if($row['type'] == 'm-doc'){      $t = 'matdc';$row['id'] = $row['attach_id']; }
+	    if($row['type'] == 'm-sticker'){  $t = 'matst';$row['id'] = $row['date']; }
 	    
 	    // Add a autodownload for the first element in list
 	    if($first == true){
-		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}".(isset($row['owner_id']) ? '&oid='.$row['owner_id'] : '' )."&auto=1\" style=\"font-size:130%;\" class=\"label label-default\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-sync\"></b></a>";
+		$auto = "&nbsp;&nbsp;<a href=\"queue.php?t={$t}&id={$row['id']}".(isset($row['owner_id']) ? '&oid='.$row['owner_id'] : '' )."&auto=1\" class=\"btn btn-sm btn-outline-primary\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fa fa-sync fa-fw\"></b></a>";
 	    } else { $auto = ''; }
 	    $oid = isset($row['owner_id']) ? "&oid=".$row['owner_id'] : '';
 return <<<E
 <tr>
-  <td>{$row['id']}</td>
-  <td><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
-  <td>{$row['date']}</td>
-  <td style="text-align:center;"><a href="queue.php?t={$t}&id={$row['id']}{$oid}" style="font-size:130%;" class="label label-default" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
+  <td class="align-middle">{$row['id']}</td>
+  <td class="align-middle"><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
+  <td class="align-middle">{$row['fdate']}</td>
+  <td class="align-middle"><a href="queue.php?t={$t}&id={$row['id']}{$oid}" class="btn btn-sm btn-outline-primary" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download fa-fw"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -291,6 +330,10 @@ return <<<E
 E;
 	}
 	
+	/*
+		Function: seconds2human
+		Parse seconds and return H:M:S
+	*/
 	function seconds2human($ss) {
 	    $s = $ss%60;
 	    $s = str_pad($s, 2, '0', STR_PAD_LEFT);
@@ -305,6 +348,10 @@ E;
 	    }
 	}
 
+	/*
+		Function: check_db_ver
+		Checks DB version and return true or false
+	*/
 	function check_db_ver(){
 	    global $db, $cfg;
 	    $row = $db->query_row("SELECT val as version FROM vk_status WHERE `key` = 'version'");

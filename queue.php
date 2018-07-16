@@ -70,7 +70,16 @@ $done['dcc'] = round(($bar_total['dc'] - $bar_queue['dc']) / $per, 2);
 $done['dc'] = ceil($done['dcc']);
 } else { $done['dc'] = $done['dcc'] = 0; }
 
-$all_queue = $bar_queue['p'] + $bar_queue['m'] + $bar_queue['v'] + $bar_queue['at'] + $bar_queue['dc'];
+$bar_total = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `uri` != '' AND `is_local` = 0");
+$bar = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0");
+$bar_queue['msat'] = $bar['msat'];
+$per = $bar_total['msat']/100;
+if($bar_total['msat'] > 0){
+$done['msatt'] = round(($bar_total['msat'] - $bar_queue['msat']) / $per, 2);
+$done['msat'] = ceil($done['msatt']);
+} else { $done['msat'] = $done['msatt'] = 0; }
+
+$all_queue = $bar_queue['p'] + $bar_queue['m'] + $bar_queue['v'] + $bar_queue['at'] + $bar_queue['dc'] + $bar_queue['msat'];
 $no_queue = true;
 
 // Profiles & Groups
@@ -89,8 +98,7 @@ print <<<E
     </nav>
 </div>
 <div class="container">
-          <div class="table-responsive">
-			<div class="row white-box p-2 pt-4 pb-4 mb-4" style="white-space:nowrap;">
+	<div class="row white-box p-2 py-3 mb-4 mx-0" style="white-space:nowrap;">
 E;
 
 // Show last queue records
@@ -113,13 +121,17 @@ $bar[3] = array('fa' => 'paperclip','name' => 'Вложения','perx' => $done
 // Documents
 $bar[4] = array('fa' => 'file','name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
 
+// MessagesAttachments
+$bar[5] = array('fa' => 'paperclip','name' => 'Диалоги','perx' => $done['msatt'],'per' => $done['msat'],'bar' => 'secondary');
+
 foreach($bar as $bark => $barv){
 	print $skin->queue_progress_bar($barv);
 }
 
 print <<<E
-<div class="clearfix"></div>
-</div>
+		<div class="clearfix"></div>
+	</div>
+<div class="table-responsive">
 E;
 unset($done);
 
@@ -953,6 +965,373 @@ E;
 		}
 	} // End of T = ATDC
 	
+	// Message - Attach - Stickers
+	if($queue_id > 0 && $_GET['t']=='matst'){
+		$don = true;
+		// Get sticker info
+		$q = $db->query_row("SELECT * FROM vk_messages_attach WHERE `date` = {$queue_id}");
+		if($q['uri'] != ''){
+			
+			// Get file name
+			preg_match_all("/\/([0-9]+)\/[^\.]+\.([^\.]+)$/",$q['uri'],$n);
+			
+			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
+			if(is_file(ROOT.'data/stickers/'.$n[1][0].'.'.$n[2][0])){
+print <<<E
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
+E;
+				$q = $db->query("UPDATE vk_messages_attach SET `is_local` = 1, `path` = '".$n[1][0].".".$n[2][0]."' WHERE `uri` = '".$q['uri']."'");
+				
+			} else {
+				
+				// Are you reagy kids? YES Capitan Curl!
+				require_once(ROOT.'classes/curl.php');
+				$c = new cu();
+				$c->curl_on();
+				
+				$out = $c->curl_req(array(
+						'uri' => $q['uri'],
+						'method'=>'',
+						'return'=>1
+				));
+			
+				if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+					$saved = $c->file_save(array('path'=>ROOT.'data/stickers/','name'=>$n[1][0].'.'.$n[2][0]),$out['content']);
+					if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
+E;
+						$q = $db->query("UPDATE vk_messages_attach SET `is_local` = 1, `path` = '".$n[1][0].".".$n[2][0]."' WHERE `uri` = '".$q['uri']."'");
+					
+					} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
+E;
+					}
+				} else {
+					// If error, let's try to see wtf is going on
+					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
+						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					}
+					// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+				}
+			} // end of local file check fail
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = MATST
+	
+	// Message - Attach - Photo
+	if($queue_id > 0 && $_GET['t']=='matph' && $queue_oid != 0){
+		$don = true;
+		// Get photo info
+		$q = $db->query_row("SELECT * FROM vk_messages_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
+		if($q['uri'] != ''){
+			
+			// Get file name
+			preg_match("/[^\/]+$/",$q['uri'],$n);
+			$f = date("Y-m",$q['date']);
+			
+			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
+			if(is_file($cfg['photo_path'].'messages/'.$f.'/'.$n[0])){
+print <<<E
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
+E;
+				$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['photo_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
+				
+				if($_GET['auto'] == '1'){
+					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_messages_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
+					if($nrow['attach_id'] > 0){
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=matph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+					}
+				}
+			} else {
+			
+				// Are you reagy kids? YES Capitan Curl!
+				require_once(ROOT.'classes/curl.php');
+				$c = new cu();
+				$c->curl_on();
+			
+				$out = $c->curl_req(array(
+						'uri' => $q['uri'],
+						'method'=>'',
+						'return'=>1
+				));
+			
+				if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+					$saved = $c->file_save(array('path'=>$cfg['photo_path'].'messages/'.$f.'/','name'=>$n[0]),$out['content']);
+					if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
+E;
+						$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['photo_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
+						
+						if($_GET['auto'] == '1'){
+							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_messages_attach WHERE `path` = '' AND `type` = 'photo' AND `is_local` = 0");
+							if($nrow['attach_id'] > 0){
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=matph&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
+							}
+						}
+					
+					} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
+E;
+					}
+				} else {
+					// If error, let's try to see wtf is going on
+					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
+						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					}
+					// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+				}
+			} // end of local file check fail
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = MATPH
+	
+	// Message - Attach - Documents
+	if($queue_id > 0 && $_GET['t']=='matdc'){
+		$don = true;
+		// Get document info
+		$q = $db->query_row("SELECT * FROM vk_messages_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
+		if($q['link_url'] != ''){
+			
+			// Are you reagy kids? YES Capitan Curl!
+			require_once(ROOT.'classes/curl.php');
+			$c = new cu();
+			$c->curl_on();
+			$f = date("Y-m",$q['date']);
+			$out = $c->curl_req(array(
+					'uri' => $q['link_url'],
+					'method'=>'',
+					'return'=>1
+			));
+			
+			if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+				$saved = $c->file_save(array('path'=>$cfg['docs_path'].'messages/'.$f.'/','name'=>$q['attach_id'].'.'.$q['caption']),$out['content']);
+				if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
+E;
+
+					$prev_q = '';
+					if($q['uri'] != ''){
+						$out_pre = $c->curl_req(array(
+							'uri' => $q['uri'],
+							'method'=>'',
+							'return'=>1
+						));
+						if($out_pre['err'] == 0 && $out_pre['errmsg'] == '' && $out_pre['content'] != '' && substr($out_pre['content'],0,5) != '<html' && substr($out_pre['content'],0,9) != '<!DOCTYPE'){
+							preg_match("/[^\.]+$/",$q['uri'],$np);
+							$saved_pre = $c->file_save(array('path'=>$cfg['docs_path'].'messages/preview/','name'=>$q['attach_id'].'.'.$np['0']),$out_pre['content']);
+							if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Превью сохранено</div>
+E;
+								$prev_q = ", `path` = '".$cfg['docs_path']."messages/preview/".$q['attach_id'].".".$np[0]."'";
+							}
+						}
+					}
+
+					$q = $db->query("UPDATE vk_messages_attach SET `player` = '".$cfg['docs_path'].'messages/'.$f."/".$q['attach_id'].".".$q['caption']."'".$prev_q." WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
+					
+					if($_GET['auto'] == '1'){
+						$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_messages_attach WHERE `player` = '' AND `type` = 'doc' AND `is_local` = 0");
+						if($nrow['attach_id'] > 0){
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_docs_next_cd']."</span> сек.","queue.php?t=matdc&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_docs_next_cd']);
+						}
+					}
+					
+				} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
+E;
+				}
+			} else {
+				// If error, let's try to see wtf is going on
+				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+					$out = $c->curl_req(array('uri' => $q['link_url'], 'method'=>'', 'return'=>0 ));
+					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+				}
+				// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+			}
+			
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = MATDC
+	
+	// Message - Attach - Link
+	if($queue_id > 0 && $_GET['t']=='matli' && $queue_oid != 0){
+		$don = true;
+		// Get photo info
+		$q = $db->query_row("SELECT * FROM vk_messages_attach WHERE `attach_id` = {$queue_id} AND `date` = {$queue_oid}");
+		if($q['uri'] != ''){
+			
+			// Get file name
+			preg_match("/[^\/]+$/",$q['uri'],$n);
+			$f = date("Y-m",$q['date']);
+			
+			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
+			if(is_file($cfg['photo_path'].'messages/'.$f.'/'.$n[0])){
+print <<<E
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
+E;
+				$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['photo_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `date` = ".$queue_oid."");
+				
+				if($_GET['auto'] == '1'){
+					$nrow = $db->query_row("SELECT attach_id, date FROM vk_messages_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
+					if($nrow['attach_id'] > 0){
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=matli&id=".$nrow['attach_id']."&oid=".$nrow['date']."&auto=1",$cfg['sync_found_local']);
+					}
+				}
+			} else {
+			
+				// Are you reagy kids? YES Capitan Curl!
+				require_once(ROOT.'classes/curl.php');
+				$c = new cu();
+				$c->curl_on();
+			
+				$out = $c->curl_req(array(
+						'uri' => $q['uri'],
+						'method'=>'',
+						'return'=>1
+				));
+			
+				if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+					$saved = $c->file_save(array('path'=>$cfg['photo_path'].'messages/'.$f.'/','name'=>$n[0]),$out['content']);
+					if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
+E;
+						$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['photo_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `date` = ".$queue_oid."");
+						
+						if($_GET['auto'] == '1'){
+							$nrow = $db->query_row("SELECT attach_id, date FROM vk_messages_attach WHERE `path` = '' AND `type` = 'link' AND `is_local` = 0");
+							if($nrow['attach_id'] > 0){
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=matli&id=".$nrow['attach_id']."&oid=".$nrow['date']."&auto=1",$cfg['sync_photo_next_cd']);
+							}
+						}
+						
+					} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
+E;
+					}
+				} else {
+					// If error, let's try to see wtf is going on
+					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
+						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					}
+					// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+				}
+			} // end of local file check fail
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = MATLI
+	
+	// Message - Attach - Video (preview)
+	if($queue_id > 0 && $_GET['t']=='matvi' && $queue_oid != 0){
+		$don = true;
+		// Get video preview info
+		$q = $db->query_row("SELECT * FROM vk_messages_attach WHERE `attach_id` = {$queue_id} AND `owner_id` = {$queue_oid}");
+		if($q['uri'] != ''){
+			
+			// Get file name
+			preg_match("/[^\/]+$/",$q['uri'],$n);
+			$f = date("Y-m",$q['date']);
+			
+			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
+			if(is_file($cfg['video_path'].'messages/'.$f.'/'.$n[0])){
+print <<<E
+<div class="alert alert-info" role="alert"><i class="far fa-file"></i> Файл найден локально</div>
+E;
+				$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['video_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
+				
+				if($_GET['auto'] == '1'){
+					$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_messages_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
+					if($nrow['attach_id'] > 0){
+						print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_found_local']."</span> сек.","queue.php?t=matvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_found_local']);
+					}
+				}
+			} else {
+			
+				// Are you reagy kids? YES Capitan Curl!
+				require_once(ROOT.'classes/curl.php');
+				$c = new cu();
+				$c->curl_on();
+			
+				$out = $c->curl_req(array(
+						'uri' => $q['uri'],
+						'method'=>'',
+						'return'=>1
+				));
+			
+				if($out['err'] == 0 && $out['errmsg'] == '' && $out['content'] != '' && substr($out['content'],0,5) != '<html' && substr($out['content'],0,9) != '<!DOCTYPE'){
+					$saved = $c->file_save(array('path'=>$cfg['video_path'].'messages/'.$f.'/','name'=>$n[0]),$out['content']);
+					if($saved){
+print <<<E
+<div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл сохранен</div>
+E;
+						$q = $db->query("UPDATE vk_messages_attach SET `path` = '".$cfg['video_path']."messages/".$f."/".$n[0]."' WHERE `attach_id` = ".$queue_id." AND `owner_id` = ".$queue_oid."");
+					
+						if($_GET['auto'] == '1'){
+							$nrow = $db->query_row("SELECT attach_id, owner_id FROM vk_messages_attach WHERE `path` = '' AND `type` = 'video' AND `is_local` = 0");
+							if($nrow['attach_id'] > 0){
+								print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","queue.php?t=matvi&id=".$nrow['attach_id']."&oid=".$nrow['owner_id']."&auto=1",$cfg['sync_photo_next_cd']);
+							}
+						}
+						
+					} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Ошибка при сохранении файла</div>
+E;
+					}
+				} else {
+					// If error, let's try to see wtf is going on
+					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
+						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
+						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					}
+					// Something wrong with response or connection
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
+E;
+				}
+			} // end of local file check fail
+		} else {
+print <<<E
+<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> ID найден в очереди но ссылка на файл отсутствует.</div>
+E;
+		}
+	} // End of T = MATVI
+	
 	if($don == false) {
 print <<<E
 <div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Неправильный тип или ID</div>
@@ -962,17 +1341,21 @@ E;
 }
 
 print <<<E
-            <table class="table table-striped table-sm table-hover white-box">
+            <table class="table table-sm table-hover small white-box">
               <thead>
                 <tr>
                   <th>#</th>
 				  <th>URL</th>
 				  <th>Добавлено</th>
-				  <th style="text-align:center;">Сохранить</th>
+				  <th>Сохранить</th>
                 </tr>
               </thead>
               <tbody>
 E;
+
+$btnclass = 'btn btn-sm btn-outline-primary';
+$btnicon = 'fas fa-download fa-fw';
+$btniconauto = 'fas fa-sync fa-fw';
 
 $first['p'] = true;
 if($bar_queue['p'] > 0){
@@ -982,14 +1365,14 @@ if($bar_queue['p'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['p'] == true){
 			$first['p'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-success\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=p&id={$row['id']}" style="font-size:130%;" class="label label-success" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
+  <td><a href="queue.php?t=p&id={$row['id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1010,14 +1393,14 @@ if($bar_queue['m'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['m'] == true){
 			$first['m'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-warning\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" class=\"{$btnclass}\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">[{$duration}] {$row['artist']} - {$row['title']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=m&id={$row['id']}" style="font-size:130%;" class="label label-warning" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
+  <td><a href="queue.php?t=m&id={$row['id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1031,14 +1414,14 @@ if($bar_queue['v'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['v'] == true){
 			$first['v'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=v&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
+  <td><a href="queue.php?t=v&id={$row['id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1051,14 +1434,14 @@ if($bar_queue['dc'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['dc'] == true){
 			$first['dc'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" style=\"font-size:130%;\" class=\"label label-info\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"fas fa-sync\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
 <tr>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
   <td>{$row['date']}</td>
-  <td style="text-align:center;"><a href="queue.php?t=dc&id={$row['id']}" style="font-size:130%;" class="label label-info" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="fas fa-download"></b></a>{$auto}</td>
+  <td><a href="queue.php?t=dc&id={$row['id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1120,6 +1503,43 @@ while($row = $db->return_row($r)){
 		if($first['atdc'] == true){ $first['atdc'] = false; }
 	}
 }
+
+
+// MessageAttach - Photo & Video (preview)
+$first['matph'] = true;
+$first['matvi'] = true;
+$first['matli'] = true;
+$first['matdc'] = true;
+$first['matst'] = false;
+$r = $db->query("SELECT * FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 LIMIT 0,{$show}");
+while($row = $db->return_row($r)){
+	$no_queue = false;
+	if($row['type'] == 'photo'){
+		$row['type'] = 'm-photo';
+		print $skin->queue_list_attach($row,$first['matph']);
+		if($first['matph'] == true){ $first['matph'] = false; }
+	}
+	if($row['type'] == 'video'){
+		$row['type'] = 'm-video';
+		print $skin->queue_list_attach($row,$first['matvi']);
+		if($first['matvi'] == true){ $first['matvi'] = false; }
+	}
+	if($row['type'] == 'link'){
+		$row['type'] = 'm-link';
+		print $skin->queue_list_attach($row,$first['matli']);
+		if($first['matli'] == true){ $first['matli'] = false; }
+	}
+	if($row['type'] == 'doc'){
+		$row['type'] = 'm-doc';
+		print $skin->queue_list_attach($row,$first['matdc']);
+		if($first['matdc'] == true){ $first['matdc'] = false; }
+	}
+	if($row['type'] == 'sticker'){
+		$row['type'] = 'm-sticker';
+		print $skin->queue_list_attach($row,$first['matst']);
+	}
+}
+
 
 if($all_queue == 0 && $no_queue == true) {
 	print '<tr><td colspan="4" style="text-align:center;color:#bbb;">Очередь закачки пуста</td></tr>';
