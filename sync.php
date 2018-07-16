@@ -248,7 +248,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			$album_id = (isset($_GET['album'])) ? intval($_GET['album']) : '';
 			$album_total = (isset($_GET['at'])) ? intval($_GET['at']) : 0;
 			$album_process = (isset($_GET['ap'])) ? intval($_GET['ap']) : 0;
-			$fast_sync = (isset($_GET['fast'])) ? (bool)$_GET['fast'] : false;
+			$fast_sync = (isset($_GET['fast']) && $_GET['fast'] == true) ? true : false;
 			
 			if($album_total > 0 && $album_process <= $album_total){
 				$per = $album_total/100;
@@ -257,7 +257,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 print <<<E
 <div class="row" style="margin:0;">
 <div class="col-sm-12">
-<div class="progress" style="margin-top:20px;">
+<div class="progress" style="margin:20px;">
 	<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{$done['al']}" aria-valuemin="0" aria-valuemax="100" style="width: {$done['al']}%"><span class="sr-only">{$done['al']}% Complete</span></div>
 </div>
 </div>
