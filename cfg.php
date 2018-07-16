@@ -101,6 +101,8 @@ $cfg['perpage_docs'] = 24;
 $cfg['wall_layout_width'] = 200;
 $cfg['perpage_wall'] = 20;
 
+$cfg['perpage_dlg_messages'] = 250;
+
 /* Sync
   Settings
   sync_*_start_cd - sec. before start sync
@@ -128,6 +130,8 @@ $cfg['sync_video_start_cd'] = 5;
 $cfg['sync_video_next_cd'] = 3;
 
 $cfg['sync_wall_next_cd'] = 10;
+
+$cfg['sync_dialog_next_cd'] = 3;
 
 $cfg['sync_found_local'] = 1;
 
