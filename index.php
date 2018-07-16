@@ -49,9 +49,10 @@ $token_valid = false;
 $counters_show = array(
 	'albums' => 0,
 	'photos' => 0,
-	'audios' => 0,
+	//'audios' => 0,
 	'videos' => 0,
-	'docs'   => 0
+	'docs'   => 0,
+	'dialogs'=> 0
 );
 
 if($vk_session['vk_token']){
@@ -105,14 +106,16 @@ E;
 			}
 
 			// GET AUDIO Count
-			$music = $vk->api('audio.getCount', array(
+		// Disabled because VK does not return data anymore
+		/*$music = $vk->api('audio.getCount', array(
 				'owner_id' => $vk_session['vk_user']
 			));
 		if(isset($music['response'])){
 				$counters_show['audios'] = $music['response'];
 		} else {
 			$counters_show['audios'] = 0;
-			}
+		}*/
+		
 			// GET VIDEO Count
 			$video = $vk->api('video.get', array(
 				'owner_id' => $vk_session['vk_user'],
@@ -138,13 +141,25 @@ E;
 			$counters_show['docs'] = 0;
 		}
 
+		// GET DIALOGS Count
+		$dialogs = $vk->api('messages.getDialogs', array(
+			'count' => 0,
+			'offset' => 0
+		));
+		if(isset($dialogs['response'])){
+			$counters_show['dialogs'] = $dialogs['response']['count'];
+		} else {
+			$counters_show['dialogs'] = 0;
+		}
+
 			foreach($counters_show as $k => $v){
-				if($k == 'albums') { $k = '<i class="fa fa-folder"></i> Альбомы'; }
-				if($k == 'photos') { $k = '<i class="fa fa-image"></i> Фото'; }
-				if($k == 'audios') { $k = '<i class="fa fa-music"></i> Музыка'; }
-				if($k == 'videos') { $k = '<i class="fa fa-film"></i> Видео'; }
-			if($k == 'docs') { $k = '<i class="fa fa-file"></i> Документы'; }
-			print '<li class="w-100 btn btn-light text-left mb-1">'.$k.': <span class="badge badge-secondary">'.$v.'</span></li>';
+			if($k == 'albums') { $k = '<i class="fa fa-folder fa-fw"></i> Альбомы'; }
+			if($k == 'photos') { $k = '<i class="fa fa-image fa-fw"></i> Фото'; }
+			//if($k == 'audios') { $k = '<i class="fa fa-music fa-fw"></i> Музыка'; }
+			if($k == 'videos') { $k = '<i class="fa fa-film fa-fw"></i> Видео'; }
+			if($k == 'docs') { $k = '<i class="fa fa-file fa-fw"></i> Документы'; }
+			if($k == 'dialogs') { $k = '<i class="far fa-comment-alt fa-fw"></i> Диалоги'; }
+			print '<li class="w-100 btn btn-light text-left mb-1 d-flex justify-content-between align-items-center"><span>'.$k.':</span> <span class="badge badge-secondary">'.$v.'</span></li>';
 			}
 			
 		print '</ul>';
@@ -163,10 +178,23 @@ E;
          * add another parameter "true". Default value "false".
          * Ex. $vk->getAuthorizeURL($api_settings, $callback_url, true);
          */
-        $authorize_url = $vk->getAuthorizeURL('offline,status,photos,audio,video,docs',$cfg['vk_uri']);
-        echo '<a href="' . $authorize_url . '" class="btn btn-success" role="button">Авторизация</a>';
+	        //$authorize_url = $vk->getAuthorizeURL('offline,status,photos,audio,video,docs',$cfg['vk_uri']);
+			$authorize_url = $vk->getAuthorizeURL('offline,status,photos,audio,video,docs,messages');
+print <<<E
+<div class="text-center">
+	<i class="fab fa-vk" style="font-size:3em;"></i>
+	<a href="{$authorize_url}" target="_blank" class="btn btn-info" role="button">Открыть окно авторизации</a>
+</div>
+<div class="text-center mt-3 p-3">
+		<form action="" method="GET">
+			скопируйте code из окна авторизации
+			<input class="m-2" type="text" name="code" value="" />
+			<input class="btn btn-success" type="submit" value="авторизироваться" />
+		</form>
+</div>
+E;
     } else {
-        $access_token = $vk->getAccessToken($_REQUEST['code'], $cfg['vk_uri']);
+			$access_token = $vk->getAccessToken($_REQUEST['code']);//, $cfg['vk_uri']);
 
 		// If we get token, save it!
 		if($access_token['access_token']){
@@ -176,7 +204,7 @@ E;
 		print '<h3><span class="badge badge-success" style="white-space:inherit;display:block;">Авторизация пройдена</span></h3>';
     }
 	} catch (Exception $error) {
-		echo '<h3><span class="label label-danger" style="white-space:inherit;display:block;">Ошибка: '.$error->getMessage().'</span></h3>';
+		echo '<h3><span class="badge badge-danger" style="white-space:inherit;display:block;">Ошибка: '.$error->getMessage().'</span></h3>';
 	}
 } // end if token else
 
@@ -190,65 +218,77 @@ E;
 $counters = $db->query_row("SELECT * FROM vk_counters");
 $music_albums = $db->query_row("SELECT count(id) as count FROM vk_music_albums");
 $wall_attachments = $db->query_row("SELECT count(uid) as count FROM vk_attach");
+$messages_count = $db->query_row("SELECT count(uid) as count FROM vk_messages");
+$messages_attach = $db->query_row("SELECT count(uid) as count FROM vk_messages_attach");
 
 print <<<E
         <div class="col-sm-10 col-md-9 mt-4">
-          <div class="row placeholders pt-4 pb-4">
+          <div class="row placeholders pt-4 pb-2">
             <div class="col-sm-3 placeholder">
               <h2 class="display-4">{$f->human_thousand($counters['album'])}</h2>
-              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-sync"></i></a></span>
+              <span class="text-muted">Альбомы&nbsp;&nbsp;<a href="sync.php?do=albums"><i class="fa fa-sync fa-fw"></i></a></span>
             </div>
             <div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($counters['photo'])}</h2>
               <span class="text-muted">Фотографии&nbsp;&nbsp;
 				<div class="dropdown show" style="display:inline-block;">
-					<a class="dropdown-toggle" href="#" role="button" id="photosync" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
+					<a class="dropdown-toggle" href="#" role="button" id="photosync" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync fa-fw"></i></a>
 					<div class="dropdown-menu" aria-labelledby="photosync">
-						<a class="dropdown-item" href="sync.php?do=photo"><i class="fa fa-hourglass"></i> Полная</a>
-						<a class="dropdown-item" href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a>
+						<a class="dropdown-item" href="sync.php?do=photo"><i class="fa fa-hourglass fa-fw"></i> Полная</a>
+						<a class="dropdown-item" href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
 					</div>
 				</div>
 			  </span>
             </div>
 			<div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($music_albums['count'])}</h2>
-              <span class="text-muted">Альбомы музыки&nbsp;&nbsp;<a href="sync.php?do=musicalbums"><i class="fa fa-sync"></i></a></span>
+              <span class="text-muted">Альбомы музыки</span>
             </div>
             <div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($counters['music'])}</h2>
-              <span class="text-muted">Музыка&nbsp;&nbsp;<a href="sync.php?do=music"><i class="fa fa-sync"></i></a></span>
+              <span class="text-muted">Музыка</span>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($counters['video'])}</h2>
-              <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-sync"></i></a></span>
+              <span class="text-muted">Видео&nbsp;&nbsp;<a href="sync.php?do=video"><i class="fa fa-sync fa-fw"></i></a></span>
             </div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($counters['wall'])}</h2>
               <span class="text-muted">Стена&nbsp;&nbsp;
-			  
-				<div class="dropdown show" style="display:inline-block;"><a class="dropdown-toggle" href="#" role="button" id="wallsync" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync"></i></a>
+				<div class="dropdown show" style="display:inline-block;"><a class="dropdown-toggle" href="#" role="button" id="wallsync" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync fa-fw"></i></a>
 					<ul class="dropdown-menu" aria-labelledby="wallsync">
-						<a class="dropdown-item" href="sync-wall.php?offset=0"><i class="fa fa-hourglass"></i> Полная</a>
-						<a class="dropdown-item" href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end"></i> Быстрая</a>
+						<a class="dropdown-item" href="sync-wall.php?offset=0"><i class="fa fa-hourglass fa-fw"></i> Полная</a>
+						<a class="dropdown-item" href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
 					</ul>
 				</div>
-				
 			  </span>
             </div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($counters['docs'])}</h2>
-              <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-sync"></i></a></span>
+              <span class="text-muted">Документы&nbsp;&nbsp;<a href="sync.php?do=docs"><i class="fa fa-sync fa-fw"></i></a></span>
             </div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($counters['dialogs'])}</h2>
+              <span class="text-muted">Диалоги&nbsp;&nbsp;<a href="sync-messages.php"><i class="fa fa-sync fa-fw"></i></a></span>
+            </div>
+			<div class="col-sm-3 mb-4">
               <h2 class="display-4">{$f->human_thousand($wall_attachments['count'])}</h2>
-              <span class="text-muted">Вложения</span>
+              <span class="text-muted">Вложения (стена)</span>
+            </div>
+			<div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($messages_count['count'])}</h2>
+              <span class="text-muted">Сообщения</span>
+            </div>
+			<div class="col-sm-3 mb-4">
+              <h2 class="display-4">{$f->human_thousand($messages_attach['count'])}</h2>
+              <span class="text-muted">Вложения (диалоги)</span>
             </div>
           </div>
           
 		  <div class="row white-box">
 			<div class="table-responsive pl-2 pr-2">
-				<h5 class="p-2 mb-0 vkhead"><i class="fa fa-info-circle"></i> Уведомления</h5>
-	            <table class="table table-striped table-sm table-hover">
+				<h6 class="p-2 mb-0 vkhead"><i class="fa fa-info-circle fa-fw"></i> Уведомления</h6>
+	            <table class="table table-sm table-hover">
 		          <tbody>
 E;
 
@@ -264,6 +304,8 @@ print <<<E
 <tr><td>Количество <b>фотографий</b> изменилось {$d}, необходима синхронизация. <a href="sync.php?do=photo">Синхронизировать</a> сейчас?</td></tr>
 E;
 }
+// Disabled because VK does not return data anymore
+/*
 if($counters_show['audios'] != 0 && $counters_show['audios'] > $counters['music']){
 	$d = $counters_show['audios'] - $counters['music'];
 	if($d > 0){ $d = '(+<b>'.$d.'</b>)'; }
@@ -271,6 +313,7 @@ print <<<E
 <tr><td>Количество <b>аудиозаписей</b> изменилось {$d}, необходима синхронизация. <a href="sync.php?do=music">Синхронизировать</a> сейчас?</td></tr>
 E;
 }
+*/
 if($counters_show['videos'] != 0 && $counters_show['videos'] > $counters['video']){
 	$d = $counters_show['videos'] - $counters['video'];
 	if($d > 0){ $d = '(+<b>'.$d.'</b>)'; }
@@ -283,6 +326,13 @@ if($counters_show['docs'] != 0 && $counters_show['docs'] > $counters['docs']){
 	if($d > 0){ $d = '(+<b>'.$d.'</b>)'; }
 print <<<E
 <tr><td>Количество <b>документов</b> изменилось {$d}, необходима синхронизация. <a href="sync.php?do=docs">Синхронизировать</a> сейчас?</td></tr>
+E;
+}
+if($counters_show['dialogs'] != 0 && $counters_show['dialogs'] > $counters['dialogs']){
+	$d = $counters_show['dialogs'] - $counters['dialogs'];
+	if($d > 0){ $d = '(+<b>'.$d.'</b>)'; }
+print <<<E
+<tr><td>Количество <b>диалогов</b> изменилось {$d}, необходима синхронизация. <a href="sync-dialog.php">Синхронизировать</a> сейчас?</td></tr>
 E;
 }
 
@@ -308,8 +358,8 @@ $queue_total = $queue_count['p']+$queue_count['m']+$queue_count['v']+$queue_coun
 
 print <<<E
           <div class="table-responsive pl-2 pr-2">
-		  <h5 class="p-2 mb-0 vkhead"><i class="fa fa-cloud-download-alt"></i> Очередь закачки - <b>{$queue_total}</b></h5>
-            <table class="table table-striped table-sm table-hover">
+		  <h6 class="p-2 mb-0 vkhead"><i class="fa fa-cloud-download-alt fa-fw"></i> Очередь закачки - <b>{$queue_total}</b></h6>
+            <table class="table table-sm table-hover">
               <thead>
                 <tr>
                   <th>#</th>
