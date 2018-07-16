@@ -11,13 +11,15 @@
 
 $(".tip").tooltip();	// tooltips
 
-$(document).pjax('a[data-pjax]', '#pj-content', {timeout:1000});	// pJax navigaion
-$(document).pjax('a[data-pjauth]', '#auth-col', {timeout:1000});
+$.pjax.defaults.maxCacheLength = 0;
+$(document).pjax('a[data-pjax]', '#pj-content', {timeout:5000});	// pJax navigaion
+$(document).pjax('a[data-pjauth]', '#auth-col', {timeout:5000});
 
 var paginator_docs   = 'ajax/docs-paginator.php';
 var paginator_albums = 'ajax/albums-paginator.php';
 var paginator_video  = 'ajax/videos-paginator.php';
 var paginator_wall   = 'ajax/wall-paginator.php';
+var paginator_dialog = 'ajax/dialog-paginator.php';
 
 var freewall_width = 300; // Default width, it replaced in albums with config value
 
@@ -296,9 +298,9 @@ $(document).mouseup(function (e){
     }
 });
 
-
 // AJAX PAGE RELOAD
 // ===============================================
+
 // Universal reload function for pages with jscroll and freewall
 // In:
 // apr_type - (string) type of page for callback functions [album|docs|video]
@@ -308,10 +310,12 @@ function ajax_page_reload(apr_type,apr_url){
     if(apr_type == 'docs'){  var qurl = paginator_docs+apr_url; }
     if(apr_type == 'video'){ var qurl = paginator_video+apr_url; }
     if(apr_type == 'wall'){  var qurl = paginator_wall+apr_url; }
+    if(apr_type == 'dialog'){  var qurl = paginator_dialog+apr_url; }
     
     if(apr_url.length > 0){
     jQuery.ajax({
 	async : false,
+	cache : false,
 	method : "GET",
 	url : qurl
     }).done( function(data){
@@ -322,6 +326,7 @@ function ajax_page_reload(apr_type,apr_url){
 	if(apr_type == 'docs' ){ apr_docs_callback(data,apr_type); }
 	if(apr_type == 'video' ){ apr_video_callback(data,apr_type); }
 	if(apr_type == 'wall' ){ apr_wall_callback(data,apr_type); }
+	if(apr_type == 'dialog' ){ apr_dialog_callback(data,apr_type); }
     });
     } else {
 	console.log("APR: Skipped "+apr_type);
@@ -369,6 +374,18 @@ function apr_wall_callback(data,type){
     var list = jQuery("#wall-list");
     list.html(data);
     apr_jscroller(type,list);
+}
+
+// Callback function for dialog
+// In:
+// data - (object) Response data
+// type - (string) [wall]
+function apr_dialog_callback(data,type){
+    var list = jQuery("#dialog-data");
+    console.log('APR:Dialog - changed');
+    jQuery("#dialog-default").css("height","0px");
+    jQuery("#dialog-none").hide();
+    list.html(data);
 }
 
 // jScroller init function
