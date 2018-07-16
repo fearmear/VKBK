@@ -3,18 +3,12 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Nov 21, 2016 at 11:03 PM
--- Server version: 5.1.59
--- PHP Version: 5.2.17
+-- Generation Time: Jul 16, 2018 at 09:19 PM
+-- Server version: 1.0.213
+-- PHP Version: 5.6.32
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `vkbk`
@@ -91,15 +85,41 @@ CREATE TABLE IF NOT EXISTS `vk_counters` (
   `video` mediumint(8) unsigned NOT NULL,
   `wall` mediumint(8) unsigned NOT NULL,
   `docs` mediumint(8) unsigned NOT NULL,
-  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`,`docs`)
+  `dialogs` mediumint(8) unsigned NOT NULL,
+  UNIQUE KEY `counters` (`album`,`photo`,`music`,`video`,`wall`,`docs`,`dialogs`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `vk_counters`
 --
 
-INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`, `docs`) VALUES
-(0, 0, 0, 0, 0, 0);
+INSERT INTO `vk_counters` (`album`, `photo`, `music`, `video`, `wall`, `docs`, `dialogs`) VALUES
+(0, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_dialogs`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_dialogs` (
+  `id` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+  `in_read` int(11) NOT NULL,
+  `multichat` tinyint(1) NOT NULL,
+  `chat_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `users` int(11) NOT NULL,
+  `is_new` tinyint(1) NOT NULL,
+  `is_upd` tinyint(1) NOT NULL,
+  UNIQUE KEY `uchat` (`id`,`multichat`,`chat_id`,`admin_id`),
+  KEY `multi` (`multichat`),
+  KEY `admin` (`admin_id`),
+  KEY `uid` (`id`),
+  KEY `new` (`is_new`),
+  KEY `upd` (`is_upd`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -146,6 +166,61 @@ CREATE TABLE IF NOT EXISTS `vk_groups` (
   `photo_path` varchar(255) NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_messages` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_id` int(11) NOT NULL,
+  `msg_chat` int(11) NOT NULL,
+  `msg_dialog` int(11) NOT NULL,
+  `msg_user` int(11) NOT NULL,
+  `msg_date` int(11) unsigned NOT NULL,
+  `msg_body` text CHARACTER SET utf8mb4 NOT NULL,
+  `msg_attach` tinyint(1) NOT NULL,
+  `msg_forwarded` tinyint(1) NOT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `msg_uid` (`msg_id`,`msg_chat`,`msg_dialog`),
+  KEY `user` (`msg_user`),
+  KEY `attach` (`msg_attach`),
+  KEY `forwarded` (`msg_forwarded`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vk_messages_attach`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_messages_attach` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `wall_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `is_local` tinyint(1) NOT NULL,
+  `attach_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `uri` text NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `width` smallint(5) unsigned NOT NULL,
+  `height` smallint(5) unsigned NOT NULL,
+  `text` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `access_key` varchar(255) NOT NULL,
+  `title` text NOT NULL,
+  `duration` int(11) NOT NULL,
+  `player` text NOT NULL,
+  `link_url` text NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `uniqid` (`wall_id`,`attach_id`),
+  KEY `local` (`is_local`),
+  KEY `width` (`width`),
+  KEY `height` (`height`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -284,6 +359,25 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `vk_stickers`
+--
+
+CREATE TABLE IF NOT EXISTS `vk_stickers` (
+  `product` int(11) NOT NULL,
+  `sticker` int(11) NOT NULL,
+  `width` int(10) unsigned NOT NULL,
+  `height` int(10) unsigned NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `in_queue` tinyint(4) NOT NULL,
+  UNIQUE KEY `stick` (`product`,`sticker`),
+  KEY `product` (`product`),
+  KEY `queue` (`in_queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `vk_videos`
 --
 
@@ -341,7 +435,3 @@ CREATE TABLE IF NOT EXISTS `vk_wall` (
   KEY `repost` (`is_repost`),
   KEY `repost_owner` (`repost_owner`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

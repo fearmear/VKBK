@@ -15,7 +15,7 @@
     
     <style type="text/css">
 	pre { max-height: 200px; }
-	.text-white-50 { color: rgba(255, 255, 255, .5); }
+	.text-white1 { color: rgba(255, 255, 255, .85); }
 	.bg-header { background-color: #597da3; }
 	.border-bottom { border-bottom: 1px solid #e5e5e5; }
 	.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
@@ -27,7 +27,7 @@
   <body>
 
 <div class="container">
-    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-header rounded box-shadow">
+    <div class="d-flex align-items-center p-3 my-3 text-white1 bg-header rounded box-shadow">
 	<div class="lh-100">
           <h6 class="mb-0 text-white lh-100">VKBK Обновления</h6>
           <small>На этой странице вы найдете запросы для обновления структуры базы данных VKBK.<br/>Обновления необходимо добавлять последовательно начиная с вашей версии и до актуальной.<br/>
@@ -37,12 +37,114 @@
     </div>
 
     <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.7.7 &rarr; 0.8.0</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
+<div class="d-flex align-items-center p-3 text-white1 badge-danger rounded box-shadow">
+        <div class="lh-100">
+          <h6 class="mb-0 text-white lh-100">Внимание! В версии 0.8.0 изменился процесс авторизации.</h6>
+          После обновления необходимо выйти из VKBK и пересоздать приложение в ВКонтакте.<br/>После чего обновить ID приложения, защищенный ключ в конфиге (<strong>cfg.php</strong>) и пройти авторизацию в VKBK.
+        </div>
+      </div>
+<hr/>
+<pre>
+ALTER TABLE `vk_counters` ADD `dialogs` MEDIUMINT( 8 ) UNSIGNED NOT NULL;
+
+ALTER TABLE `vk_counters` DROP INDEX `counters` ,
+ADD UNIQUE `counters` ( `album` , `photo` , `music` , `video` , `wall` , `docs` , `dialogs` );
+
+CREATE TABLE IF NOT EXISTS `vk_dialogs` (
+  `id` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+  `in_read` int(11) NOT NULL,
+  `multichat` tinyint(1) NOT NULL,
+  `chat_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `users` int(11) NOT NULL,
+  `is_new` tinyint(1) NOT NULL,
+  `is_upd` tinyint(1) NOT NULL,
+  UNIQUE KEY `uchat` (`id`,`multichat`,`chat_id`,`admin_id`),
+  KEY `multi` (`multichat`),
+  KEY `admin` (`admin_id`),
+  KEY `uid` (`id`),
+  KEY `new` (`is_new`),
+  KEY `upd` (`is_upd`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `vk_messages` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_id` int(11) NOT NULL,
+  `msg_chat` int(11) NOT NULL,
+  `msg_dialog` int(11) NOT NULL,
+  `msg_user` int(11) NOT NULL,
+  `msg_date` int(11) unsigned NOT NULL,
+  `msg_body` text CHARACTER SET utf8mb4 NOT NULL,
+  `msg_attach` tinyint(1) NOT NULL,
+  `msg_forwarded` tinyint(1) NOT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `msg_uid` (`msg_id`,`msg_chat`,`msg_dialog`),
+  KEY `user` (`msg_user`),
+  KEY `attach` (`msg_attach`),
+  KEY `forwarded` (`msg_forwarded`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `vk_messages_attach` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `wall_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `is_local` tinyint(1) NOT NULL,
+  `attach_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `uri` text NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `width` smallint(5) unsigned NOT NULL,
+  `height` smallint(5) unsigned NOT NULL,
+  `text` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `access_key` varchar(255) NOT NULL,
+  `title` text NOT NULL,
+  `duration` int(11) NOT NULL,
+  `player` text NOT NULL,
+  `link_url` text NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `uniqid` (`wall_id`,`attach_id`),
+  KEY `local` (`is_local`),
+  KEY `width` (`width`),
+  KEY `height` (`height`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `vk_stickers` (
+  `product` int(11) NOT NULL,
+  `sticker` int(11) NOT NULL,
+  `width` int(10) unsigned NOT NULL,
+  `height` int(10) unsigned NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `in_queue` tinyint(4) NOT NULL,
+  UNIQUE KEY `stick` (`product`,`sticker`),
+  KEY `product` (`product`),
+  KEY `queue` (`in_queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+UPDATE `vk_status` SET `val` = '2018050201' WHERE `key` = 'version';
+</pre>
+	    </span>
+          </div>
+        </div>
+    </div>
+
+    <div class="my-3 p-3 bg-white rounded box-shadow">
         <h6 class="border-bottom border-gray pb-2 mb-0">0.7.5 &rarr; 0.7.6</h6>
         <div class="media text-muted pt-3">
           <div class="media-body pb-0 mb-0 small lh-125">
             <span class="d-block">
 <pre>
 ALTER TABLE `vk_wall` CHANGE `text` `text` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+
+UPDATE `vk_status` SET `val` = '2018042101' WHERE `key` = 'version';
 </pre>
 	    </span>
           </div>
