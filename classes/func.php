@@ -459,13 +459,8 @@ E;
 				$lph_row['path'] = $this->windows_path_alias($lph_row['path'],'video');
 			}
 			
-			// Clean ref
-			$lph_row['player'] = preg_replace("/\?__ref\=vk\.api/","",$lph_row['player']);
-			
-			// Youtube disable fkn Anontation Z
-			if(strstr($lph_row['player'],'youtube.com') || strstr($lph_row['player'],'youtu.be')){
-				$lph_row['player'] = $lph_row['player'].'?iv_load_policy=3';
-			}
+			// Clean player
+			$lph_row['player'] = $this->clean_player($lph_row['player']);
 
 			if($lph_row['text'] != ''){ $lph_row['text'] = '<div style="margin-bottom:10px;">'.nl2br($lph_row['text']).'</div>'; }
 			$lph_row['duration'] = $skin->seconds2human($lph_row['duration']);
@@ -677,8 +672,10 @@ E;
 		}
 	}
 	
-	// Emoji clecn function by quantizer
-	// https://gist.github.com/quantizer/5744907
+	/*
+		Emoji clecn function by quantizer
+		https://gist.github.com/quantizer/5744907
+	*/
 	function removeEmoji($text) {
         $cleanText = "";
 
@@ -695,6 +692,23 @@ E;
         $cleanText = preg_replace($regexTransport, '', $cleanText);
 
         return $cleanText;
+	}
+
+	/*
+		Disable annotations in YouTube player & other cleaning
+		In:
+		link - player link (string)
+		Out:
+		string
+	*/
+	function clean_player($link){
+		$link = preg_replace("/\?__ref\=vk\.api/", "", $link);
+		
+		if(strstr($link,'youtube.com') || strstr($link,'youtu.be')){
+			return $link.'?iv_load_policy=3';
+		} else {
+			return $link;
+		}
 	}
 
 } // end of class

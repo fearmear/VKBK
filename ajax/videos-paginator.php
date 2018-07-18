@@ -75,13 +75,8 @@ while($row = $db->return_row($q)){
 		$row['preview_path'] = $f->windows_path_alias($row['preview_path'],'video');
 	}
 	
-	// Clean ref
-	$row['player_uri'] = preg_replace("/\?__ref\=vk\.api/","",$row['player_uri']);
-	
-	// Youtube disable fkn Anontation Z
-	if(strstr($row['player_uri'],'youtube.com') || strstr($row['player_uri'],'youtu.be')){
-		$row['player_uri'] = $row['player_uri'].'?iv_load_policy=3';
-	}
+	// Clean player
+	$row['player_uri'] = $f->clean_player($row['player_uri']);
 	
 	$row['stitle'] = $row['title'];
 	if(mb_strlen($row['title']) > 38){ $row['stitle'] = mb_substr($row['title'],0,38).'...'; }

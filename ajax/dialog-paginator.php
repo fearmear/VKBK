@@ -247,13 +247,8 @@ E;
 				$av['path'] = $f->windows_path_alias($av['path'],'video');
 			}
 			
-			// Clean ref
-			$av['player'] = preg_replace("/\?__ref\=vk\.api/","",$av['player']);
-			
-			// Youtube disable fkn Anontation Z
-			if(strstr($av['player'],'youtube.com') || strstr($av['player'],'youtu.be')){
-				$av['player'] = $av['player'].'?iv_load_policy=3';
-			}
+			// Clean player
+			$av['player'] = $f->clean_player($av['player']);
 
 			if($av['text'] != ''){ $av['text'] = '<div style="margin-bottom:10px;">'.nl2br($av['text']).'</div>'; }
 			$av['duration'] = $skin->seconds2human($av['duration']);
