@@ -142,11 +142,12 @@ class func {
 	    id - attachID,
 	    atk - attachData
 	*/
-	function msg_attach_update($id,$atk){
+	function msg_attach_update($id,$atk,$debug){
 	    global $db;
 	    
 	    $type = $atk['type'];
 	    
+		if($debug == false){
 	    // Insert OR update
 	    $q = $db->query("INSERT INTO `vk_messages_attach`
 	    (`uid`,`wall_id`,`type`,`is_local`,`attach_id`,`owner_id`,`uri`,`path`,`width`,`height`,`text`,`date`,`access_key`,`title`,`duration`,`player`,`link_url`,`caption`)
@@ -155,6 +156,9 @@ class func {
 	    ON DUPLICATE KEY UPDATE
 	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 1, `attach_id` = {$atk[$type]['id']}
 	    ");
+		} else {
+			// Be lazy, Do nothing;
+		}
 	}
 	
 	/*
@@ -187,13 +191,14 @@ class func {
 	    attach - message contains attachment
 	    forward - message contains additional data
 	*/
-	function dialog_message_insert($v,$attach,$forward){
+	function dialog_message_insert($v,$attach,$forward,$debug){
 	    global $db;
 	    
 		$dialog_id = $v['user_id'];
 		if(!isset($v['chat_id'])){ $v['chat_id'] = 0; }
 		if($v['chat_id'] > 0){ $dialog_id = 2000000000 + $v['chat_id']; }
 		
+		if($debug == false){
 	    $q = $db->query("INSERT INTO `vk_messages`
 	    (`uid`,`msg_id`,`msg_chat`,`msg_dialog`,`msg_user`,`msg_date`,`msg_body`,`msg_attach`,`msg_forwarded`)
 	    VALUES
@@ -201,6 +206,9 @@ class func {
 	    ON DUPLICATE KEY UPDATE
 	    `msg_id` = {$v['id']}, `msg_chat` = {$v['chat_id']}, `msg_dialog` = {$dialog_id}, `msg_user` = {$v['from_id']}, `msg_date` = '{$v['date']}', `msg_body` = '".$db->real_escape($this->removeEmoji($v['body']))."', `msg_attach` = {$attach}, `msg_forwarded` = {$forward}
 	    ");
+		} else {
+			// Be lazy, Do nothing;
+		}
 	}
 	
 	/*

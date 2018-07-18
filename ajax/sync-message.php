@@ -5,6 +5,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
+define(SYNC_MSG_DEBUG, false);
+
 // Check do we have all needed GET data
 $do = false;
 $do_opts = array('dlg','msg','next');
@@ -351,12 +353,12 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Attach found, make a link
 						if(!empty($at['id']) && $atk['photo']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
-							$f->msg_attach_update($v['id'],$atk);
+							$f->msg_attach_update($v['id'],$atk,SYNC_MSG_DEBUG);
 						} else {
 							$photo_uri = $f->get_largest_photo($atk['photo']);
 							
 							// Save information about attach
-							$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+							$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 						}
 					}
 					
@@ -367,7 +369,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Attach found, make a link
 						if(!empty($at['id']) && $atk['video']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
-							$f->msg_attach_update($v['id'],$atk);
+							$f->msg_attach_update($v['id'],$atk,SYNC_MSG_DEBUG);
 						} else {
 							$photo_uri = $f->get_largest_photo($atk['video']);
 							$atk['video']['player'] = '';
@@ -385,7 +387,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							}
 							
 							// Save information about attach
-							$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+							$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 						}
 					}
 					
@@ -401,7 +403,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Attach found, just skip it ><
 						if(!empty($at['attach_id'])){
 							// Insert OR update
-							$f->msg_attach_update($v['id'],$atk);
+							$f->msg_attach_update($v['id'],$atk,SYNC_MSG_DEBUG);
 						} else {
 							if(isset($atk['link']['photo'])){
 								$photo_uri = $f->get_largest_photo($atk['link']['photo']);
@@ -412,7 +414,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							}
 							
 							// Save information about attach
-							$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+							$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 						}
 					}
 					
@@ -438,7 +440,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Attach found, make a link
 						if(!empty($at['id']) && $atk['doc']['owner_id'] == $vk_session['vk_user']){
 							// Insert OR update
-							$f->msg_attach_update($v['id'],$atk);
+							$f->msg_attach_update($v['id'],$atk,SYNC_MSG_DEBUG);
 						} else {
 							$atk['doc']['caption'] = $atk['doc']['ext'];
 							$atk['doc']['width'] = 0;
@@ -460,7 +462,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 							} // Preview end
 
 							// Save information about attach
-							$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+							$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 						}
 					}
 					
@@ -473,7 +475,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						// Attach found, make a link
 						if(!empty($at['sticker'])){
 							// Insert OR update
-							$f->msg_attach_update($v['id'],$atk);
+							$f->msg_attach_update($v['id'],$atk,SYNC_MSG_DEBUG);
 						} else {
 							$atk['sticker']['caption'] = '';
 							$atk['sticker']['width'] = 0;
@@ -492,7 +494,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 								$atk['sticker']['height'] = $sticker['preh'];
 							}
 							// Save information about attach
-							$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+							$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 						}
 					} // STICKER end
 					
@@ -505,14 +507,14 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 						$atk['wall']['duration'] = 0;
 						$atk['wall']['title'] = '';
 						$photo_uri = '';
-						$f->msg_attach_insert($v['id'],$atk,$photo_uri,false);
+						$f->msg_attach_insert($v['id'],$atk,$photo_uri,SYNC_MSG_DEBUG);
 					} // WALL end
 					
 				} // Foreach end
 			} // Attachments end
 
 						// Insert OR update message
-						$f->dialog_message_insert($v,$attach,$forward);
+						$f->dialog_message_insert($v,$attach,$forward,SYNC_MSG_DEBUG);
 			
 						// Fast sync option
 						// Check the date of the last post to our posts. If found, stop sync.
@@ -544,8 +546,10 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 				$output['response']['msg'][] = '<div>Получаем сообщения <b> '.$ot.' - '.$to.' / '.$vk_msg_total.'</b>'.($quick == true ? ' (быстрая синхронизация) ' : '').'</div>';
 				
 				if($quick == true && $quick_sync_stop == true){
+					if(SYNC_MSG_DEBUG == false){
 					// Update current dialog status to done
 					$q1 = $db->query("UPDATE vk_dialogs SET `is_new` = 0, `is_upd` = 0 WHERE `id` = ".$dlg_id." AND `date` = ".$dlg_date);
+					}
 					
 					// Check do we need sync updated or new dialogs?
 					$q2 = $db->query_row("SELECT id,date FROM vk_dialogs WHERE `is_new` = 1 OR `is_upd` = 1 ORDER BY `id` DESC LIMIT 1");
@@ -560,8 +564,10 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	
 					// If we done with all messages
 					if(($offset+$count) >= $vk_msg_total){
+						if(SYNC_MSG_DEBUG == false){
 						// Update current dialog status to done
 						$q1 = $db->query("UPDATE vk_dialogs SET `is_new` = 0, `is_upd` = 0 WHERE `id` = ".$dlg_id." AND `date` = ".$dlg_date);
+						}
 					
 						// Check do we need sync updated or new dialogs?
 						$q2 = $db->query_row("SELECT id,date FROM vk_dialogs WHERE `is_new` = 1 OR `is_upd` = 1 ORDER BY `id` DESC LIMIT 1");
