@@ -109,7 +109,7 @@ if($opt['val'] == 1){
 print <<<E
           </div>
 </div>
-<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="js/js.cookie.min.js"></script>
 <script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
 <script type="text/javascript">
