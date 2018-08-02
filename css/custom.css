@@ -85,16 +85,6 @@ h4[aria-expanded="false"]:hover{
     padding-top: .25rem;
 }
 
-.navbar-inverse .navbar-nav>.open>a,
-.navbar-inverse .navbar-nav>.open>a:focus,
-.navbar-inverse .navbar-nav>.open>a:hover,
-.navbar-inverse .navbar-nav>li>a:focus,
-.navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>li>.morphing-btn-wrap>a:focus,
-.navbar-inverse .navbar-nav>li>.morphing-btn-wrap>a:hover{
-    background-color: rgba(75,109,148,.65);
-}
-
 .navbar-inverse .navbar-nav>.open>a i,
 .navbar-inverse .navbar-nav>.open>a:focus i,
 .navbar-inverse .navbar-nav>.open>a:hover i,
@@ -255,7 +245,7 @@ h4[aria-expanded="false"]:hover{
 .navbar-nav > li > a > i,
 .navbar-nav > li > .morphing-btn-wrap > a > i {
     padding: 3px 10px;
-    color: #47698f;
+    color: #2a5885;
     font-size: 1.5rem;
     vertical-align: middle;
 }
