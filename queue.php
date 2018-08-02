@@ -426,7 +426,7 @@ E;
 		if($q['photo_uri'] != ''){
 			
 			// Get file name
-			preg_match("/[^\.]+$/",$q['photo_uri'],$n);
+			preg_match("/[^\/]+\.(jpg|jpeg|png|gif|bmp)/",$q['photo_uri'],$n);
 			
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file(ROOT.'data/profiles/'.$queue_id.'.'.$n[0])){
@@ -501,7 +501,7 @@ E;
 		if($q['photo_uri'] != ''){
 			
 			// Get file name
-			preg_match("/[^\.]+$/",$q['photo_uri'],$n);
+			preg_match("/[^\/]+\.(jpg|jpeg|png|gif|bmp)/",$q['photo_uri'],$n);
 			
 			// Check do we have this file already ( useful if you are developer and pucked up attachments DB :D )
 			if(is_file(ROOT.'data/groups/'.$queue_id.'.'.$n[0])){
