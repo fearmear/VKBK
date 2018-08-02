@@ -248,7 +248,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			$album_id = (isset($_GET['album'])) ? intval($_GET['album']) : '';
 			$album_total = (isset($_GET['at'])) ? intval($_GET['at']) : 0;
 			$album_process = (isset($_GET['ap'])) ? intval($_GET['ap']) : 0;
-			$fast_sync = (isset($_GET['fast']) && $_GET['fast'] == true) ? true : false;
+			$fast_sync = (isset($_GET['fast']) && $_GET['fast'] == 1) ? 1 : 0;
 			
 			if($album_total > 0 && $album_process <= $album_total){
 				$per = $album_total/100;
@@ -275,7 +275,7 @@ E;
 				// Set all local photos to album -9000
 				// For fast sync move only 'system' albums
 				$fsync_q1 = "";
-				if($fast_sync == true){ $fsync_q1 = " WHERE `album_id` < 1"; }
+				if($fast_sync == 1){ $fsync_q1 = " WHERE `album_id` < 1"; }
 				$q = $db->query("UPDATE vk_photos SET `album_id` = -9000".$fsync_q1);
 				$moved = $db->affected_rows();
 				array_unshift($log,"<tr><td>Перемещаю фотографии в системный альбом. Всего - <b>".$moved."</b></td></tr>");
@@ -290,7 +290,7 @@ E;
 				// Get first album ID
 				// For fast sync get only 'system' albums
 				$fsync_q2 = "";
-				if($fast_sync == true){ $fsync_q2 = " AND `id` < 1"; }
+				if($fast_sync == 1){ $fsync_q2 = " AND `id` < 1"; }
 				$row = $db->query_row("SELECT id FROM vk_albums WHERE id > -9000 ".$fsync_q2." LIMIT 1");
 				// Get albums count
 				$alb_c = $db->query_row("SELECT COUNT(*) as count FROM vk_albums WHERE id > -9000".$fsync_q2);
@@ -452,7 +452,7 @@ E;
 					// Get NEXT album id
 					// For fast sync get only 'system' albums
 					$fsync_q3 = "";
-					if($fast_sync == true){ $fsync_q3 = " AND `id` < 1"; }
+					if($fast_sync == 1){ $fsync_q3 = " AND `id` < 1"; }
 					$row = $db->query_row("SELECT id FROM vk_albums WHERE id > ".$album_id.$fsync_q3." LIMIT 1");
 					if(!empty($row['id']) && $row['id'] > $album_id){
 						$album_next = $row['id'];

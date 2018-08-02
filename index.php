@@ -235,7 +235,7 @@ print <<<E
 					<a class="dropdown-toggle" href="#" role="button" id="photosync" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync fa-fw"></i></a>
 					<div class="dropdown-menu" aria-labelledby="photosync">
 						<a class="dropdown-item" href="sync.php?do=photo"><i class="fa fa-hourglass fa-fw"></i> Полная</a>
-						<a class="dropdown-item" href="sync.php?do=photo&fast=true"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
+						<a class="dropdown-item" href="sync.php?do=photo&fast=1"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
 					</div>
 				</div>
 			  </span>
