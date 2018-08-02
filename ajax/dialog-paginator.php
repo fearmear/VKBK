@@ -134,8 +134,10 @@ if(count($messages) > 0){
 }
 foreach($messages as $k => $v){
 	if($v['msg_user'] < 1){
-		$who = abs($groups_data[$v['msg_user']]);
+		$uplus = abs($v['msg_user']);
+		$who = $groups_data[$uplus];
 		$ava_path = "groups/".$who['photo_path'];
+		$who['first_name'] = $who['name'];
 	} else {
 		$who = $users_data[$v['msg_user']];
 		$ava_path = "profiles/".$who['photo_path'];
