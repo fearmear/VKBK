@@ -5,7 +5,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-define(SYNC_MSG_DEBUG, false);
+define('SYNC_MSG_DEBUG', false);
 
 // Check do we have all needed GET data
 $do = false;
