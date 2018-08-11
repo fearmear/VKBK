@@ -496,7 +496,7 @@ E;
 				
 					// Calculate offset and reload page
 					$offset_new = $offset+$count;
-					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","sync.php?do=photo&album=".$album_id."&offset=".$offset_new."&at=".$album_total."&ap=".$album_process."",$cfg['sync_photo_next_cd']);
+					print $skin->reload('info',"Страница будет обновлена через  <span id=\"gcd\">".$cfg['sync_photo_next_cd']."</span> сек.","sync.php?do=photo&album=".$album_id."&offset=".$offset_new."&at=".$album_total."&ap=".$album_process."&fast=".$fast_sync,$cfg['sync_photo_next_cd']);
 				}
 			
 			
