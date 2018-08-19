@@ -79,7 +79,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	$api_profiles = array();
 	$api_groups = array();
 	$vk_post_total = 0;
-	$fast_sync = (isset($_GET['fast'])) ? true : false;
+	$fast_sync = (isset($_GET['fast']) && $_GET['fast'] == 1) ? 1 : 0;
 	$fast_sync_date = 0;
 	$fast_sync_stop = false;
 	
@@ -94,7 +94,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	}
 	
 	// If we do fast sync, get the date of the last post in DB
-	if($fast_sync == true){
+	if($fast_sync == 1){
 		$lp = $db->query_row("SELECT date FROM `vk_wall` ORDER BY date DESC LIMIT 1");
 		if(!empty($lp['date'])){ $fast_sync_date = intval($lp['date']); }
 	}
@@ -486,7 +486,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			
 			// Fast sync option
 			// Check the date of the last post to our posts. If found, stop sync.
-			if($fast_sync == true && $fast_sync_date > 0 && $v['date'] <= $fast_sync_date){
+			if($fast_sync == 1 && $fast_sync_date > 0 && $v['date'] <= $fast_sync_date){
 				$fast_sync_stop = true;
 			}
 		}
@@ -514,7 +514,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 	// Let's recount wall
 	$q5 = $db->query("UPDATE vk_counters SET `wall` = (SELECT COUNT(*) FROM vk_wall WHERE `is_repost` = 0)");
 	
-	if($fast_sync == true && $fast_sync_stop == true){
+	if($fast_sync == 1 && $fast_sync_stop == true){
 		// No unsynced posts left. This is the end...
 		print '<tr><td><div class="alert alert-success" role="alert"><strong>Великая китайская!</strong> Быстрая синхронизация сообщений завершена.</div></td></tr>';
 	} else {

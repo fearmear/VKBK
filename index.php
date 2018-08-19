@@ -258,7 +258,7 @@ print <<<E
 				<div class="dropdown show" style="display:inline-block;"><a class="dropdown-toggle" href="#" role="button" id="wallsync" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sync fa-fw"></i></a>
 					<ul class="dropdown-menu" aria-labelledby="wallsync">
 						<a class="dropdown-item" href="sync-wall.php?offset=0"><i class="fa fa-hourglass fa-fw"></i> Полная</a>
-						<a class="dropdown-item" href="sync-wall.php?offset=0&fast=true"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
+						<a class="dropdown-item" href="sync-wall.php?offset=0&fast=1"><i class="fa fa-hourglass-end fa-fw"></i> Быстрая</a>
 					</ul>
 				</div>
 			  </span>
