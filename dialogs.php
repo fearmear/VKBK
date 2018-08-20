@@ -72,6 +72,16 @@ print <<<E
 E;
 
 foreach($dial_list as $k => $v){
+	if(!is_array($v['data'])){	// For some reason if we don't have any info about user. How this could be?!
+print <<<E
+<div class="mb-1 dialogs-head border-bottom list-group-item list-group-item-action justify-content-between" style="cursor:pointer;">
+<div class="ml-5 pl-3 d-flex">
+<small style="color:red;">Неопознанный пользователь</small> <span class="full-date ml-auto"></span>
+</div>
+<div class="ml-5 pl-3 d-flex text-truncate">ID: {$v['id']}</div>
+</div>
+E;
+	} else {
 	$n = (!isset($v['data']['name']) ? $n = $v['data']['first_name'].' '.$v['data']['last_name'] : $n = $v['data']['name'] );
 	$full_date = date("d M Y H:i",$v['date']);
 	$v['date'] = $f->dialog_date_format($v['date']);
@@ -84,6 +94,7 @@ print <<<E
 <div class="ml-5 pl-3 d-flex text-truncate">{$v['title']}</div>
 </div>
 E;
+	}
 }
 
 print <<<E
