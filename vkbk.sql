@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Jul 16, 2018 at 09:19 PM
+-- Generation Time: Aug 26, 2018 at 12:01 AM
 -- Server version: 1.0.213
 -- PHP Version: 5.6.32
 
@@ -65,11 +65,13 @@ CREATE TABLE IF NOT EXISTS `vk_attach` (
   `player` text NOT NULL,
   `link_url` text NOT NULL,
   `caption` varchar(255) NOT NULL,
+  `skipthis` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uniqid` (`wall_id`,`attach_id`),
   KEY `local` (`is_local`),
   KEY `width` (`width`),
-  KEY `height` (`height`)
+  KEY `height` (`height`),
+  KEY `skip` (`skipthis`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -215,11 +217,13 @@ CREATE TABLE IF NOT EXISTS `vk_messages_attach` (
   `player` text NOT NULL,
   `link_url` text NOT NULL,
   `caption` varchar(255) NOT NULL,
+  `skipthis` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uniqid` (`wall_id`,`attach_id`),
   KEY `local` (`is_local`),
   KEY `width` (`width`),
-  KEY `height` (`height`)
+  KEY `height` (`height`),
+  KEY `skip` (`skipthis`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -351,7 +355,7 @@ INSERT INTO `vk_status` (`key`, `val`) VALUES
 ('log_music', ''),
 ('log_photo', ''),
 ('log_video', ''),
-('version', '2018050201'),
+('version', '2018082501'),
 ('auto-queue-audio', '0'),
 ('auto-queue-photo', '0'),
 ('play-local-video', '0');
@@ -383,6 +387,7 @@ CREATE TABLE IF NOT EXISTS `vk_stickers` (
 
 CREATE TABLE IF NOT EXISTS `vk_videos` (
   `id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
   `title` text NOT NULL,
   `desc` text NOT NULL,
   `duration` smallint(5) unsigned NOT NULL,
@@ -399,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `vk_videos` (
   `local_format` varchar(50) NOT NULL,
   `local_w` smallint(5) unsigned NOT NULL,
   `local_h` smallint(5) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`,`owner_id`),
   KEY `dur` (`duration`),
   KEY `dadded` (`date_added`),
   KEY `dsaved` (`date_done`),

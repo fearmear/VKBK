@@ -26,6 +26,7 @@ print $skin->navigation($lc);
 $key = isset($_GET['key']) ? $_GET['key'] : '';
 // DB id
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$oid = isset($_GET['oid']) ? intval($_GET['oid']) : 0;
 // Service type
 $s = isset($_GET['s']) ? preg_replace("/[^a-z]+/","",$_GET['s']) : '';
 // Force authorization
@@ -49,7 +50,7 @@ E;
 }
 
 // Check video ID
-$vid = $db->query_row("SELECT id, player_uri FROM `vk_videos` WHERE id = {$id}");
+$vid = $db->query_row("SELECT id, owner_id, player_uri FROM `vk_videos` WHERE `id` = {$id} AND `owner_id` = {$oid}");
 if(!isset($vid['id']) || empty($vid['id'])){
 print <<<E
 <tr>
@@ -125,7 +126,7 @@ E;
 // Check info.json for... INFO! :D
 $info = '';
 if($s == 'yt'){	$info = $cfg['video_path'].'data/'.$key.'.info.json'; }
-if($s == 'vk'){ $info = $cfg['video_path'].'data/vk-'.$vid['id'].'.info.json'; }
+if($s == 'vk'){ $info = $cfg['video_path'].'data/vk-'.$vid['id'].'-'.$vid['owner_id'].'.info.json'; }
 
 if(file_exists($info)){
 	$handle = fopen($info, "r");
@@ -136,12 +137,12 @@ if(file_exists($info)){
 	if(isset($youtubeDLlog->_filename) && file_exists(preg_replace("@\\\@","/",$youtubeDLlog->_filename))){
 		$local['path'] = preg_replace("@\\\@","/",$youtubeDLlog->_filename);
 		if($s == 'yt'){ $local['size'] = filesize($cfg['video_path'].'data/'.$key.'.'.$youtubeDLlog->ext); }
-		if($s == 'vk'){ $local['size'] = filesize($cfg['video_path'].'data/vk-'.$vid['id'].'.'.$youtubeDLlog->ext); }
+		if($s == 'vk'){ $local['size'] = filesize($cfg['video_path'].'data/vk-'.$vid['id'].'-'.$vid['owner_id'].'.'.$youtubeDLlog->ext); }
 		$local['format'] = $youtubeDLlog->ext;
 		$local['w'] = (isset($youtubeDLlog->width)) ? $youtubeDLlog->width : 0;
 		$local['h'] = (isset($youtubeDLlog->height)) ? $youtubeDLlog->height : 0;
 		
-		$q = $db->query("UPDATE vk_videos SET `local_path` = '".$db->real_escape($local['path'])."', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']}");
+		$q = $db->query("UPDATE vk_videos SET `local_path` = '".$db->real_escape($local['path'])."', `local_size` = {$local['size']}, `local_format` = '{$local['format']}', `local_w` = {$local['w']}, `local_h` = {$local['h']} WHERE id = {$vid['id']} AND owner_id = {$vid['owner_id']}");
 		if($q){
 print <<<E
 <tr>

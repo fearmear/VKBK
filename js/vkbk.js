@@ -15,11 +15,14 @@ $.pjax.defaults.maxCacheLength = 0;
 $(document).pjax('a[data-pjax]', '#pj-content', {timeout:5000});	// pJax navigaion
 $(document).pjax('a[data-pjauth]', '#auth-col', {timeout:5000});
 
-var paginator_docs   = 'ajax/docs-paginator.php';
-var paginator_albums = 'ajax/albums-paginator.php';
-var paginator_video  = 'ajax/videos-paginator.php';
-var paginator_wall   = 'ajax/wall-paginator.php';
-var paginator_dialog = 'ajax/dialog-paginator.php';
+var ajxdir = 'ajax/';
+
+var paginator_docs   = ajxdir+'docs-paginator.php';
+var paginator_albums = ajxdir+'albums-paginator.php';
+var paginator_video  = ajxdir+'videos-paginator.php';
+var paginator_wall   = ajxdir+'wall-paginator.php';
+var paginator_dialog = ajxdir+'dialog-paginator.php';
+var queue_skip       = ajxdir+'queue-skipthis.php';
 
 var freewall_width = 300; // Default width, it replaced in albums with config value
 
@@ -471,5 +474,25 @@ function freewill(container,re,debug){
     
     if(re === true){
 	$(window).trigger("resize");
+    }
+}
+
+// QUEUE
+// ===============================================
+
+// SkipIt
+// u - url for ajax script, i - id of element to hide
+function skipit(u,i){
+    if(u.length > 0){
+	jQuery.ajax({
+	    async : false,
+	    cache : false,
+	    method : "GET",
+	    url : queue_skip+"?"+u
+	}).done( function(data){
+	    // Hide item in list
+	    jQuery("#"+i).hide();
+	    jQuery(".hosterror").hide();
+	});
     }
 }

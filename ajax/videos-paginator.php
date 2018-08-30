@@ -89,18 +89,18 @@ print <<<E
 E;
 	if($row['local_path'] != '' && $play['local'] == 1){
 print <<<E
-		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('ajax/local-video.php?id={$row['id']}&oid={$row['owner_id']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	} else {
 print <<<E
-		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}" onclick="javascript:fbox_video_global('{$row['player_uri']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
+		<a class="various-localz" href="javascript:;" data-title-id="title-{$row['id']}-{$row['owner_id']}" onclick="javascript:fbox_video_global('{$row['player_uri']}',1);"><span class="play-icon"><i class="fa fa-play"></i></span></a>
 E;
 	}
 print <<<E
 		<span class="badge bg-light">{$row['duration']}</span>
 	</div>
 	<div class="video-info">
-		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']}</div>
+		<div class="video-title tip" data-placement="top" data-toggle="tooltip" data-original-title="{$row['title']}" onclick="javascript:show_details({$row['id']},{$row['owner_id']});"><i class="fa fa-info-circle"></i> | {$row['stitle']}</div>
 		<div class="video-status">
 E;
 
@@ -116,7 +116,7 @@ E;
 		} else {
 			preg_match("/embed\/([^\?]+)\?/",$row['player_uri'],$pu);
 			$key = $pu[1];
-			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&oid='.$row['owner_id'].'&key='.$key.'&s=yt" target="_blank">скачать?</a>';
 		}
 	}
 	// Vkontakte
@@ -128,7 +128,7 @@ E;
 		} else {
 			preg_match("/oid\=([\-0-9]+)\&id\=([\-0-9]+)/",$row['player_uri'],$pu);
 			$key = $pu[1].'_'.$pu[2];
-			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
+			print ' | Копия: <i class="fa fa-check-square"></i> <a href="ytget.php?id='.$row['id'].'&oid='.$row['owner_id'].'&key='.$key.'&s=vk" target="_blank">скачать?</a>';
 		}
 	}
 	
@@ -142,7 +142,7 @@ E;
 
 	if($play['local'] == 0){
 print <<<E
-		<div id="title-{$row['id']}" style="display:none;">
+		<div id="title-{$row['id']}-{$row['owner_id']}" style="display:none;">
 			{$row['desc']}
 			<div class="expander" onClick="expand_desc();">показать</div>
 		</div>

@@ -13,6 +13,10 @@ require_once(ROOT.'classes/db.php');
 $db = new db();
 $res = $db->connect($cfg['host'],$cfg['user'],$cfg['pass'],$cfg['base']);
 
+// Get Functions
+require_once(ROOT.'classes/func.php');
+$func = new func();
+
 // Get Skin
 require_once(ROOT.'classes/skin.php');
 $skin = new skin();
@@ -52,8 +56,8 @@ $done['vv'] = round(($bar_total['v'] - $bar_queue['v']) / $per, 2);
 $done['v'] = ceil($done['vv']);
 } else { $done['v'] = $done['vv'] = 0; }
 
-$bar_total = $db->query_row("SELECT COUNT(*) as at FROM vk_attach WHERE `uri` != '' AND `is_local` = 0");
-$bar = $db->query_row("SELECT COUNT(*) as at FROM vk_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0");
+$bar_total = $db->query_row("SELECT COUNT(*) as at FROM vk_attach WHERE `uri` != '' AND `is_local` = 0 AND `skipthis` = 0");
+$bar = $db->query_row("SELECT COUNT(*) as at FROM vk_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 AND `skipthis` = 0");
 $bar_queue['at'] = $bar['at'];
 $per = $bar_total['at']/100;
 if($bar_total['at'] > 0){
@@ -70,8 +74,8 @@ $done['dcc'] = round(($bar_total['dc'] - $bar_queue['dc']) / $per, 2);
 $done['dc'] = ceil($done['dcc']);
 } else { $done['dc'] = $done['dcc'] = 0; }
 
-$bar_total = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `uri` != '' AND `is_local` = 0");
-$bar = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0");
+$bar_total = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `uri` != '' AND `is_local` = 0 AND `skipthis` = 0");
+$bar = $db->query_row("SELECT COUNT(*) as msat FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 AND `skipthis` = 0");
 $bar_queue['msat'] = $bar['msat'];
 $per = $bar_total['msat']/100;
 if($bar_total['msat'] > 0){
@@ -187,14 +191,12 @@ E;
 				}
 			} else {
 				// If error, let's try to see wtf is going on
-				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-					$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 				}
 				// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,false,false);
 			}
 			
 		} else {
@@ -280,7 +282,7 @@ E;
 	if($queue_id > 0 && $_GET['t']=='v'){
 		$don = true;
 		// Get video info
-		$q = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$queue_id}");
+		$q = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$queue_id} AND `owner_id` = {$queue_oid}");
 		if($q['preview_uri'] != ''){
 			
 			// Are you reagy kids? YES Capitan Curl!
@@ -300,12 +302,12 @@ E;
 print <<<E
 <div class="alert alert-success" role="alert"><i class="far fa-file"></i> Файл превью сохранен</div>
 E;
-					$q = $db->query("UPDATE vk_videos SET `in_queue` = 0, `date_done` = ".time().", `preview_path` = '".$cfg['video_path'].$n[0]."' WHERE `id` = ".$queue_id."");
+					$q = $db->query("UPDATE vk_videos SET `in_queue` = 0, `date_done` = ".time().", `preview_path` = '".$cfg['video_path'].$n[0]."' WHERE `id` = ".$queue_id." AND `owner_id` =".$queue_oid);
 					
 					if($_GET['auto'] == '1'){
-						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date_added DESC");
+						$nrow = $db->query_row("SELECT id,owner_id FROM vk_videos WHERE `in_queue` = 1 ".($skip_list != '' ? "AND `id` NOT IN (".$skip_list.")" : "")." ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),$cfg['sync_video_next_cd']);
+							print $skin->reload('info',"Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_video_next_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&oid=".$nrow['oqner_id']."&auto=1".($skip_list != '' ? "&skip=".$skip_list : ""),$cfg['sync_video_next_cd']);
 						}
 					}
 					
@@ -327,9 +329,9 @@ E;
 				// Move ID to skip list & continue if server response is contain html
 				if($_GET['auto'] == '1' && substr($out['content'],0,5) == '<html'){
 						$skip_row = ($_GET['skip'] != '') ? $_GET['skip'].','.$queue_id : $queue_id;
-						$nrow = $db->query_row("SELECT id FROM vk_videos WHERE `in_queue` = 1 && `id` < {$queue_id} ORDER BY date_added DESC");
+						$nrow = $db->query_row("SELECT id,owner_id FROM vk_videos WHERE `in_queue` = 1 && `id` < {$queue_id} ORDER BY date_added DESC");
 						if($nrow['id'] > 0){
-							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_error_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&auto=1&skip=".$skip_row."",$cfg['sync_music_error_cd']);
+							print $skin->reload('info',"Пропускаем #".$queue_id." следующий #".$nrow['id'].". Страница будет обновлена через <span id=\"gcd\">".$cfg['sync_music_error_cd']."</span> сек.","queue.php?t=v&id=".$nrow['id']."&oid=".$nrow['owner_id']."&auto=1&skip=".$skip_row."",$cfg['sync_music_error_cd']);
 						}
 				}
 			}
@@ -401,14 +403,12 @@ E;
 				}
 			} else {
 				// If error, let's try to see wtf is going on
-				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-					$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 				}
 				// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,false,false);
 			}
 			
 		} else {
@@ -476,14 +476,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,false,false);
 				}
 			} // end of local file check fail
 		} else {
@@ -551,14 +549,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,false,false);
 				}
 			} // end of local file check fail
 		} else {
@@ -627,14 +623,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=atph&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -703,14 +697,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=atvi&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -779,14 +771,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=atli&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -948,14 +938,12 @@ E;
 				}
 			} else {
 				// If error, let's try to see wtf is going on
-				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-					$out = $c->curl_req(array('uri' => $q['link_url'], 'method'=>'', 'return'=>0 ));
-					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['link_url'], 'method'=>'', 'return'=>0 )));
 				}
 				// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=atdc&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 			}
 			
 		} else {
@@ -1010,14 +998,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=matst&id=".$queue_id."&oid=0",$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -1086,14 +1072,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=matph&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -1163,14 +1147,12 @@ E;
 				}
 			} else {
 				// If error, let's try to see wtf is going on
-				if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-					$out = $c->curl_req(array('uri' => $q['link_url'], 'method'=>'', 'return'=>0 ));
-					if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['link_url'], 'method'=>'', 'return'=>0 )));
 				}
 				// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=matdc&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 			}
 			
 		} else {
@@ -1239,14 +1221,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=matli&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -1315,14 +1295,12 @@ E;
 					}
 				} else {
 					// If error, let's try to see wtf is going on
-					if((substr($out['content'],0,5) == '<html') || (substr($out['content'],0,9) == '<!DOCTYPE')){
-						$out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 ));
-						if(isset($out['header'])){ $error_code = "<br/>Ответ сервера: {$out['header']['http_code']}"; }
+					$error_code = false;
+					if($func->is_html_response($out['content'])){
+						$error_code = $skin->remote_server_error($out = $c->curl_req(array('uri' => $q['uri'], 'method'=>'', 'return'=>0 )));
 					}
 					// Something wrong with response or connection
-print <<<E
-<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error_code}</div>
-E;
+					$skin->queue_no_data($error_code,"t=matvi&id=".$queue_id."&oid=".$queue_oid,$queue_id);
 				}
 			} // end of local file check fail
 		} else {
@@ -1368,7 +1346,7 @@ if($bar_queue['p'] > 0){
 			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=p&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
-<tr>
+<tr id="{$row['id']}">
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
@@ -1396,7 +1374,7 @@ if($bar_queue['m'] > 0){
 			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=m&id={$row['id']}&auto=1\" class=\"{$btnclass}\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
-<tr>
+<tr id="{$row['id']}">
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">[{$duration}] {$row['artist']} - {$row['title']}</a></td>
   <td>{$row['date_added']}</td>
@@ -1414,14 +1392,14 @@ if($bar_queue['v'] > 0){
 		// Add a autodownload for the first element in list
 		if($first['v'] == true){
 			$first['v'] = false;
-			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
+			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=v&id={$row['id']}&oid={$row['owner_id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
-<tr>
+<tr id="{$row['id']}">
   <td>{$row['id']}</td>
   <td><a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
-  <td><a href="queue.php?t=v&id={$row['id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
+  <td><a href="queue.php?t=v&id={$row['id']}&oid={$row['owner_id']}" class="{$btnclass}" id="{$row['id']}" onClick="jQuery('#{$row['id']}').hide();return true;" title="Скачать"><b class="{$btnicon}"></b></a>{$auto}</td>
 </tr>
 E;
 	}
@@ -1437,7 +1415,7 @@ if($bar_queue['dc'] > 0){
 			$auto = "&nbsp;&nbsp;<a href=\"queue.php?t=dc&id={$row['id']}&auto=1\" class=\"{$btnclass}\" onClick=\"jQuery('#{$row['id']}').hide();return true;\" title=\"Скачать автоматически\"><b class=\"{$btniconauto}\"></b></a>";
 		} else { $auto = ''; }
 print <<<E
-<tr>
+<tr id="{$row['id']}">
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
   <td>{$row['date']}</td>
@@ -1479,7 +1457,7 @@ $first['atvi'] = true;
 $first['atli'] = true;
 $first['atau'] = true;
 $first['atdc'] = true;
-$r = $db->query("SELECT * FROM vk_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 LIMIT 0,{$show}");
+$r = $db->query("SELECT * FROM vk_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 AND `skipthis` = 0 LIMIT 0,{$show}");
 while($row = $db->return_row($r)){
 	$no_queue = false;
 	if($row['type'] == 'photo'){
@@ -1511,7 +1489,7 @@ $first['matvi'] = true;
 $first['matli'] = true;
 $first['matdc'] = true;
 $first['matst'] = false;
-$r = $db->query("SELECT * FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 LIMIT 0,{$show}");
+$r = $db->query("SELECT * FROM vk_messages_attach WHERE `path` = '' AND `uri` != '' AND `is_local` = 0 AND `skipthis` = 0 LIMIT 0,{$show}");
 while($row = $db->return_row($r)){
 	$no_queue = false;
 	if($row['type'] == 'photo'){

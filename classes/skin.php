@@ -258,7 +258,7 @@ E;
 	    } else { $auto = ''; }
 	    $oid = isset($row['owner_id']) ? "&oid=".$row['owner_id'] : '';
 return <<<E
-<tr>
+<tr id="{$row['id']}">
   <td class="align-middle">{$row['id']}</td>
   <td class="align-middle"><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
   <td class="align-middle">{$row['fdate']}</td>
@@ -315,6 +315,36 @@ return <<<E
     <div class="col-sm-8">{$left}</div>
     <div class="col-sm-4">{$right}</div>
 </div>
+E;
+	}
+	
+	/*
+	    Function: remote_server_error
+	    In:
+	    response - cURL response array
+	*/
+	function remote_server_error($response){
+	    if(isset($response['header'])){
+		return "<br/>Ответ сервера: {$response['header']['http_code']}";
+	    } else {
+		return false;
+	    }
+	}
+	
+	/*
+	    Function: queue_no_data
+	    In:
+	    error - remote_server_error() output
+	    exclurl - url params to exclusion function
+	*/
+	function queue_no_data($error,$exclurl = false,$exclid = false){
+	    if($exclurl != false){
+		$exclude = <<<E
+<div class="float-right"><input type="button" class="btn btn-outline-danger" onclick="skipit('{$exclurl}',{$exclid});" value="Исключить из очереди" /></div>
+E;
+	    }
+print <<<E
+<div class="alert alert-danger hosterror" role="alert">{$exclude}<div><i class="fas fa-exclamation-triangle"></i> Невозможно получить данные с удаленного хоста.{$error}</div></div>
 E;
 	}
 	

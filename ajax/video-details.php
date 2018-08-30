@@ -10,6 +10,13 @@ $id = 0;
 if(isset($_GET['id']) && is_numeric($_GET['id'])){
 	$v = intval($_GET['id']);
 	if($v > 0){ $id = $v; }
+	unset($v);
+}
+$oid = 0;
+if(isset($_GET['oid']) && is_numeric($_GET['oid'])){
+	$v = intval($_GET['oid']);
+	if($v > 0){ $oid = $v; }
+	unset($v);
 }
 
 require_once('../cfg.php');
@@ -29,14 +36,14 @@ $f = new func();
 
 print <<<E
 <div class="container video-details-bg" id="video-details-bg" onclick="javascript:hide_details();"></div>
-<div class="col-xs-12 col-md-4 col-md-offset-8 video-details" id="video-details">
+<div class="col-sm-12 col-md-4 col-md-offset-8 video-details" id="video-details">
 <i class="fas fa-times details-close" onclick="javascript:hide_details();"></i>
 E;
 
 $play = $db->query_row("SELECT val as local FROM vk_status WHERE `key` = 'play-local-video'");
 
 mb_internal_encoding("UTF-8");
-$row = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$id}");
+$row = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$id} AND `owner_id` = {$oid}");
 
 	// Rewrite if you plan to store content outside of web directory and will call it by Alias
 	if($cfg['vhost_alias'] == true && substr($row['preview_path'],0,4) != 'http'){

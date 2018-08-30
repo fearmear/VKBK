@@ -36,6 +36,30 @@
     
     </div>
 
+
+
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">0.8.1 &rarr; 0.8.2</h6>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-0 mb-0 small lh-125">
+            <span class="d-block">
+<pre>
+ALTER TABLE `vk_videos` ADD `owner_id` INT( 11 ) NOT NULL AFTER `id`;
+ALTER TABLE `vk_videos` DROP PRIMARY KEY , ADD PRIMARY KEY ( `id` , `owner_id` );
+    
+ALTER TABLE `vk_messages_attach` ADD `skipthis` BOOLEAN NOT NULL DEFAULT '0';
+ALTER TABLE `vk_messages_attach` ADD INDEX `skip` ( `skipthis` );
+
+ALTER TABLE `vk_attach` ADD `skipthis` BOOLEAN NOT NULL DEFAULT '0';
+ALTER TABLE `vk_attach` ADD INDEX `skip` ( `skipthis` );
+
+UPDATE `vk_status` SET `val` = '2018082501' WHERE `key` = 'version';
+</pre>
+	    </span>
+          </div>
+        </div>
+    </div>
+
     <div class="my-3 p-3 bg-white rounded box-shadow">
         <h6 class="border-bottom border-gray pb-2 mb-0">0.7.7 &rarr; 0.8.0</h6>
         <div class="media text-muted pt-3">

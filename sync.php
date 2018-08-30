@@ -781,10 +781,11 @@ E;
 				$video_vk = $api['response']['items'];
 				$video_vk_total = $api['response']['count'];
 				
-				$video_vk_list = array();
+				$video_vk_list = array('id'=>array(),'uid'=>array());
 				// Get VK IDs
 				foreach($video_vk as $k => $v){
-					$video_vk_list[] = $v['id'];
+					$video_vk_list['id'][] = $v['id'];
+					$video_vk_list['uid'][] = $v['id'].'_'.$v['adding_date'];
 				}
 				
 				// I want this logic in one line, but this blow my mind so...
@@ -806,20 +807,21 @@ E;
 				array_unshift($log,'<tr><td>Получаем видеозаписи <b> '.$ot.' - '.$to.' / '.$video_vk_total.'</b> из ВК.</td></tr>');
 				print $log[0];
 				
-				$video_list = array();
+				$video_list = array('id'=>array(),'uid'=>array());
 				// get local IDs
-				$q = $db->query("SELECT id FROM vk_videos WHERE `id` IN(".implode(',',$video_vk_list).")");
+				$q = $db->query("SELECT id,date_added FROM vk_videos WHERE `id` IN(".implode(',',$video_vk_list['id']).")");
 				while($row = $db->return_row($q)){
-					$video_list[] = $row['id'];
+					$video_list['id'][] = $row['id'];
+					$video_list['uid'][] = $row['id'].'_'.$row['date_added'];
 				}
 			
 				// Get list of IDs which is NOT in local DB. so they are NEW
 				// Compare VK IDs with local IDs
-				$video_create = array_diff($video_vk_list,$video_list);
+				$video_create = array_diff($video_vk_list['uid'],$video_list['uid']);
 			
 				if(sizeof($video_list) > 0){
 					// Update status for local IDs which was found
-					$q = $db->query("UPDATE vk_videos SET `deleted` = 0 WHERE `id` IN(".implode(',',$video_list).") AND `in_queue` = 0");
+					$q = $db->query("UPDATE vk_videos SET `deleted` = 0 WHERE `id` IN(".implode(',',$video_list['id']).") AND `in_queue` = 0");
 					$moved = $db->affected_rows();
 					array_unshift($log,'<tr><td>Пропускаем сохраненные ранее видеозаписи. Всего - <b>'.$moved.'</b></td></tr>');
 					print $log[0];
@@ -829,14 +831,23 @@ E;
 				// Put new video to queue
 				$video_data = array();
 				
+				// If we have new data
+				if(sizeof($video_create) >= 1){
+					$video_create_ids = array();
+					foreach($video_create as $vck => $vcv){
+						$vcv = explode("_",$vcv);
+						$video_create_ids[$vcv[1]] = $vcv[0]; // Key: date_added, Value: id
+					}
+				
 				foreach($video_vk as $k => $v){
-					if(in_array($v['id'],$video_create)){
+					if(isset($video_create_ids[$v['adding_date']]) && $video_create_ids[$v['adding_date']] = $v['id']){
 						// Get biggest preview
 						if(isset($v['photo_640'])){ $v['uri'] = $v['photo_640'];}
 							elseif(isset($v['photo_320'])){ $v['uri'] = $v['photo_320'];}
 								elseif(isset($v['photo_130'])){ $v['uri'] = $v['photo_130'];}
 						
 						$video_data[$v['id']] = array(
+							'owner_id' => (!is_numeric($v['owner_id']) ? 0 : $v['owner_id']),
 							'title' => ($v['title'] == '' ? '- Unknown '.$v['id'].' -' : $v['title']),
 							'desc' => ($v['description'] == '' ? '' : $v['description']),
 							'duration' => (!is_numeric($v['duration']) ? 0 : $v['duration']),
@@ -847,6 +858,7 @@ E;
 						);
 					}
 				} // foreach end
+				}
 				
 				if(!empty($video_data) && (sizeof($video_create) == sizeof($video_data))){
 					$data_sql = array(0=>'');
@@ -854,7 +866,7 @@ E;
 					$data_i = 1;
 					$data_k = 0;
 					foreach($video_data as $k => $v){
-						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},'".$db->real_escape($v['title'])."','".$db->real_escape($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true,'',0,'',0,0)";
+						$data_sql[$data_k] .= ($data_sql[$data_k] != '' ? ',' : '')."({$k},{$v['owner_id']},'".$db->real_escape($v['title'])."','".$db->real_escape($v['desc'])."',{$v['duration']},'{$v['preview_uri']}','','{$v['player_uri']}','{$v['access_key']}',{$v['date']},0,0,true,'',0,'',0,0)";
 						$data_i++;
 						if($data_i > $data_limit){
 							$data_i = 1;
@@ -863,7 +875,7 @@ E;
 					}
 					
 					foreach($data_sql as $k => $v){
-						$q = $db->query("INSERT INTO vk_videos (`id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`,`local_path`,`local_size`,`local_format`,`local_w`,`local_h`) VALUES {$v}");
+						$q = $db->query("INSERT INTO vk_videos (`id`,`owner_id`,`title`,`desc`,`duration`,`preview_uri`,`preview_path`,`player_uri`,`access_key`,`date_added`,`date_done`,`deleted`,`in_queue`,`local_path`,`local_size`,`local_format`,`local_w`,`local_h`) VALUES {$v}");
 					}
 
 					array_unshift($log,'<tr><td>Новые видеозаписи добавлены в очередь. Всего - <b>'.sizeof($video_create).'</b></td></tr>');

@@ -11,6 +11,11 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])){
 	$id = intval($_GET['id']);
 	if($id > 0){ $video = $id; }
 }
+$oid = 0;
+if(isset($_GET['oid']) && is_numeric($_GET['oid'])){
+	$o = intval($_GET['oid']);
+	if($o > 0){ $oid = $o; }
+}
 
 require_once('../cfg.php');
 
@@ -80,7 +85,7 @@ print <<<E
 </div>
 E;
 
-$list = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$video}");
+$list = $db->query_row("SELECT * FROM vk_videos WHERE `id` = {$video} AND `owner_id` = {$oid}");
 
 // Rewrite if you plan to store content outside of web directory and will call it by Alias
 if($cfg['vhost_alias'] == true && substr($list['local_path'],0,4) != 'http'){
