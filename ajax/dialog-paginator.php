@@ -139,8 +139,20 @@ foreach($messages as $k => $v){
 		$ava_path = "groups/".$who['photo_path'];
 		$who['first_name'] = $who['name'];
 	} else {
+		// Check if user is a ghost (does not known by me)
+		if(!isset($users_data[$v['msg_user']])){
+			$who = array(
+				'id' => $v['msg_user'],
+				'first_name' => "Неизвестный ID ".$v['msg_user'],
+				'last_name' => "",
+				'nick' => "Призрак",
+				'photo_path' => ""
+			);
+			$ava_path = "#f44336";
+		} else {
 		$who = $users_data[$v['msg_user']];
 		$ava_path = "profiles/".$who['photo_path'];
+	}
 	}
 	
 	$output_attach = '';
@@ -272,9 +284,15 @@ E;
 
 	} // Output Attach end
 	
+	if(substr($ava_path,0,1) == "#"){
+		$ava_path = '<span class="mb-2 ml-2" style="background:'.$ava_path.';display:block;min-width:35px;min-height:35px;float:left;border-radius:50%;"></span>';
+	} else {
+		$ava_path = '<img src="data/'.$ava_path.'" class="wall-ava dlg-ava mb-2 ml-2" />';
+	}
+	
 print <<<E
 <div class="msg-body mb-3">
-	<img src="data/{$ava_path}" class="wall-ava dlg-ava mb-2 ml-2" />
+	{$ava_path}
 	<div class="ml-5 pl-3">
 		<strong>{$who['first_name']}</strong>&nbsp;&nbsp;{$f->dialog_date_format($v['msg_date'])}<br/>
 		{$v['msg_body']}{$output_attach}
