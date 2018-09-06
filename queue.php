@@ -29,6 +29,15 @@ if(!$cfg['pj']){
 	print $skin->navigation($lc);
 }
 
+$type_icons = array(
+	'photo'		=> 'image',
+	'audio'		=> 'music',
+	'video'		=> 'film',
+	'docs'		=> 'file',
+	'attach'	=> 'paperclip',
+	'mattach'	=> 'paperclip'
+);
+
 $bar_total = $db->query_row("SELECT COUNT(*) as p FROM vk_photos WHERE album_id > -9000");
 $bar = $db->query_row("SELECT COUNT(*) as p FROM vk_photos WHERE album_id > -9000 AND `in_queue` = 1");
 $bar_queue['p'] = $bar['p'];
@@ -111,22 +120,22 @@ $bar = array();
 
 // Make a progress bars
 // Photo
-$bar[0] = array('fa' => 'image','name' => 'Фотографии','perx' => $done['pp'],'per' => $done['p'],'bar' => 'success');
+$bar[0] = array('fa' => $type_icons['photo'],'name' => 'Фотографии','perx' => $done['pp'],'per' => $done['p'],'bar' => 'success');
 
 // Audio
-$bar[1] = array('fa' => 'music','name' => 'Аудиозаписи','perx' => $done['mm'],'per' => $done['m'],'bar' => 'warning');
+$bar[1] = array('fa' => $type_icons['audio'],'name' => 'Аудиозаписи','perx' => $done['mm'],'per' => $done['m'],'bar' => 'warning');
 
 // Video
-$bar[2] = array('fa' => 'film','name' => 'Видеозаписи','perx' => $done['vv'],'per' => $done['v'],'bar' => 'info');
+$bar[2] = array('fa' => $type_icons['video'],'name' => 'Видеозаписи','perx' => $done['vv'],'per' => $done['v'],'bar' => 'info');
 
 // Attachments
-$bar[3] = array('fa' => 'paperclip','name' => 'Вложения','perx' => $done['att'],'per' => $done['at'],'bar' => 'primary');
+$bar[3] = array('fa' => $type_icons['attach'],'name' => 'Вложения','perx' => $done['att'],'per' => $done['at'],'bar' => 'primary');
 
 // Documents
-$bar[4] = array('fa' => 'file','name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
+$bar[4] = array('fa' => $type_icons['docs'],'name' => 'Документы','perx' => $done['dcc'],'per' => $done['dc'],'bar' => 'danger');
 
 // MessagesAttachments
-$bar[5] = array('fa' => 'paperclip','name' => 'Диалоги','perx' => $done['msatt'],'per' => $done['msat'],'bar' => 'secondary');
+$bar[5] = array('fa' => $type_icons['mattach'],'name' => 'Диалоги','perx' => $done['msatt'],'per' => $done['msat'],'bar' => 'secondary');
 
 foreach($bar as $bark => $barv){
 	print $skin->queue_progress_bar($barv);
@@ -1322,7 +1331,8 @@ print <<<E
             <table class="table table-sm table-hover small white-box">
               <thead>
                 <tr>
-                  <th>#</th>
+				  <th class="text-center">Тип</th>
+                  <th>ID#</th>
 				  <th>URL</th>
 				  <th>Добавлено</th>
 				  <th>Сохранить</th>
@@ -1347,6 +1357,7 @@ if($bar_queue['p'] > 0){
 		} else { $auto = ''; }
 print <<<E
 <tr id="{$row['id']}">
+  <td class="text-center"><i class="fa fa-{$type_icons['photo']}"></i></td>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['uri']}</a></td>
   <td>{$row['date_added']}</td>
@@ -1375,6 +1386,7 @@ if($bar_queue['m'] > 0){
 		} else { $auto = ''; }
 print <<<E
 <tr id="{$row['id']}">
+  <td class="text-center"><i class="fa fa-{$type_icons['audio']}"></i></td>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">[{$duration}] {$row['artist']} - {$row['title']}</a></td>
   <td>{$row['date_added']}</td>
@@ -1396,6 +1408,7 @@ if($bar_queue['v'] > 0){
 		} else { $auto = ''; }
 print <<<E
 <tr id="{$row['id']}">
+  <td class="text-center"><i class="fa fa-{$type_icons['video']}"></i></td>
   <td>{$row['id']}</td>
   <td><a href="{$row['preview_uri']}" target="_blank">{$row['preview_uri']}</a></td>
   <td>{$row['date_added']}</td>
@@ -1416,6 +1429,7 @@ if($bar_queue['dc'] > 0){
 		} else { $auto = ''; }
 print <<<E
 <tr id="{$row['id']}">
+  <td class="text-center"><i class="fa fa-{$type_icons['docs']}"></i></td>
   <td>{$row['id']}</td>
   <td><a href="{$row['uri']}" target="_blank">{$row['title']}</a></td>
   <td>{$row['date']}</td>

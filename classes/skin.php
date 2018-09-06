@@ -259,6 +259,7 @@ E;
 	    $oid = isset($row['owner_id']) ? "&oid=".$row['owner_id'] : '';
 return <<<E
 <tr id="{$row['id']}">
+  <td class="text-center"><i class="fa fa-paperclip"></i></td>
   <td class="align-middle">{$row['id']}</td>
   <td class="align-middle"><a href="{$row['uri']}" target="_blank">{$uri_name}</a></td>
   <td class="align-middle">{$row['fdate']}</td>
