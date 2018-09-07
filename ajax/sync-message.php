@@ -133,7 +133,7 @@ if($vk_session['vk_token'] != '' && $token_valid == true){
 			$f->dialog_insert($pv,$multi,$dialog_exist);
 		}
 		
-		if($dialog_ids != '' && true == false){
+		if($dialog_ids != ''){
 			$q = $db->query("SELECT * FROM vk_profiles WHERE id IN(".$dialog_ids.")");
 			$dialog_ids = explode(',',$dialog_ids);
 			
