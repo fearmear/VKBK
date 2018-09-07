@@ -105,9 +105,9 @@ class func {
 	    $q = $db->query("INSERT INTO `vk_messages_attach`
 	    (`uid`,`wall_id`,`type`,`is_local`,`attach_id`,`owner_id`,`uri`,`path`,`width`,`height`,`text`,`date`,`access_key`,`title`,`duration`,`player`,`link_url`,`caption`,`skipthis`)
 	    VALUES
-	    (NULL,{$id},'{$type}',0,{$atk[$type]['id']},{$atk[$type]['owner_id']},'{$photo_uri}','',{$atk[$type]['width']},{$atk[$type]['height']},'".$db->real_escape($text)."',{$atk[$type]['date']},'{$atk[$type]['access_key']}','".$db->real_escape($atk[$type]['title'])."',{$atk[$type]['duration']},'{$atk[$type]['player']}','{$atk[$type]['url']}','".$db->real_escape($atk[$type]['caption'])."',0)
+	    (NULL,{$id},'{$type}',0,{$atk[$type]['id']},{$atk[$type]['owner_id']},'{$photo_uri}','',{$atk[$type]['width']},{$atk[$type]['height']},'".$db->real_escape($text)."',{$atk[$type]['date']},'{$atk[$type]['access_key']}','".$db->real_escape($atk[$type]['title'])."',{$atk[$type]['duration']},'{$atk[$type]['player']}','".$db->real_escape($atk[$type]['url'])."','".$db->real_escape($atk[$type]['caption'])."',0)
 	    ON DUPLICATE KEY UPDATE
-	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 0, `attach_id` = {$atk[$type]['id']}, `owner_id` = {$atk[$type]['owner_id']}, `uri` = '{$photo_uri}', `width` = {$atk[$type]['width']}, `height` = {$atk[$type]['height']}, `text` = '".$db->real_escape($text)."', `date` = {$atk[$type]['date']}, `access_key` = '{$atk[$type]['access_key']}', `title` = '".$db->real_escape($atk[$type]['title'])."', `duration` = {$atk[$type]['duration']}, `player` = '{$atk[$type]['player']}', `link_url` = '{$atk[$type]['url']}', `caption` = '".$db->real_escape($atk[$type]['caption'])."', `skipthis` = 0
+	    `wall_id` = {$id}, `type` = '{$type}', `is_local` = 0, `attach_id` = {$atk[$type]['id']}, `owner_id` = {$atk[$type]['owner_id']}, `uri` = '{$photo_uri}', `width` = {$atk[$type]['width']}, `height` = {$atk[$type]['height']}, `text` = '".$db->real_escape($text)."', `date` = {$atk[$type]['date']}, `access_key` = '{$atk[$type]['access_key']}', `title` = '".$db->real_escape($atk[$type]['title'])."', `duration` = {$atk[$type]['duration']}, `player` = '{$atk[$type]['player']}', `link_url` = '".$db->real_escape($atk[$type]['url'])."', `caption` = '".$db->real_escape($atk[$type]['caption'])."', `skipthis` = 0
 	    ");
 		} else {
 			return array(
