@@ -96,7 +96,7 @@ class func {
 	    $atk[$type]['duration']    = !isset($atk[$type]['duration'])   ? 0  : $atk[$type]['duration'];
 	    $atk[$type]['title']       = !isset($atk[$type]['title'])      ? '' : $atk[$type]['title'];
 	    $atk[$type]['player']      = !isset($atk[$type]['player'])     ? '' : $atk[$type]['player'];
-	    $atk[$type]['url']         = !isset($atk[$type]['url'])        ? '' : $atk[$type]['url'];;
+	    $atk[$type]['url']         = !isset($atk[$type]['url'])        ? '' : $atk[$type]['url'];
 	    $atk[$type]['caption']     = !isset($atk[$type]['caption'])    ? '' : $atk[$type]['caption'];
 	    $atk[$type]['access_key']  = !isset($atk[$type]['access_key']) ? '' : $atk[$type]['access_key'];
 	    
