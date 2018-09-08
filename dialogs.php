@@ -72,30 +72,29 @@ print <<<E
 E;
 
 foreach($dial_list as $k => $v){
-	if(!is_array($v['data'])){	// For some reason if we don't have any info about user. How this could be?!
-print <<<E
-<div class="mb-1 dialogs-head border-bottom list-group-item list-group-item-action justify-content-between" style="cursor:pointer;">
-<div class="ml-5 pl-3 d-flex">
-<small style="color:red;">Неопознанный пользователь</small> <span class="full-date ml-auto"></span>
-</div>
-<div class="ml-5 pl-3 d-flex text-truncate">ID: {$v['id']}</div>
-</div>
-E;
-	} else {
-	$n = (!isset($v['data']['name']) ? $n = $v['data']['first_name'].' '.$v['data']['last_name'] : $n = $v['data']['name'] );
+	$is_name = isset($v['data']['name']);
+	$is_splitname = isset($v['data']['first_name']) || isset($v['data']['last_name']);
+	$is_group = !empty($v['title']) && empty($v['data']);
+	$n = "Неизвестный диалог";
+	if ($is_name) {
+		$n = $v['data']['name'];
+	} else if ($is_splitname) {
+		$n = $v['data']['first_name'].' '.$v['data']['last_name'];
+	} else if ($is_group) {
+		$n = $v['title'];
+	}
 	$full_date = date("d M Y H:i",$v['date']);
 	$v['date'] = $f->dialog_date_format($v['date']);
-		if($v['chat_id'] > 0){ $v['id'] = 2000000000+$v['chat_id']; }
+	if($v['chat_id'] > 0){ $v['id'] = 2000000000+$v['chat_id']; }
+	$img_src = isset($v['data']['path'], $v['data']['photo_path']) ? "data/{$v['data']['path']}/{$v['data']['photo_path']}" : 'images/camera.png';
 print <<<E
 <div class="mb-1 dialogs-head border-bottom list-group-item list-group-item-action justify-content-between" onclick="javascript:dialog_load({$v['id']});return false;" style="cursor:pointer;">
-<img src="data/{$v['data']['path']}/{$v['data']['photo_path']}" class="wall-ava mb-2" />
+<img src="${img_src}" class="wall-ava mb-2" />
 <div class="ml-5 pl-3 d-flex">
 <small>{$n}</small> <span class="full-date ml-auto" data-placement="right" data-toggle="tooltip" data-original-title="{$full_date}">{$v['date']}</span>
 </div>
-<div class="ml-5 pl-3 d-flex text-truncate">{$v['title']}</div>
 </div>
 E;
-	}
 }
 
 print <<<E
