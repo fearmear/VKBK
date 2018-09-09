@@ -72,16 +72,14 @@ print <<<E
 E;
 
 foreach($dial_list as $k => $v){
-	$is_name = isset($v['data']['name']);
-	$is_splitname = isset($v['data']['first_name']) || isset($v['data']['last_name']);
-	$is_group = !empty($v['title']) && empty($v['data']);
-	$n = "Неизвестный диалог";
-	if ($is_name) {
+	if ($v['data']['path'] === 'groups') {
 		$n = $v['data']['name'];
-	} else if ($is_splitname) {
+	} else if ($v['data']['path'] === 'profiles') {
 		$n = $v['data']['first_name'].' '.$v['data']['last_name'];
-	} else if ($is_group) {
+	} else if ($v['multichat']) {
 		$n = $v['title'];
+	} else {
+		$n = "Неизвестный диалог";
 	}
 	$full_date = date("d M Y H:i",$v['date']);
 	$v['date'] = $f->dialog_date_format($v['date']);
