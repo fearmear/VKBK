@@ -76,7 +76,7 @@ foreach($dial_list as $k => $v){
 		$n = $v['data']['name'];
 	} else if ($v['data']['path'] === 'profiles') {
 		$n = $v['data']['first_name'].' '.$v['data']['last_name'];
-	} else if ($v['multichat']) {
+	} else if ($v['chat_id'] > 0) {
 		$n = $v['title'];
 	} else {
 		$n = "Неизвестный диалог";
